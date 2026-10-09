@@ -263,7 +263,8 @@ Next.js entra na lista quando o portfólio estiver no ar.
 ## 8. Publicação
 - Domínio próprio `.dev`. Nome **pendente**: Luige verifica a disponibilidade (sugestões: `luige.dev`, `lucasluige.dev`, `luigecm.dev`).
 - HTTPS pela Vercel.
-- Deploy automático a partir do repositório público.
+- Deploy automático a partir do repositório público `lluigecm/portfolio`.
+- Endereço provisório: https://portfolio-chi-indol-56.vercel.app/
 
 ## 9. Pendências antes do desenvolvimento
 
@@ -281,6 +282,8 @@ Next.js entra na lista quando o portfólio estiver no ar.
 
 ## 11. Manutenção de conteúdo
 
+- **Token do GitHub:** criado sem data de vencimento. Se vazar ou houver suspeita, revogar no GitHub e criar outro, atualizando `.env.local` e a Vercel.
+- **Dependências:** `npm audit` acusa vulnerabilidades no `braces`, só na cadeia do ESLint (desenvolvimento). Rever a cada atualização do `eslint-config-next`; não aplicar correção forçada.
 - **Jan/2027:** atualizar a Formação para "concluído"; revisar o cargo (trainee); acrescentar resultados ao card do TCC após a defesa.
 
 ## 12. Fluxo de trabalho
@@ -313,3 +316,10 @@ Next.js entra na lista quando o portfólio estiver no ar.
 | 09/10/2026 | Sem analytics |
 | 09/10/2026 | GIF do MyGather convertido em vídeo com pausa; acessibilidade AA; Lighthouse ≥ 90; testes E2E com Playwright no CI |
 | 09/10/2026 | Domínio próprio `.dev`; repositório público |
+| 09/10/2026 | Etapa 1 concluída: Next.js 16.4 (React 19.3), Tailwind 4 |
+| 09/10/2026 | `.gitattributes` força finais de linha LF (Windows local, CI Linux) |
+| 09/10/2026 | Arquivos locais de skills de IA no `.gitignore`; permanecem no commit inicial, sem segredos, sem reescrever o histórico |
+| 09/10/2026 | `AGENTS.md` gerado pelo Next.js fica versionado |
+| 09/10/2026 | Vulnerabilidades do `braces` (só desenvolvimento) não corrigidas à força; acompanhar atualizações |
+| 09/10/2026 | Cache Components (padrão no Next 16): convivência entre idioma dinâmico e dados em cache definida na etapa 5 |
+| 09/10/2026 | Token do GitHub sem data de vencimento |

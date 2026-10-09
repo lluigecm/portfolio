@@ -14,29 +14,29 @@
 
 ## Visão geral
 
-| # | Etapa | Depende de |
-|---|---|---|
-| 0 | Pré-requisitos (Luige) | — |
-| 1 | Setup e deploy inicial | 0 |
-| 2 | Base de testes e CI | 1 |
-| 3 | Tokens de design e tipografia | 2 |
-| 4 | Tema claro/escuro | 3 |
-| 5 | Idioma PT/EN | 3 |
-| 6 | Layout e seções estáticas | 4, 5 |
-| 7 | Integração com o GitHub: cards | 6 |
-| 8 | Mídia dos projetos | 7 |
-| 9 | Gráfico de contribuições | 7 |
-| 10 | SEO e prévia de link | 6 |
-| 11 | Auditoria e polimento | 8, 9, 10 |
-| 12 | Publicação | 11 |
+| # | Etapa | Depende de | Status |
+|---|---|---|---|
+| 0 | Pré-requisitos (Luige) | — | ✅ Concluída |
+| 1 | Setup e deploy inicial | 0 | ✅ Concluída em 09/10/2026 |
+| 2 | Base de testes e CI | 1 | ⏳ Próxima |
+| 3 | Tokens de design e tipografia | 2 |  |
+| 4 | Tema claro/escuro | 3 |  |
+| 5 | Idioma PT/EN | 3 |  |
+| 6 | Layout e seções estáticas | 4, 5 |  |
+| 7 | Integração com o GitHub: cards | 6 |  |
+| 8 | Mídia dos projetos | 7 |  |
+| 9 | Gráfico de contribuições | 7 |  |
+| 10 | SEO e prévia de link | 6 |  |
+| 11 | Auditoria e polimento | 8, 9, 10 |  |
+| 12 | Publicação | 11 |  |
 
 ---
 
 ## Etapa 0 — Pré-requisitos (Luige)
 
 **Antes da etapa 1:**
-- [ ] Criar token pessoal do GitHub (fine-grained, somente leitura de dados públicos).
-- [ ] Ativar a exibição de contribuições privadas no perfil das duas contas.
+- [x] Criar token pessoal do GitHub (fine-grained, somente leitura de dados públicos).
+- [x] Ativar a exibição de contribuições privadas no perfil das duas contas.
 
 **Antes da etapa 6:** endereço de e-mail e URL do LinkedIn.
 **Antes da etapa 8:** diagrama do TCC exportado como imagem.
@@ -57,9 +57,9 @@
 - Variáveis de ambiente cadastradas na Vercel (`GITHUB_TOKEN`, `GITHUB_PERSONAL_USER`, `GITHUB_WORK_USER`).
 
 **Critérios de aceite**
-- [ ] O endereço `.vercel.app` abre a página inicial.
-- [ ] Nenhum arquivo `.env` aparece no repositório nem no histórico.
-- [ ] `npm run build` e `npm run lint` passam sem erros.
+- [x] O endereço `.vercel.app` abre a página inicial: https://portfolio-chi-indol-56.vercel.app/
+- [x] Nenhum arquivo `.env` aparece no repositório nem no histórico.
+- [x] `npm run build` e `npm run lint` passam sem erros.
 
 ---
 
@@ -124,6 +124,7 @@
 - Escolha manual salva num cookie de preferência, para o servidor já entregar a página no idioma certo (sem trocar o texto depois que a página aparece). É um cookie funcional, não de rastreamento.
 - Botão de troca de idioma, acessível por teclado.
 - Atributo `lang` da página atualizado com o idioma.
+- **Atenção (Next 16, Cache Components ativo):** ler cookie e cabeçalhos torna a renderização dinâmica. Definir já nesta etapa como a parte dinâmica (idioma, a cada visita) convive com os dados em cache do GitHub (1 hora, etapas 7 e 9), para não refazer nada depois.
 
 **Critérios de aceite**
 - [ ] Teste E2E: navegador em português abre em PT.
