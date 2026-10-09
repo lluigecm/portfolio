@@ -12,7 +12,13 @@
   --grafite: #1f2328;
   --lapis: #5c636b;
   --linha: #d9dce0;
-  --ambar: #b45309;
+  --ambar: #a84e08;
+
+  /* Gráfico (seção 5.2): nível 0 = linha; 1 a 4 com 3:1 ou mais contra o papel. */
+  --grafico-1: #c3672c;
+  --grafico-2: var(--ambar);
+  --grafico-3: #8c3e00;
+  --grafico-4: #753301;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +30,10 @@
     --lapis: #9aa1a9;
     --linha: #30353b;
     --ambar: #e0a458;
+    --grafico-1: #976102;
+    --grafico-2: #c4893c;
+    --grafico-3: var(--ambar);
+    --grafico-4: #fec074;
   }
 }
 
@@ -35,6 +45,10 @@
   --lapis: #9aa1a9;
   --linha: #30353b;
   --ambar: #e0a458;
+  --grafico-1: #976102;
+  --grafico-2: #c4893c;
+  --grafico-3: var(--ambar);
+  --grafico-4: #fec074;
 }
 
 /*
@@ -54,12 +68,12 @@
   --color-linha: var(--linha);
   --color-ambar: var(--ambar);
 
-  /* Gráfico de contribuições: 5 níveis, da cor da linha até o âmbar. */
+  /* Gráfico de contribuições: 5 níveis (seção 5.2). */
   --color-grafico-0: var(--linha);
-  --color-grafico-1: color-mix(in oklch, var(--ambar) 30%, var(--linha));
-  --color-grafico-2: color-mix(in oklch, var(--ambar) 55%, var(--linha));
-  --color-grafico-3: color-mix(in oklch, var(--ambar) 80%, var(--linha));
-  --color-grafico-4: var(--ambar);
+  --color-grafico-1: var(--grafico-1);
+  --color-grafico-2: var(--grafico-2);
+  --color-grafico-3: var(--grafico-3);
+  --color-grafico-4: var(--grafico-4);
 
   --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;

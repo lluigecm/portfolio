@@ -114,11 +114,16 @@ PLANO.md            # plano de implementação
 | Grafite (texto) | `#1F2328` | `#E6E8EB` |
 | Lápis (secundário) | `#5C636B` | `#9AA1A9` |
 | Linha (borda) | `#D9DCE0` | `#30353B` |
-| Âmbar (destaque) | `#B45309` | `#E0A458` |
+| Âmbar (destaque) | `#A84E08` | `#E0A458` |
 
 - O âmbar é o único elemento quente e a única cor de destaque.
-- O gráfico de contribuições usa uma escala de âmbar em 5 níveis, partindo da cor da linha.
-- Todo texto atende contraste AA (WCAG).
+- Todo texto atende contraste AA (WCAG), com folga: nenhum par texto/fundo abaixo de 5:1 no tema claro para o âmbar.
+
+**Escala do gráfico de contribuições (5 níveis):**
+- Nível 0 (sem contribuição) = cor da linha.
+- Níveis 1 a 4 em âmbar, cada um com contraste mínimo de **3:1 contra o papel**, nos dois temas (WCAG 1.4.11).
+- Referência: claro de ~3,6:1 a ~8,5:1; escuro de ~3,4:1 a ~11:1.
+- O total de contribuições aparece em texto visível na legenda, para a cor não ser o único meio de obter a informação.
 
 ### 5.3 Tipografia
 - **IBM Plex Sans** para todo o texto.
@@ -159,7 +164,9 @@ PLANO.md            # plano de implementação
 | Nome | Luige | Luige |
 | Título | Desenvolvedor de Automação de Testes | Test Automation Developer |
 | Apresentação | Testes automatizados quebram quando a interface muda. Na X-Testing, automatizo testes e processos desde 2024. No TCC, pesquiso como esses testes podem se recuperar sozinhos. | Automated tests break when the interface changes. At X-Testing, I've been automating tests and processes since 2024. In my undergraduate thesis, I'm researching how those tests can heal themselves. |
-| Legenda do gráfico | Contribuições no GitHub nos últimos 12 meses, somando a conta pessoal e a de trabalho. | GitHub contributions over the last 12 months, combining my personal and work accounts. |
+| Legenda do gráfico | {total} contribuições no GitHub nos últimos 12 meses, somando a conta pessoal e a de trabalho. | {total} GitHub contributions over the last 12 months, combining my personal and work accounts. |
+
+`{total}` é dinâmico e formatado conforme o idioma (ex.: 1.234 em PT, 1,234 em EN).
 
 ### 6.2 Experiência
 
@@ -326,3 +333,7 @@ Next.js entra na lista quando o portfólio estiver no ar.
 | 09/10/2026 | Etapa 2 concluída: Playwright 1.64, axe restrito às regras WCAG A/AA, testes contra o build de produção |
 | 09/10/2026 | CI só no Chromium durante o desenvolvimento; WebKit (celular) entra na auditoria da etapa 11 |
 | 09/10/2026 | Ruleset da `main`: merge só por PR com CI verde, sem exceções; bloqueia apagar a branch e force push |
+| 09/10/2026 | Etapa 3 concluída: tokens como variáveis CSS, paleta padrão do Tailwind desligada, IBM Plex via `next/font` |
+| 09/10/2026 | Âmbar do tema claro ajustado de `#B45309` para `#A84E08` (contraste 4,56 → 5,07 sobre o papel) |
+| 09/10/2026 | Gráfico: níveis 1–4 com 3:1 contra o papel; nível 0 = linha; total visível na legenda |
+| 09/10/2026 | `adjustFontFallback` sem efeito no Next 16.4; fallback calibrado gerado automaticamente |
