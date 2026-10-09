@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+/*
+ * Tokens de cor (PROJETO.md, seção 5.2).
+ * Claro por padrão; escuro quando o sistema pede, a menos que a página force
+ * o claro. O atributo data-theme é o ponto de entrada do botão de tema (etapa 4).
+ */
+:root {
+  color-scheme: light;
+  --papel: #f3f4f5;
+  --superficie: #ffffff;
+  --grafite: #1f2328;
+  --lapis: #5c636b;
+  --linha: #d9dce0;
+  --ambar: #b45309;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #16181b;
+    --superficie: #1e2125;
+    --grafite: #e6e8eb;
+    --lapis: #9aa1a9;
+    --linha: #30353b;
+    --ambar: #e0a458;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #16181b;
+  --superficie: #1e2125;
+  --grafite: #e6e8eb;
+  --lapis: #9aa1a9;
+  --linha: #30353b;
+  --ambar: #e0a458;
+}
+
+/*
+ * Só os tokens existem como cores no Tailwind: a paleta padrão é desligada,
+ * então classes como bg-zinc-50 não compilam.
+ */
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+}
+
+@theme inline {
+  --color-papel: var(--papel);
+  --color-superficie: var(--superficie);
+  --color-grafite: var(--grafite);
+  --color-lapis: var(--lapis);
+  --color-linha: var(--linha);
+  --color-ambar: var(--ambar);
+
+  /* Gráfico de contribuições: 5 níveis, da cor da linha até o âmbar. */
+  --color-grafico-0: var(--linha);
+  --color-grafico-1: color-mix(in oklch, var(--ambar) 30%, var(--linha));
+  --color-grafico-2: color-mix(in oklch, var(--ambar) 55%, var(--linha));
+  --color-grafico-3: color-mix(in oklch, var(--ambar) 80%, var(--linha));
+  --color-grafico-4: var(--ambar);
+
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+/* Escala tipográfica clássica (seção 5.3): corpo 18px, nome 48px. */
+@theme {
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.6;
+  --text-lg: 1.3125rem;
+  --text-lg--line-height: 1.45;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 1.35;
+  --text-2xl: 2.25rem;
+  --text-2xl--line-height: 1.2;
+  --text-3xl: 3rem;
+  --text-3xl--line-height: 1.1;
+
+  /* Coluna de leitura: até 70 caracteres por linha (seção 5.1). */
+  --container-texto: 70ch;
+}
