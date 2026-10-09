@@ -99,3 +99,16 @@
   /* Coluna de leitura: até 70 caracteres por linha (seção 5.1). */
   --container-texto: 70ch;
 }
+
+/*
+ * Transição discreta, só durante a troca de tema (seção 5.1, princípio 3).
+ * A classe é posta e retirada por src/lib/theme.ts.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :root.trocando-tema,
+  :root.trocando-tema * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+}
