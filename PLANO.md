@@ -18,8 +18,8 @@
 |---|---|---|---|
 | 0 | Pré-requisitos (Luige) | — | ✅ Concluída |
 | 1 | Setup e deploy inicial | 0 | ✅ Concluída em 09/10/2026 |
-| 2 | Base de testes e CI | 1 | ⏳ Próxima |
-| 3 | Tokens de design e tipografia | 2 |  |
+| 2 | Base de testes e CI | 1 | ✅ Concluída em 09/10/2026 |
+| 3 | Tokens de design e tipografia | 2 | ⏳ Próxima |
 | 4 | Tema claro/escuro | 3 |  |
 | 5 | Idioma PT/EN | 3 |  |
 | 6 | Layout e seções estáticas | 4, 5 |  |
@@ -74,8 +74,8 @@
 - Proteção da `main`: merge só com o CI verde.
 
 **Critérios de aceite**
-- [ ] O CI roda e fica verde num pull request de teste.
-- [ ] Um teste quebrado de propósito deixa o CI vermelho e bloqueia o merge.
+- [x] O CI roda e fica verde num pull request de teste.
+- [x] Um teste quebrado de propósito deixa o CI vermelho e bloqueia o merge.
 
 ---
 
@@ -232,10 +232,11 @@
 - Revisão de acessibilidade manual (teclado e leitor de tela) além da automática.
 - Revisão crítica do design contra a seção 5, com a pergunta da skill de frontend: "o que dá para tirar?".
 - Revisão final dos textos nos dois idiomas.
+- Rodar a suíte E2E também no WebKit com emulação de celular (Safari no iPhone), além do Chromium usado no CI. Muitos visitantes vão abrir o link pelo app do LinkedIn no celular.
 
 **Critérios de aceite**
 - [ ] Lighthouse ≥ 90 em todas as categorias, no celular.
-- [ ] Todos os testes E2E verdes.
+- [ ] Todos os testes E2E verdes, no Chromium e no WebKit (celular).
 - [ ] Nenhum item da especificação sem implementação.
 
 ---

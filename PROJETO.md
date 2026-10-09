@@ -323,3 +323,6 @@ Next.js entra na lista quando o portfólio estiver no ar.
 | 09/10/2026 | Vulnerabilidades do `braces` (só desenvolvimento) não corrigidas à força; acompanhar atualizações |
 | 09/10/2026 | Cache Components (padrão no Next 16): convivência entre idioma dinâmico e dados em cache definida na etapa 5 |
 | 09/10/2026 | Token do GitHub sem data de vencimento |
+| 09/10/2026 | Etapa 2 concluída: Playwright 1.64, axe restrito às regras WCAG A/AA, testes contra o build de produção |
+| 09/10/2026 | CI só no Chromium durante o desenvolvimento; WebKit (celular) entra na auditoria da etapa 11 |
+| 09/10/2026 | Ruleset da `main`: merge só por PR com CI verde, sem exceções; bloqueia apagar a branch e force push |

@@ -7,7 +7,10 @@ test("a página inicial carrega", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Luige");
 });
 
-test("a página inicial não tem violações de acessibilidade", async ({ page }) => {
-  await page.goto("/");
-  expect(await checkA11y(page)).toEqual([]);
-});
+for (const colorScheme of ["light", "dark"] as const) {
+  test(`sem violações de acessibilidade no tema ${colorScheme}`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/");
+    expect(await checkA11y(page)).toEqual([]);
+  });
+}
