@@ -41,6 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # ferramentas de IA (skills locais)
-/.agents/
-/.claude/
-/skills-lock.json
+.agents/
+.claude/
+skills-lock.json
