@@ -19,8 +19,8 @@
 | 0 | Pré-requisitos (Luige) | — | ✅ Concluída |
 | 1 | Setup e deploy inicial | 0 | ✅ Concluída em 09/10/2026 |
 | 2 | Base de testes e CI | 1 | ✅ Concluída em 09/10/2026 |
-| 3 | Tokens de design e tipografia | 2 | ⏳ Próxima |
-| 4 | Tema claro/escuro | 3 |  |
+| 3 | Tokens de design e tipografia | 2 | ✅ Concluída em 09/10/2026 (ajuste de contraste pendente) |
+| 4 | Tema claro/escuro | 3 | ⏳ Próxima |
 | 5 | Idioma PT/EN | 3 |  |
 | 6 | Layout e seções estáticas | 4, 5 |  |
 | 7 | Integração com o GitHub: cards | 6 |  |
@@ -90,9 +90,14 @@
 - Escala tipográfica: corpo 18px, nome 48px, coluna de até 70 caracteres.
 
 **Critérios de aceite**
-- [ ] Nenhuma cor escrita direto nos componentes; tudo vem dos tokens.
-- [ ] As fontes carregam sem deslocamento de layout visível.
-- [ ] A verificação de acessibilidade não acusa problemas de contraste.
+- [x] Nenhuma cor escrita direto nos componentes; tudo vem dos tokens.
+- [x] As fontes carregam sem deslocamento de layout visível.
+- [x] A verificação de acessibilidade não acusa problemas de contraste.
+
+**Ajuste pós-etapa (PR pequeno, antes da etapa 4)**
+- Âmbar do tema claro: `#B45309` → `#A84E08`.
+- Escala do gráfico refeita: nível 0 = linha; níveis 1 a 4 com contraste mínimo de 3:1 contra o papel nos dois temas (especificação 5.2).
+- [ ] Testes de contraste atualizados cobrindo o novo âmbar e os níveis 1 a 4 do gráfico.
 
 ---
 
@@ -149,6 +154,7 @@
 - [ ] Teste E2E: os links do cabeçalho levam às seções certas.
 - [ ] Navegação completa por teclado, com foco sempre visível.
 - [ ] Revisão visual contra os princípios de design (seção 5.1): sem numeração, sem mono decorativa, sem animações de entrada.
+- [ ] Teste de deslocamento de layout das fontes (etapa 3) repetido com a página completa, que agora tem conteúdo suficiente para deslocar.
 
 ---
 
@@ -194,7 +200,7 @@
 
 **Entregas**
 - Busca via GraphQL do calendário de contribuições das duas contas, somado dia a dia, últimos 12 meses.
-- Gráfico em largura total abaixo da apresentação, na escala de âmbar, com a legenda aprovada.
+- Gráfico em largura total abaixo da apresentação, na escala de âmbar (especificação 5.2), com a legenda aprovada, incluindo o total dinâmico formatado conforme o idioma.
 - Alternativa textual para leitores de tela (ex.: total de contribuições no período).
 - Regras de falha: mantém os últimos dados válidos; sem dados válidos ou com uma conta falhando, o gráfico é ocultado.
 - **No celular:** o gráfico rola na horizontal dentro do próprio espaço, começando pelos meses mais recentes. Assim ele mostra sempre os 12 meses da legenda, sem a página inteira rolar para o lado.
@@ -204,6 +210,7 @@
 - [ ] Teste E2E: com a API falhando e sem cache, o gráfico não aparece e o resto da página continua normal.
 - [ ] No celular, a página não rola na horizontal.
 - [ ] Leitores de tela recebem a alternativa textual.
+- [ ] O total visível na legenda bate com a soma exibida no gráfico.
 
 ---
 
