@@ -56,6 +56,12 @@ export default defineConfig({
       testIgnore: /(api-fora-do-ar|renovacao)\.spec\.ts/,
     },
     {
+      // Safari no iPhone: muitos visitantes abrem o link pelo app do LinkedIn no celular.
+      name: "webkit-celular",
+      use: { ...devices["iPhone 13"] },
+      testIgnore: /(api-fora-do-ar|renovacao)\.spec\.ts/,
+    },
+    {
       name: "api-fora-do-ar",
       use: { ...desktop, baseURL: "http://localhost:3001" },
       testMatch: /api-fora-do-ar\.spec\.ts/,

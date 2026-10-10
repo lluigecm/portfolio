@@ -77,7 +77,12 @@ for (const [locale, browserLocale] of [
   });
 }
 
-test("navegação completa por teclado, com foco sempre visível", async ({ page }) => {
+// O Safari só leva o Tab a links se o visitante ligar essa preferência, e no
+// iPhone não há Tab: a navegação por teclado é conferida no Chromium.
+const TAB_SKIPS_LINKS_ON_SAFARI = "Tab do Safari não passa por links por padrão";
+
+test("navegação completa por teclado, com foco sempre visível", async ({ page, browserName }) => {
+  test.skip(browserName === "webkit", TAB_SKIPS_LINKS_ON_SAFARI);
   await page.goto("/");
   const focusable = await page
     // Inclui a área rolável do gráfico, que recebe foco para rolar pelo teclado.
@@ -106,7 +111,8 @@ test("navegação completa por teclado, com foco sempre visível", async ({ page
   expect(visited.size).toBe(focusable);
 });
 
-test("o link de pular vai direto ao conteúdo", async ({ page }) => {
+test("o link de pular vai direto ao conteúdo", async ({ page, browserName }) => {
+  test.skip(browserName === "webkit", TAB_SKIPS_LINKS_ON_SAFARI);
   await page.goto("/");
   await page.keyboard.press("Tab");
   const skip = page.getByRole("link", { name: "Skip to content" });
@@ -138,17 +144,38 @@ test.describe("princípios de design (seção 5.1)", () => {
     await page.goto("/");
     const found = await page.evaluate(() => {
       const all = [...document.querySelectorAll("body *")];
+      const label = (el: Element, pseudo = "") => `${el.outerHTML.slice(0, 60)}${pseudo}`;
+
+      // Texto gerado por CSS (::before/::after) não aparece no innerText.
+      const generated = all.flatMap((el) =>
+        (["::before", "::after", "::marker"] as const).flatMap((pseudo) => {
+          const style = getComputedStyle(el, pseudo);
+          const text = style.content.match(/^"(.*)"$/)?.[1] ?? "";
+          return { el, pseudo, style, text };
+        }),
+      );
+
       return {
         numbered: all
           .filter((el) => el.matches("ol, ul") && getComputedStyle(el).listStyleType !== "none")
-          .map((el) => el.outerHTML.slice(0, 60)),
-        uppercase: all
-          .filter((el) => getComputedStyle(el).textTransform === "uppercase")
-          .map((el) => el.outerHTML.slice(0, 60)),
-        middleDot: document.body.innerText.includes("·"),
+          .map((el) => label(el)),
+        uppercase: [
+          ...all.filter((el) => getComputedStyle(el).textTransform === "uppercase").map((el) => label(el)),
+          ...generated
+            .filter(({ text, style }) => text && style.textTransform === "uppercase")
+            .map(({ el, pseudo }) => label(el, pseudo)),
+        ],
+        middleDot: [
+          ...(document.body.innerText.includes("·") ? ["texto da página"] : []),
+          ...generated.filter(({ text }) => /[·•]/.test(text)).map(({ el, pseudo }) => label(el, pseudo)),
+        ],
+        // Numeração gerada por CSS: contadores ou texto como "01", "1.", "02 /".
+        generatedNumbers: generated
+          .filter(({ style, text }) => /counter/.test(style.content) || /^s*d+s*[./)]?s*$/.test(text))
+          .map(({ el, pseudo }) => label(el, pseudo)),
       };
     });
-    expect(found).toEqual({ numbered: [], uppercase: [], middleDot: false });
+    expect(found).toEqual({ numbered: [], uppercase: [], middleDot: [], generatedNumbers: [] });
   });
 });
 

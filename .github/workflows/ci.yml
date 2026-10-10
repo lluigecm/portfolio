@@ -24,8 +24,8 @@ jobs:
       - run: npm run lint
       - run: npm run build
 
-      - name: Instalar navegador do Playwright
-        run: npx playwright install --with-deps chromium
+      - name: Instalar navegadores do Playwright (Chromium e WebKit)
+        run: npx playwright install --with-deps chromium webkit
 
       - run: npm run test:e2e
 
