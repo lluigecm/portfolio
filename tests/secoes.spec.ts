@@ -38,7 +38,7 @@ for (const [locale, browserLocale] of [
         await expect(page.getByText(project.description)).toBeVisible();
       }
       for (const group of text.stack) {
-        await expect(page.getByText(group.label, { exact: true })).toBeVisible();
+        await expect(page.locator("#stack").getByText(group.label, { exact: true })).toBeVisible();
       }
       await expect(page.getByRole("heading", { name: text.education.degree })).toBeVisible();
       await expect(page.getByText(text.education.institution)).toBeVisible();

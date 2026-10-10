@@ -1,6 +1,7 @@
 import type { Content } from "@/types/content";
 
 const number = new Intl.NumberFormat("en-US");
+const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeZone: "UTC" });
 
 export const en: Content = {
   meta: {
@@ -17,6 +18,13 @@ export const en: Content = {
     },
     skipToContent: "Skip to content",
     navLabel: "Sections",
+    repo: {
+      stars: "Stars",
+      languages: "Languages",
+      updated: "Updated",
+      count: (value) => number.format(value),
+      date: (iso) => date.format(new Date(iso)),
+    },
     nav: {
       experience: "Experience",
       projects: "Projects",
