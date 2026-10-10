@@ -2,24 +2,24 @@
 
 import { useSyncExternalStore } from "react";
 import { getTheme, setTheme, subscribeToTheme } from "@/lib/theme";
+import type { Content } from "@/types/content";
 
-// Textos provisórios em inglês; vão para src/content na etapa 5.
-const LABELS = {
-  light: "Switch to dark theme",
-  dark: "Switch to light theme",
-  unknown: "Switch theme",
-};
+interface Props {
+  labels: Content["ui"]["theme"];
+}
 
-export function ThemeToggle() {
+export function ThemeToggle({ labels }: Props) {
   // No servidor o tema é desconhecido (depende do navegador); o rótulo
   // definitivo aparece na hidratação.
   const theme = useSyncExternalStore(subscribeToTheme, getTheme, () => null);
+  const label =
+    theme === null ? labels.toggle : theme === "dark" ? labels.toLight : labels.toDark;
 
   return (
     <button
       type="button"
       onClick={() => setTheme(getTheme() === "dark" ? "light" : "dark")}
-      aria-label={LABELS[theme ?? "unknown"]}
+      aria-label={label}
       className="inline-flex size-10 items-center justify-center rounded-md text-grafite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ambar"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5">
