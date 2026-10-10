@@ -10,6 +10,9 @@ export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 /** Valor do atributo lang do <html> para cada idioma. */
 export const HTML_LANG: Record<Locale, string> = { pt: "pt-BR", en: "en" };
 
+/** Idioma no formato do Open Graph (og:locale). */
+export const OG_LOCALE: Record<Locale, string> = { pt: "pt_BR", en: "en_US" };
+
 export function isLocale(value: unknown): value is Locale {
   return LOCALES.includes(value as Locale);
 }
