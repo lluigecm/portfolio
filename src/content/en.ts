@@ -16,6 +16,10 @@ export const en: Content = {
       toLight: "Switch to light theme",
       toggle: "Switch theme",
     },
+    video: {
+      pause: "Pause video",
+      play: "Play video",
+    },
     skipToContent: "Skip to content",
     navLabel: "Sections",
     repo: {
@@ -66,12 +70,28 @@ export const en: Content = {
       badge: "Undergraduate thesis, in progress",
       description:
         "E2E tests break when a DOM or CSS change leaves a selector unable to find its element. This prototype searches for the element using structural similarity and stable attributes, then computes a confidence score. Above the threshold, it replaces the selector and logs the change for review. Below it, the test fails just as it would without the mechanism.",
+      mediaAlt:
+        "Recovery diagram: when the selector can't find the element, heuristics based on stable attributes and structural similarity compute a confidence score from 0 to 1. If the score meets the threshold, the selector is replaced; otherwise, the test fails as usual. Every attempt is logged.",
     },
     mygather: {
       title: "MyGather",
       description:
         "A 2D pixel-art virtual office. When two avatars get close, audio between them turns on by itself. The server validates every move, so nobody gets into a closed room without walking through the door. Built for real use by a small team.",
+      mediaAlt:
+        "MyGather recording: an avatar walks across the pixel-art office to another one, and audio between them turns on once they are close.",
+      credit: "art: LPC (CC-BY-SA 3.0) and DyLESTorm",
     },
+  },
+  diagram: {
+    selectorFails: ["The selector can't", "find the element"],
+    heuristics: ["Heuristics: stable attributes", "and structural similarity"],
+    score: ["Confidence score (0 to 1)"],
+    decision: ["Score ≥", "threshold?"],
+    yes: "yes",
+    no: "no",
+    replaced: ["Selector", "replaced"],
+    fails: ["Test fails", "as usual"],
+    note: ["Note: every attempt is logged"],
   },
   stack: [
     { label: "Languages", items: ["Python", "TypeScript", "C", "C++"] },

@@ -7,6 +7,27 @@ export interface ProjectText {
   /** Selo opcional, ex.: "TCC, em andamento". */
   badge?: string;
   description: string;
+  /** Texto alternativo da mídia do card. */
+  mediaAlt: string;
+  /** Crédito da arte, quando a licença exige (regra 19). */
+  credit?: string;
+}
+
+/**
+ * Textos do diagrama de recuperação do TCC (seção 6.3). Cada texto já vem
+ * quebrado em linhas, porque o SVG não quebra linha sozinho.
+ */
+export interface DiagramText {
+  selectorFails: string[];
+  heuristics: string[];
+  score: string[];
+  decision: string[];
+  /** Rótulos das duas saídas da decisão. */
+  yes: string;
+  no: string;
+  replaced: string[];
+  fails: string[];
+  note: string[];
 }
 
 export interface Role {
@@ -29,6 +50,11 @@ export interface Content {
       toLight: string;
       /** Antes da hidratação, quando o tema atual ainda é desconhecido. */
       toggle: string;
+    };
+    /** Botão de pausa do vídeo do card (regra 18). */
+    video: {
+      pause: string;
+      play: string;
     };
     /** Link que pula o cabeçalho e vai direto ao conteúdo (teclado). */
     skipToContent: string;
@@ -65,6 +91,7 @@ export interface Content {
     roles: Role[];
   };
   projects: Record<ProjectId, ProjectText>;
+  diagram: DiagramText;
   stack: { label: string; items: string[] }[];
   education: {
     degree: string;

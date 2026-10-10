@@ -16,6 +16,10 @@ export const pt: Content = {
       toLight: "Ativar tema claro",
       toggle: "Trocar tema",
     },
+    video: {
+      pause: "Pausar vídeo",
+      play: "Reproduzir vídeo",
+    },
     skipToContent: "Pular para o conteúdo",
     navLabel: "Seções",
     repo: {
@@ -66,12 +70,28 @@ export const pt: Content = {
       badge: "TCC, em andamento",
       description:
         "Testes E2E quebram quando o DOM ou o CSS mudam e o seletor deixa de encontrar o elemento. Este protótipo procura o elemento por similaridade estrutural e atributos estáveis e calcula um score de confiança. Acima do limiar, troca o seletor e registra a troca para revisão. Abaixo, o teste falha como falharia sem o mecanismo.",
+      mediaAlt:
+        "Diagrama da recuperação: quando o seletor não encontra o elemento, heurísticas de atributos estáveis e de similaridade estrutural calculam um score de confiança de 0 a 1. Se o score for maior ou igual ao limiar, o seletor é substituído; se não, o teste falha normalmente. Cada tentativa fica registrada em log.",
     },
     mygather: {
       title: "MyGather",
       description:
         "Escritório virtual 2D em pixel art. Quando dois avatares se aproximam, o áudio entre eles liga sozinho. O servidor valida cada movimento, então ninguém entra numa sala fechada sem passar pela porta. Feito para uso real por uma equipe pequena.",
+      mediaAlt:
+        "Gravação do MyGather: um avatar atravessa o escritório em pixel art até outro, e o áudio entre os dois liga quando eles ficam próximos.",
+      credit: "arte: LPC (CC-BY-SA 3.0) e DyLESTorm",
     },
+  },
+  diagram: {
+    selectorFails: ["O seletor não encontra", "o elemento"],
+    heuristics: ["Heurísticas: atributos estáveis", "e similaridade estrutural"],
+    score: ["Score de confiança (0 a 1)"],
+    decision: ["Score ≥", "limiar?"],
+    yes: "sim",
+    no: "não",
+    replaced: ["Seletor", "substituído"],
+    fails: ["O teste falha", "normalmente"],
+    note: ["Nota: cada tentativa fica", "registrada em log"],
   },
   stack: [
     { label: "Linguagens", items: ["Python", "TypeScript", "C", "C++"] },

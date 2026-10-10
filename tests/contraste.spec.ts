@@ -1,25 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
+import { contrast, type Rgb } from "./cores";
 
 // Contrastes exigidos pela especificação (seção 5.2), conferidos nos dois temas
 // para todos os tokens, mesmo os que ainda não aparecem na página.
 const TEXT = ["--grafite", "--lapis", "--ambar"];
 const BACKGROUNDS = ["--papel", "--superficie"];
 const CHART_LEVELS = ["--grafico-1", "--grafico-2", "--grafico-3", "--grafico-4"];
-
-type Rgb = [number, number, number];
-
-function luminance(rgb: Rgb) {
-  const [r, g, b] = rgb.map((value) => {
-    const c = value / 255;
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-function contrast(a: Rgb, b: Rgb) {
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-}
 
 // O navegador resolve cada token para rgb(), qualquer que seja a escrita no CSS.
 async function resolveTokens(page: Page, names: string[]) {
