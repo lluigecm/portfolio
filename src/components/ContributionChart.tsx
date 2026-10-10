@@ -11,8 +11,12 @@ import type { ContributionDay, Contributions } from "@/types/github";
 const CELL = 11;
 const GAP = 3;
 const STEP = CELL + GAP;
-const MONTH_ROW = 18;
-const FONT = 11;
+const MONTH_ROW = 20;
+// No celular o SVG fica no tamanho natural (1 unidade = 1 px): 12 px é o piso
+// de legibilidade, o mesmo do diagrama do TCC.
+const FONT = 12;
+// Rótulos nas últimas semanas são alinhados pela direita, para não sair do gráfico.
+const RIGHT_ALIGNED_WEEKS = 2;
 // Rótulos de mês a menos de 3 semanas um do outro se sobreporiam.
 const MIN_WEEKS_BETWEEN_MONTHS = 3;
 
@@ -49,11 +53,18 @@ export function ContributionChart({ contributions, caption, month }: Props) {
           aria-hidden="true"
           viewBox={`0 0 ${width} ${height}`}
           fontSize={FONT}
-          className="block h-auto w-full min-w-[46rem] shrink-0"
+          // Nunca menor que o tamanho natural: no celular, rola em vez de encolher.
+          style={{ minWidth: width }}
+          className="block h-auto w-full shrink-0"
         >
           <g className="fill-lapis">
             {labels.map(({ week, date }) => (
-              <text key={date} x={week * STEP} y={FONT}>
+              <text
+                key={date}
+                x={week >= weeks.length - RIGHT_ALIGNED_WEEKS ? width : week * STEP}
+                y={FONT}
+                textAnchor={week >= weeks.length - RIGHT_ALIGNED_WEEKS ? "end" : "start"}
+              >
                 {month(date)}
               </text>
             ))}

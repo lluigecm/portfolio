@@ -112,3 +112,42 @@ test.describe("no celular", () => {
     await expect.poll(() => region.evaluate((el) => el.scrollLeft)).not.toBe(before);
   });
 });
+
+// Ajuste pós-etapa 9: rótulos de mês legíveis (mínimo de 12 px, como no
+// diagrama do TCC), inteiros dentro do gráfico e sem se sobrepor.
+for (const viewport of [
+  { width: 360, height: 780 },
+  { width: 1280, height: 900 },
+]) {
+  test(`rótulos de mês legíveis a ${viewport.width} px`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+
+    const report = await chart(page)
+      .locator("svg")
+      .evaluate((svg: SVGSVGElement) => {
+        const box = svg.getBoundingClientRect();
+        const scale = box.width / svg.viewBox.baseVal.width;
+        const labels = [...svg.querySelectorAll("text")].map((text) => {
+          const rect = text.getBoundingClientRect();
+          return { text: text.textContent, left: rect.left, right: rect.right };
+        });
+        return {
+          fontSize: parseFloat(svg.getAttribute("font-size")!) * scale,
+          labels,
+          svg: { left: box.left, right: box.right },
+        };
+      });
+
+    expect(report.labels.length).toBeGreaterThanOrEqual(12);
+    expect(report.fontSize, "tamanho dos rótulos em px").toBeGreaterThanOrEqual(12);
+    for (const [i, label] of report.labels.entries()) {
+      expect(label.left, `${label.text} dentro do gráfico`).toBeGreaterThanOrEqual(report.svg.left - 0.5);
+      expect(label.right, `${label.text} dentro do gráfico`).toBeLessThanOrEqual(report.svg.right + 0.5);
+      if (i > 0) {
+        expect(label.left, `${label.text} sem sobrepor o anterior`).toBeGreaterThan(report.labels[i - 1].right);
+      }
+    }
+  });
+}
