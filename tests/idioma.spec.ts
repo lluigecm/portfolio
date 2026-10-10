@@ -10,7 +10,7 @@ test.describe("navegador em português", () => {
   test("abre em PT", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt)).toBeVisible();
+    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Ativar tema escuro" })).toBeVisible();
   });
 
@@ -26,7 +26,7 @@ test.describe("navegador em alemão", () => {
   test("abre em EN", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.getByText(TITLE.en)).toBeVisible();
+    await expect(page.getByText(TITLE.en, { exact: true })).toBeVisible();
   });
 });
 
@@ -39,18 +39,18 @@ test.describe("troca manual", () => {
 
     await page.getByRole("button", { name: /Ver em português/ }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt)).toBeVisible();
+    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
     await expect(page).toHaveURL("/");
 
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt)).toBeVisible();
+    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
 
     // E volta para o inglês, mesmo com o navegador em inglês.
     await page.getByRole("button", { name: /View in English/ }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await page.reload();
-    await expect(page.getByText(TITLE.en)).toBeVisible();
+    await expect(page.getByText(TITLE.en, { exact: true })).toBeVisible();
   });
 
   test("a escolha salva prevalece sobre o idioma do navegador", async ({ page, context }) => {

@@ -37,24 +37,69 @@ test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {
   expect(fallback).toContain("size-adjust");
 });
 
-test("a troca de fonte não desloca o layout", async ({ page }) => {
-  await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
+const FALLBACKS = ["IBM Plex Sans Fallback", "IBM Plex Sans Reserva"];
 
-  const cls = await page.evaluate(
-    () =>
-      new Promise<number>((resolve) => {
-        let total = 0;
-        new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as unknown as {
-            value: number;
-            hadRecentInput: boolean;
-          }[]) {
-            if (!entry.hadRecentInput) total += entry.value;
-          }
-        }).observe({ type: "layout-shift", buffered: true });
-        setTimeout(() => resolve(total), 500);
-      }),
-  );
-  expect(cls).toBeLessThan(0.01);
+test("as duas reservas têm a mesma calibração", async ({ page }) => {
+  // A segunda reserva (globals.css) copia os números que o next/font gera para a Arial.
+  await page.goto("/");
+  const descriptors = await page.evaluate((families) => {
+    const faces = [...document.styleSheets]
+      .flatMap((sheet) => [...sheet.cssRules])
+      .filter((rule): rule is CSSFontFaceRule => rule instanceof CSSFontFaceRule);
+    return families.map((family) => {
+      const face = faces.find((rule) => rule.style.getPropertyValue("font-family").includes(family));
+      return ["ascent-override", "descent-override", "line-gap-override", "size-adjust"].map(
+        (name) => parseFloat(face?.style.getPropertyValue(name) ?? "NaN").toFixed(2),
+      );
+    });
+  }, FALLBACKS);
+  expect(descriptors[1]).toEqual(descriptors[0]);
 });
+
+test("há uma reserva calibrada disponível neste sistema", async ({ page }) => {
+  // Arial (Windows, macOS, iOS) ou Liberation Sans/Roboto (Linux, Android).
+  await page.goto("/");
+  const available = await page.evaluate(async (families) => {
+    const result: Record<string, boolean> = {};
+    for (const family of families) {
+      try {
+        result[family] = (await document.fonts.load(`16px "${family}"`)).length > 0;
+      } catch {
+        result[family] = false;
+      }
+    }
+    return result;
+  }, FALLBACKS);
+  console.log("Reservas disponíveis:", JSON.stringify(available));
+  expect(Object.values(available).some(Boolean), JSON.stringify(available)).toBe(true);
+});
+
+// A página completa (etapa 6) tem texto suficiente para deslocar; o celular
+// quebra mais linhas, então mede nas duas larguras.
+for (const viewport of [
+  { width: 375, height: 812 },
+  { width: 1280, height: 900 },
+]) {
+  test(`a troca de fonte não desloca o layout (${viewport.width}px)`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+
+    const cls = await page.evaluate(
+      () =>
+        new Promise<number>((resolve) => {
+          let total = 0;
+          new PerformanceObserver((list) => {
+            for (const entry of list.getEntries() as unknown as {
+              value: number;
+              hadRecentInput: boolean;
+            }[]) {
+              if (!entry.hadRecentInput) total += entry.value;
+            }
+          }).observe({ type: "layout-shift", buffered: true });
+          setTimeout(() => resolve(total), 500);
+        }),
+    );
+    expect(cls).toBeLessThan(0.01);
+  });
+}

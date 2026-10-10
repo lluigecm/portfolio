@@ -30,6 +30,10 @@ export interface Content {
       /** Antes da hidratação, quando o tema atual ainda é desconhecido. */
       toggle: string;
     };
+    /** Link que pula o cabeçalho e vai direto ao conteúdo (teclado). */
+    skipToContent: string;
+    /** Nome da navegação entre seções, para leitores de tela. */
+    navLabel: string;
     nav: {
       experience: string;
       projects: string;

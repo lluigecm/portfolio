@@ -15,6 +15,8 @@ export const en: Content = {
       toLight: "Switch to light theme",
       toggle: "Switch theme",
     },
+    skipToContent: "Skip to content",
+    navLabel: "Sections",
     nav: {
       experience: "Experience",
       projects: "Projects",
@@ -53,7 +55,7 @@ export const en: Content = {
   projects: {
     autohealing: {
       title: "Auto-Healing for Web UI Tests",
-      badge: "undergraduate thesis, in progress",
+      badge: "Undergraduate thesis, in progress",
       description:
         "E2E tests break when a DOM or CSS change leaves a selector unable to find its element. This prototype searches for the element using structural similarity and stable attributes, then computes a confidence score. Above the threshold, it replaces the selector and logs the change for review. Below it, the test fails just as it would without the mechanism.",
     },

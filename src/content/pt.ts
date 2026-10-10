@@ -15,6 +15,8 @@ export const pt: Content = {
       toLight: "Ativar tema claro",
       toggle: "Trocar tema",
     },
+    skipToContent: "Pular para o conteúdo",
+    navLabel: "Seções",
     nav: {
       experience: "Experiência",
       projects: "Projetos",
