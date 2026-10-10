@@ -17,9 +17,12 @@ export function Header({ locale }: { locale: Locale }) {
           {text.hero.name}
         </a>
 
-        {/* No celular os links descem para uma segunda linha; os botões ficam visíveis. */}
+        {/*
+          No celular os links descem para uma segunda linha, menores e distribuídos
+          pela largura, para caber em uma linha a partir de 360 px; os botões ficam visíveis.
+        */}
         <nav aria-label={text.ui.navLabel} className="order-last w-full md:order-none md:w-auto">
-          <ul className="flex flex-wrap gap-x-4 text-sm md:gap-x-5">
+          <ul className="flex flex-wrap justify-between gap-x-2 text-xs md:justify-start md:gap-x-5 md:text-sm">
             {SECTIONS.map((id) => (
               <li key={id}>
                 <a href={`#${id}`} className="inline-block py-2 text-lapis hover:text-grafite">
