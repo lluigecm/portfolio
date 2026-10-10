@@ -52,6 +52,21 @@
 }
 
 /*
+ * Segunda reserva calibrada para a Plex, para sistemas sem Arial (Linux, Android).
+ * O next/font só calibra a partir da Arial; a Liberation Sans tem as mesmas
+ * medidas e a Roboto, praticamente as mesmas. Os valores repetem os que o
+ * next/font gera para a Arial (tests/fontes.spec.ts confere que continuam iguais).
+ */
+@font-face {
+  font-family: "IBM Plex Sans Reserva";
+  src: local("Liberation Sans"), local("LiberationSans"), local("Roboto"), local("Roboto-Regular");
+  ascent-override: 101.32%;
+  descent-override: 27.18%;
+  line-gap-override: 0%;
+  size-adjust: 101.17%;
+}
+
+/*
  * Só os tokens existem como cores no Tailwind: a paleta padrão é desligada,
  * então classes como bg-zinc-50 não compilam.
  */
@@ -75,7 +90,7 @@
   --color-grafico-3: var(--grafico-3);
   --color-grafico-4: var(--grafico-4);
 
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans Reserva", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
