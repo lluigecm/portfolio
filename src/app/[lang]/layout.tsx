@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
-import { HTML_LANG, isLocale, LOCALES } from "@/lib/locale";
+import { content } from "@/content";
+import { HTML_LANG, isLocale, LOCALES, OG_LOCALE } from "@/lib/locale";
+import { siteUrl } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
 import "../globals.css";
 
@@ -16,9 +18,38 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
 });
 
-export const metadata: Metadata = {
-  title: "Luige | Test Automation Developer",
-};
+/*
+ * Título, descrição e prévia de link por idioma (seção 6.7). A URL é sempre "/":
+ * as duas versões vivem no mesmo endereço (regra 7). A imagem de prévia vem de
+ * opengraph-image.tsx e twitter-image.tsx.
+ */
+export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  const locale = isLocale(lang) ? lang : "en";
+  const { meta, hero } = content[locale];
+  const other = locale === "pt" ? "en" : "pt";
+
+  return {
+    metadataBase: siteUrl(),
+    title: meta.title,
+    description: meta.description,
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: "/",
+      siteName: hero.name,
+      title: meta.title,
+      description: meta.description,
+      locale: OG_LOCALE[locale],
+      alternateLocale: OG_LOCALE[other],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: meta.title,
+      description: meta.description,
+    },
+  };
+}
 
 // Uma versão pré-renderizada por idioma; o proxy escolhe qual servir em "/".
 export function generateStaticParams() {
