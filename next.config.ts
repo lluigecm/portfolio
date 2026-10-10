@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import { assertProductionEnv } from "./src/lib/production-env";
+
+// O build de produção na Vercel falha aqui se faltar token ou usuário do GitHub.
+assertProductionEnv();
 
 const nextConfig: NextConfig = {
   // Os testes E2E montam versões separadas do site (API falsa, API fora do ar).
