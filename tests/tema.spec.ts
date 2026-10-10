@@ -49,6 +49,8 @@ test("o botão funciona pelo teclado", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
 
+  // Idioma vem antes do tema na ordem de foco.
+  await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await expect(toggle(page)).toBeFocused();
   await page.keyboard.press("Enter");
