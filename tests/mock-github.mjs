@@ -2,6 +2,7 @@
 // Uso: node tests/mock-github.mjs (porta 4010).
 import { createServer } from "node:http";
 
+// As estrelas continuam aqui de propósito: os testes provam que o site não as mostra.
 export const REPOS = {
   "lluigecm/autohealing-e2e-tests": {
     info: { stargazers_count: 7, pushed_at: "2026-09-15T12:00:00Z" },

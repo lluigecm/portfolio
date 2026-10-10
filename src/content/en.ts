@@ -23,10 +23,8 @@ export const en: Content = {
     skipToContent: "Skip to content",
     navLabel: "Sections",
     repo: {
-      stars: "Stars",
       languages: "Languages",
       updated: "Updated",
-      count: (value) => number.format(value),
       date: (iso) => date.format(new Date(iso)),
     },
     nav: {

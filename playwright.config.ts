@@ -3,7 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 const isCI = !!process.env.CI;
 
 const MOCK_API = "http://localhost:4010";
-// Porta 9 (discard): a conexão é recusada na hora, como uma API fora do ar.
+// Porta 9: o fetch do Node a bloqueia como "porta proibida" (bad port) antes de
+// tentar conectar. O erro é imediato, como o de uma API fora do ar.
 const DOWN_API = "http://127.0.0.1:9";
 
 // Cada versão do site de teste é montada e servida a partir da própria pasta.

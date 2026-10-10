@@ -22,7 +22,7 @@ function client() {
 }
 
 /**
- * Estrelas, linguagens e data do último push de um repositório ("dono/nome").
+ * Linguagens e data do último push de um repositório ("dono/nome").
  * Regra 14: se a API falhar, devolve null e o card fica só com os textos próprios.
  */
 export async function getRepoStats(repo: string): Promise<RepoStats | null> {
@@ -37,7 +37,6 @@ export async function getRepoStats(repo: string): Promise<RepoStats | null> {
       github.rest.repos.listLanguages({ owner, repo: name }),
     ]);
     return {
-      stars: info.stargazers_count,
       languages: Object.entries(languages)
         .sort(([, a], [, b]) => b - a)
         .slice(0, MAX_LANGUAGES)
