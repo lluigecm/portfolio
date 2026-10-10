@@ -24,3 +24,10 @@ test("com a API fora do ar, o resto da página continua normal", async ({ page }
   await expect(page.getByRole("heading", { level: 2 })).toHaveCount(5);
   expect(await checkA11y(page)).toEqual([]);
 });
+
+test("com a API fora do ar e sem cache, o gráfico não aparece", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByTestId("contribution-chart")).toHaveCount(0);
+  await expect(page.locator("figcaption#contribution-caption")).toHaveCount(0);
+});

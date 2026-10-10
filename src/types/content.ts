@@ -81,6 +81,8 @@ export interface Content {
     intro: string;
     /** Legenda do gráfico, com o total já formatado no idioma. */
     chartCaption: (total: number) => string;
+    /** Rótulo curto do mês no topo do gráfico (ex.: "out.", "Oct"). */
+    chartMonth: (date: string) => string;
   };
   experience: {
     company: string;
