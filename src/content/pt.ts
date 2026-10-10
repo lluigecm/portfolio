@@ -23,10 +23,8 @@ export const pt: Content = {
     skipToContent: "Pular para o conteúdo",
     navLabel: "Seções",
     repo: {
-      stars: "Estrelas",
       languages: "Linguagens",
       updated: "Atualizado em",
-      count: (value) => number.format(value),
       date: (iso) => date.format(new Date(iso)),
     },
     nav: {

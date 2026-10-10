@@ -5,12 +5,12 @@ import { expect, test } from "@playwright/test";
 // O site de teste (porta 3000) é montado contra a API falsa de tests/mock-github.mjs.
 const EXPECTED = {
   pt: {
-    autohealing: ["Estrelas", "7", "Linguagens", "TypeScript, JavaScript", "Atualizado em", "15 de set. de 2026"],
-    mygather: ["Estrelas", "1.234", "Linguagens", "TypeScript, HTML, CSS", "Atualizado em", "1 de ago. de 2026"],
+    autohealing: ["Linguagens", "TypeScript, JavaScript", "Atualizado em", "15 de set. de 2026"],
+    mygather: ["Linguagens", "TypeScript, HTML, CSS", "Atualizado em", "1 de ago. de 2026"],
   },
   en: {
-    autohealing: ["Stars", "7", "Languages", "TypeScript, JavaScript", "Updated", "Sep 15, 2026"],
-    mygather: ["Stars", "1,234", "Languages", "TypeScript, HTML, CSS", "Updated", "Aug 1, 2026"],
+    autohealing: ["Languages", "TypeScript, JavaScript", "Updated", "Sep 15, 2026"],
+    mygather: ["Languages", "TypeScript, HTML, CSS", "Updated", "Aug 1, 2026"],
   },
 };
 
@@ -21,11 +21,32 @@ for (const [locale, browserLocale] of [
   test.describe(`cards em ${locale.toUpperCase()}`, () => {
     test.use({ locale: browserLocale });
 
-    test("mostram estrelas, linguagens e última atualização vindas da API", async ({ page }) => {
+    test("mostram linguagens e último push vindos da API", async ({ page }) => {
       await page.goto("/");
       for (const [id, facts] of Object.entries(EXPECTED[locale])) {
         const stats = page.locator(`[data-project="${id}"] [data-testid="repo-stats"]`);
         await expect(stats.locator("dt, dd")).toHaveText(facts);
+      }
+    });
+  });
+}
+
+// Regra 12: os cards não exibem estrelas em nenhum caso. A API falsa devolve
+// 7 e 1234 estrelas, então o número apareceria se o site o usasse.
+for (const [locale, browserLocale] of [
+  ["pt", "pt-BR"],
+  ["en", "en-US"],
+] as const) {
+  test.describe(`sem estrelas em ${locale.toUpperCase()}`, () => {
+    test.use({ locale: browserLocale });
+
+    test("os cards não exibem estrelas", async ({ page }) => {
+      await page.goto("/");
+      const cards = page.locator("[data-project]");
+      await expect(cards.locator('[data-testid="repo-stats"]')).toHaveCount(2);
+      for (const text of await cards.allInnerTexts()) {
+        expect(text).not.toMatch(/estrela|star|★|☆/i);
+        expect(text).not.toMatch(/(^|D)(7|1[.,]?234)(D|$)/m);
       }
     });
   });

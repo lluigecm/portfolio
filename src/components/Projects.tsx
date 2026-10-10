@@ -73,7 +73,6 @@ function Media({ project, text, diagram, ui }: MediaProps) {
 
 function RepoFacts({ stats, labels }: { stats: RepoStats; labels: Content["ui"]["repo"] }) {
   const facts = [
-    [labels.stars, labels.count(stats.stars)],
     [labels.languages, stats.languages.join(", ")],
     [labels.updated, labels.date(stats.pushedAt)],
   ].filter(([, value]) => value);
