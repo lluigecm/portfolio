@@ -34,6 +34,16 @@ export interface Content {
     skipToContent: string;
     /** Nome da navegação entre seções, para leitores de tela. */
     navLabel: string;
+    /** Rótulos dos dados que a API do GitHub acrescenta aos cards. */
+    repo: {
+      stars: string;
+      languages: string;
+      updated: string;
+      /** Número de estrelas, formatado no idioma. */
+      count: (value: number) => string;
+      /** Data do último push, formatada no idioma. */
+      date: (iso: string) => string;
+    };
     nav: {
       experience: string;
       projects: string;
