@@ -2,6 +2,7 @@ import type { Content } from "@/types/content";
 
 const number = new Intl.NumberFormat("pt-BR");
 const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeZone: "UTC" });
+const month = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: "UTC" });
 
 export const pt: Content = {
   meta: {
@@ -42,6 +43,7 @@ export const pt: Content = {
       "Testes automatizados quebram quando a interface muda. Na X-Testing, automatizo testes e processos desde 2024. No TCC, pesquiso como esses testes podem se recuperar sozinhos.",
     chartCaption: (total) =>
       `${number.format(total)} contribuições no GitHub nos últimos 12 meses, somando a conta pessoal e a de trabalho.`,
+    chartMonth: (iso) => month.format(new Date(iso)),
   },
   experience: {
     company: "X-Testing",

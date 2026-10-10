@@ -80,7 +80,8 @@ for (const [locale, browserLocale] of [
 test("navegação completa por teclado, com foco sempre visível", async ({ page }) => {
   await page.goto("/");
   const focusable = await page
-    .locator("a[href], button")
+    // Inclui a área rolável do gráfico, que recebe foco para rolar pelo teclado.
+    .locator('a[href], button, [tabindex="0"]')
     .evaluateAll((elements) => elements.length);
 
   const visited = new Set<string>();
@@ -91,7 +92,7 @@ test("navegação completa por teclado, com foco sempre visível", async ({ page
       const style = getComputedStyle(el);
       const box = el.getBoundingClientRect();
       return {
-        id: `${el.tagName} ${el.getAttribute("href") ?? el.getAttribute("aria-label")}`,
+        id: `${el.tagName} ${el.getAttribute("href") ?? el.getAttribute("aria-label") ?? el.getAttribute("aria-labelledby")}`,
         outline: `${style.outlineStyle} ${style.outlineWidth}`,
         visible: box.width > 0 && box.height > 0,
       };
@@ -101,7 +102,7 @@ test("navegação completa por teclado, com foco sempre visível", async ({ page
     expect(focus.outline, `${focus.id} sem foco visível`).toBe("solid 2px");
     expect(focus.visible, `${focus.id} invisível com foco`).toBe(true);
   }
-  // Todos os links e botões da página são alcançados pelo Tab.
+  // Todos os elementos focáveis da página são alcançados pelo Tab.
   expect(visited.size).toBe(focusable);
 });
 

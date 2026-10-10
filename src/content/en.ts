@@ -2,6 +2,7 @@ import type { Content } from "@/types/content";
 
 const number = new Intl.NumberFormat("en-US");
 const date = new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeZone: "UTC" });
+const month = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
 
 export const en: Content = {
   meta: {
@@ -42,6 +43,7 @@ export const en: Content = {
       "Automated tests break when the interface changes. At X-Testing, I've been automating tests and processes since 2024. In my undergraduate thesis, I'm researching how those tests can heal themselves.",
     chartCaption: (total) =>
       `${number.format(total)} GitHub contributions over the last 12 months, combining my personal and work accounts.`,
+    chartMonth: (iso) => month.format(new Date(iso)),
   },
   experience: {
     company: "X-Testing",

@@ -5,6 +5,16 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   cacheComponents: true,
   partialPrefetching: true,
+  cacheLife: {
+    // Dados do GitHub (cards e gráfico): renovação a cada hora (regra 3) e
+    // expiração longa, para os últimos dados válidos continuarem no ar mesmo
+    // com a API fora por dias (regra 14). Os testes encurtam a renovação.
+    github: {
+      stale: 60 * 5,
+      revalidate: Number(process.env.GITHUB_REVALIDATE_SECONDS) || 60 * 60,
+      expire: 60 * 60 * 24 * 365,
+    },
+  },
   turbopack: {
     rules: {
       "*.css": {
