@@ -49,9 +49,10 @@ test("o botão funciona pelo teclado", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
 
-  // Idioma vem antes do tema na ordem de foco.
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
+  // Chega ao botão só com Tab, passando pelos elementos anteriores do cabeçalho.
+  for (let i = 0; i < 15 && !(await toggle(page).evaluate((el) => el === document.activeElement)); i++) {
+    await page.keyboard.press("Tab");
+  }
   await expect(toggle(page)).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");

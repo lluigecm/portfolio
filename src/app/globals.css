@@ -112,3 +112,11 @@
     transition-timing-function: ease;
   }
 }
+
+/* Foco sempre visível, no âmbar (contraste 5:1 ou mais sobre os fundos). */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--ambar);
+    outline-offset: 2px;
+  }
+}

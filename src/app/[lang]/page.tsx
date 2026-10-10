@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
-import { LanguageToggle } from "@/components/LanguageToggle";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { content, getContent } from "@/content";
+import { Contact } from "@/components/Contact";
+import { Education } from "@/components/Education";
+import { Experience } from "@/components/Experience";
+import { Header } from "@/components/Header";
+import { Hero } from "@/components/Hero";
+import { Projects } from "@/components/Projects";
+import { Section } from "@/components/Section";
+import { Stack } from "@/components/Stack";
+import { getContent } from "@/content";
 import { isLocale } from "@/lib/locale";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
@@ -9,18 +15,33 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!isLocale(lang)) notFound();
 
   const text = getContent(lang);
-  const other = lang === "pt" ? "en" : "pt";
 
   return (
     <>
-      {/* Cabeçalho provisório; o definitivo entra na etapa 6. */}
-      <header className="flex justify-end gap-2 px-6 pt-6">
-        <LanguageToggle target={other} label={content[other].ui.viewInThisLanguage} />
-        <ThemeToggle labels={text.ui.theme} />
-      </header>
-      <main className="max-w-texto px-6 py-16">
-        <h1 className="text-3xl font-semibold">{text.hero.name}</h1>
-        <p className="mt-2 text-lg text-lapis">{text.hero.title}</p>
+      <a
+        href="#content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-10 focus:rounded-md focus:bg-superficie focus:px-4 focus:py-2"
+      >
+        {text.ui.skipToContent}
+      </a>
+      <Header locale={lang} />
+      <main id="content" className="mx-auto max-w-5xl px-6">
+        <Hero text={text.hero} />
+        <Section id="experience" title={text.ui.nav.experience}>
+          <Experience text={text.experience} />
+        </Section>
+        <Section id="projects" title={text.ui.nav.projects}>
+          <Projects text={text.projects} />
+        </Section>
+        <Section id="stack" title={text.ui.nav.stack}>
+          <Stack text={text.stack} />
+        </Section>
+        <Section id="education" title={text.ui.nav.education}>
+          <Education text={text.education} />
+        </Section>
+        <Section id="contact" title={text.ui.nav.contact}>
+          <Contact text={text.contact} />
+        </Section>
       </main>
     </>
   );

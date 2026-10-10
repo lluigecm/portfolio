@@ -37,24 +37,32 @@ test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {
   expect(fallback).toContain("size-adjust");
 });
 
-test("a troca de fonte não desloca o layout", async ({ page }) => {
-  await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
+// A página completa (etapa 6) tem texto suficiente para deslocar; o celular
+// quebra mais linhas, então mede nas duas larguras.
+for (const viewport of [
+  { width: 375, height: 812 },
+  { width: 1280, height: 900 },
+]) {
+  test(`a troca de fonte não desloca o layout (${viewport.width}px)`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
 
-  const cls = await page.evaluate(
-    () =>
-      new Promise<number>((resolve) => {
-        let total = 0;
-        new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as unknown as {
-            value: number;
-            hadRecentInput: boolean;
-          }[]) {
-            if (!entry.hadRecentInput) total += entry.value;
-          }
-        }).observe({ type: "layout-shift", buffered: true });
-        setTimeout(() => resolve(total), 500);
-      }),
-  );
-  expect(cls).toBeLessThan(0.01);
-});
+    const cls = await page.evaluate(
+      () =>
+        new Promise<number>((resolve) => {
+          let total = 0;
+          new PerformanceObserver((list) => {
+            for (const entry of list.getEntries() as unknown as {
+              value: number;
+              hadRecentInput: boolean;
+            }[]) {
+              if (!entry.hadRecentInput) total += entry.value;
+            }
+          }).observe({ type: "layout-shift", buffered: true });
+          setTimeout(() => resolve(total), 500);
+        }),
+    );
+    expect(cls).toBeLessThan(0.01);
+  });
+}
