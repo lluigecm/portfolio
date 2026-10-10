@@ -167,3 +167,41 @@ test.describe("celular", () => {
     }
   });
 });
+
+// Ajuste pós-etapa 6: no celular, o cabeçalho não pode empurrar a apresentação
+// para baixo da primeira tela.
+for (const [locale, browserLocale] of [
+  ["pt", "pt-BR"],
+  ["en", "en-US"],
+] as const) {
+  test.describe(`cabeçalho a 360 px em ${locale.toUpperCase()}`, () => {
+    test.use({ locale: browserLocale, viewport: { width: 360, height: 780 } });
+
+    test("cabe em no máximo duas linhas, sem rolagem lateral", async ({ page }) => {
+      await page.goto("/");
+      await page.evaluate(() => document.fonts.ready);
+
+      const rows = await page.locator("header a, header button").evaluateAll((elements) => {
+        const centers = elements
+          .map((el) => el.getBoundingClientRect())
+          .map((box) => box.top + box.height / 2)
+          .sort((a, b) => a - b);
+        // Elementos com centros a menos de 12 px de distância estão na mesma linha.
+        return centers.filter((center, i) => i === 0 || center - centers[i - 1] > 12).length;
+      });
+      expect(rows).toBeLessThanOrEqual(2);
+
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBe(0);
+
+      for (const id of SECTIONS) {
+        await expect(
+          page.getByRole("link", { name: content[locale].ui.nav[id], exact: true }),
+        ).toBeInViewport();
+      }
+      await expect(page.getByText(content[locale].hero.intro)).toBeInViewport();
+    });
+  });
+}
