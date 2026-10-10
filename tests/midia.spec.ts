@@ -12,39 +12,83 @@ const LOCALES = [
 const video = (page: Page) => page.locator('[data-project="mygather"] video');
 const isPaused = (page: Page) => video(page).evaluate((el: HTMLVideoElement) => el.paused);
 
+/*
+ * Estado de carregamento do vídeo, lido do próprio elemento: vale em qualquer
+ * navegador (o WebKit baixa mídia por outro processo, invisível ao Playwright).
+ * Sem fontes e com networkState vazio, nada foi pedido à rede.
+ */
+const videoLoad = (page: Page) =>
+  video(page).evaluate((el: HTMLVideoElement) => ({
+    sources: el.querySelectorAll("source").length,
+    empty: el.networkState === HTMLMediaElement.NETWORK_EMPTY,
+    src: el.currentSrc,
+  }));
+
+// Rola a página até o vídeo ficar inteiro na tela, ou de volta ao topo.
+const showVideo = (page: Page) => video(page).evaluate((el) => el.scrollIntoView({ block: "center" }));
+const scrollToTop = (page: Page) => page.evaluate(() => window.scrollTo(0, 0));
+
 test.describe("vídeo do MyGather", () => {
-  test("toca sozinho, sem som, e pausa e volta pelo teclado", async ({ page }) => {
+  // Desktop: o card do vídeo começa abaixo da dobra.
+  test.use({ viewport: { width: 1280, height: 720 } });
+
+  test("só baixa e toca quando aparece na tela, e pausa ao sair", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
+    expect(await videoLoad(page), "nada baixado com o vídeo fora da tela").toEqual({
+      sources: 0,
+      empty: true,
+      src: "",
+    });
+    expect(await isPaused(page)).toBe(true);
 
+    await showVideo(page);
     await expect.poll(() => isPaused(page)).toBe(false);
     expect(await video(page).evaluate((el: HTMLVideoElement) => el.muted)).toBe(true);
+    expect((await videoLoad(page)).src).toMatch(/\/projects\/mygather\.(webm|mp4)$/);
+
+    await scrollToTop(page);
+    await expect.poll(() => isPaused(page)).toBe(true);
+
+    await showVideo(page);
+    await expect.poll(() => isPaused(page)).toBe(false);
+  });
+
+  test("pausa e volta pelo teclado; a pausa do visitante vale ao rolar", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto("/");
+    await showVideo(page);
+    await expect.poll(() => isPaused(page)).toBe(false);
 
     const pause = page.getByRole("button", { name: content.en.ui.video.pause });
     await pause.focus();
     await page.keyboard.press("Enter");
     await expect.poll(() => isPaused(page)).toBe(true);
 
+    // Sair e voltar à tela não desfaz a pausa do visitante.
+    await scrollToTop(page);
+    await showVideo(page);
+    await page.waitForTimeout(500);
+    expect(await isPaused(page)).toBe(true);
+
     const play = page.getByRole("button", { name: content.en.ui.video.play });
-    await expect(play).toBeFocused();
+    await play.focus();
     await page.keyboard.press("Space");
     await expect.poll(() => isPaused(page)).toBe(false);
   });
 
-  test("com prefers-reduced-motion, não toca sozinho e mostra a capa", async ({ page }) => {
+  test("com prefers-reduced-motion, não baixa nem toca sozinho e mostra a capa", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    const videoRequests: string[] = [];
-    page.on("request", (request) => {
-      if (/\.(webm|mp4)$/.test(request.url())) videoRequests.push(request.url());
-    });
 
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    // Confirmação negativa: dá tempo para a hidratação, que é quem daria o play.
+    await showVideo(page);
+    // Confirmação negativa: dá tempo para a hidratação e o observador agirem.
     await page.waitForTimeout(1000);
 
     expect(await isPaused(page)).toBe(true);
-    expect(videoRequests).toEqual([]);
+    expect(await videoLoad(page)).toEqual({ sources: 0, empty: true, src: "" });
     await expect(video(page)).toHaveAttribute("poster", "/projects/mygather-capa.webp");
     await expect(video(page)).not.toHaveAttribute("autoplay");
 
@@ -68,13 +112,14 @@ test("a mídia carrega de public/, sem chamadas a outros sites", async ({ page, 
 
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
+  await showVideo(page);
   await expect.poll(() => isPaused(page)).toBe(false);
   await page.waitForLoadState("networkidle");
 
   expect([...origins]).toEqual([new URL(baseURL!).origin]);
 
   const source = await video(page).evaluate((el: HTMLVideoElement) => new URL(el.currentSrc).pathname);
-  expect(source).toBe("/projects/mygather.webm");
+  expect(["/projects/mygather.webm", "/projects/mygather.mp4"]).toContain(source);
 
   for (const project of projects) {
     if (project.media.kind !== "video") continue;

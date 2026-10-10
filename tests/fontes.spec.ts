@@ -26,13 +26,14 @@ test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {
   // (size-adjust e afins); é ela que evita o salto quando a Plex chega.
   await page.goto("/");
   const stack = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
-  expect(stack).toMatch(/^"IBM Plex Sans", "IBM Plex Sans Fallback"/);
+  // O WebKit escreve a pilha sem aspas; o Chromium, com aspas.
+  expect(stack).toMatch(/^"?IBM Plex Sans"?, "?IBM Plex Sans Fallback"?/);
 
   const fallback = await page.evaluate(() =>
     [...document.styleSheets]
       .flatMap((sheet) => [...sheet.cssRules])
       .map((rule) => rule.cssText)
-      .find((css) => css.startsWith("@font-face") && css.includes('"IBM Plex Sans Fallback"')),
+      .find((css) => css.startsWith("@font-face") && /font-family: "?IBM Plex Sans Fallback"?;/.test(css)),
   );
   expect(fallback).toContain("size-adjust");
 });
