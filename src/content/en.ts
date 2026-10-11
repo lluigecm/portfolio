@@ -95,6 +95,7 @@ export const en: Content = {
   stack: [
     { label: "Languages", items: ["Python", "TypeScript", "C", "C++"] },
     { label: "Testing and automation", items: ["Playwright", "Robot Framework"] },
+    { label: "Web", items: ["Next.js", "Node.js"] },
     { label: "Parallel computing", items: ["MPI", "OpenMP"] },
   ],
   education: {
