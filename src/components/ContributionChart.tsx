@@ -1,5 +1,7 @@
+import type { CSSProperties } from "react";
 import type { Content } from "@/types/content";
 import type { ContributionDay, Contributions } from "@/types/github";
+import { ChartRelief } from "./ChartRelief";
 
 /*
  * Gráfico de contribuições, a peça marcante do site (princípio 5.1.1): uma
@@ -7,6 +9,10 @@ import type { ContributionDay, Contributions } from "@/types/github";
  * No celular, rola na horizontal dentro do próprio espaço, começando pelos
  * meses mais recentes (flex-row-reverse inicia a rolagem pela direita).
  * Medidas em unidades do viewBox.
+ *
+ * Movimento (seção 5.5): as semanas se preenchem uma vez ao carregar (efeito 1,
+ * CSS em globals.css) e, com mouse, as células sobem perto do cursor (efeito 2,
+ * ChartRelief).
  */
 const CELL = 11;
 const GAP = 3;
@@ -19,6 +25,7 @@ const FONT = 12;
 const RIGHT_ALIGNED_WEEKS = 2;
 // Rótulos de mês a menos de 3 semanas um do outro se sobreporiam.
 const MIN_WEEKS_BETWEEN_MONTHS = 3;
+const SVG_ID = "contribution-svg";
 
 const LEVEL_CLASS = [
   "fill-grafico-0",
@@ -50,6 +57,7 @@ export function ContributionChart({ contributions, caption, month }: Props) {
         className="flex flex-row-reverse overflow-x-auto"
       >
         <svg
+          id={SVG_ID}
           aria-hidden="true"
           viewBox={`0 0 ${width} ${height}`}
           fontSize={FONT}
@@ -69,10 +77,13 @@ export function ContributionChart({ contributions, caption, month }: Props) {
               </text>
             ))}
           </g>
-          {weeks.map((week, w) =>
-            week.map(
-              (day, d) =>
-                day && (
+          {weeks.map((week, w) => (
+            // Uma semana por grupo: o preenchimento (efeito 1) segue a ordem das semanas.
+            <g key={w} className="grafico-semana" style={{ "--semana": w } as CSSProperties}>
+              {week.map((day, d) => {
+                if (!day) return null;
+                const dayLevel = level(day.count);
+                return (
                   <rect
                     key={day.date}
                     x={w * STEP}
@@ -82,12 +93,15 @@ export function ContributionChart({ contributions, caption, month }: Props) {
                     rx={2}
                     data-date={day.date}
                     data-count={day.count}
-                    className={LEVEL_CLASS[level(day.count)]}
+                    data-level={dayLevel}
+                    className={LEVEL_CLASS[dayLevel]}
                   />
-                ),
-            ),
-          )}
+                );
+              })}
+            </g>
+          ))}
         </svg>
+        <ChartRelief svgId={SVG_ID} cell={CELL} step={STEP} />
       </div>
       <figcaption id="contribution-caption" className="mt-3 text-sm text-lapis">
         {caption}

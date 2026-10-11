@@ -14,11 +14,15 @@ export function LanguageToggle({ target, label }: Props) {
   const code = target.toUpperCase();
 
   function switchLanguage() {
-    // O servidor lê o cookie e já entrega a página no outro idioma. Recarrega a
-    // página inteira porque o idioma define o <html>; o script do tema reaplica
-    // o tema antes da pintura.
+    // O servidor lê o cookie e já entrega a página no outro idioma. Carrega a
+    // página inteira de novo porque o idioma define o <html>; o script do tema
+    // reaplica o tema antes da pintura (regra 11c).
+    //
+    // Navegação, e não reload: só navegações têm a transição entre documentos
+    // (seção 5.5, efeito 3). Sem o #fragmento, senão seria só um salto dentro
+    // da mesma página e o idioma não mudaria.
     document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
-    window.location.reload();
+    window.location.replace(window.location.pathname + window.location.search);
   }
 
   return (
