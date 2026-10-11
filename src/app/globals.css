@@ -135,3 +135,47 @@
     outline-offset: 2px;
   }
 }
+
+/*
+ * Movimento da seção 5.5. Só transform e opacity, nunca curva linear, e nada
+ * disso acontece com prefers-reduced-motion: o site funciona igual sem animação.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Efeito 1: o gráfico se preenche uma vez por carregamento, da semana mais
+   * antiga para a mais recente, só com opacidade. Total de até 700 ms:
+   * 52 semanas × 7,5 ms de atraso + 300 ms da última = 690 ms. O fill
+   * "backwards" esconde as células antes da vez delas e encerra a animação
+   * no fim. As células já ocupam o seu espaço: nada desloca o layout.
+   */
+  .grafico-semana {
+    animation: grafico-preencher 300ms cubic-bezier(0, 0, 0.2, 1) backwards;
+    animation-delay: calc(var(--semana) * 7.5ms);
+  }
+
+  /* Efeito 2: relevo, ligado por ChartRelief depois do efeito 1. */
+  .grafico-relevo rect {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform 120ms ease-out;
+  }
+  .grafico-relevo-ativo rect {
+    will-change: transform;
+  }
+
+  /* Efeito 3: esmaecimento entre as duas versões da página na troca de idioma. */
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 350ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@keyframes grafico-preencher {
+  from {
+    opacity: 0;
+  }
+}

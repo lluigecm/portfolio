@@ -123,10 +123,18 @@ test("o link de pular vai direto ao conteúdo", async ({ page, browserName }) =>
 });
 
 test.describe("princípios de design (seção 5.1)", () => {
-  test("sem animações de entrada", async ({ page }) => {
+  test("nenhuma animação de entrada além do preenchimento do gráfico", async ({ page }) => {
+    // Seção 5.5: o preenchimento do gráfico é o único momento orquestrado da página.
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/");
-    await page.evaluate(() => document.fonts.ready);
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    const others = await page.evaluate(() =>
+      document
+        .getAnimations()
+        .map((animation) => (animation.effect as KeyframeEffect | null)?.target)
+        .filter((target) => !(target instanceof Element && target.closest(".grafico-semana")))
+        .map((target) => (target instanceof Element ? target.outerHTML.slice(0, 60) : String(target))),
+    );
+    expect(others).toEqual([]);
   });
 
   test("mono só em código de verdade", async ({ page }) => {
