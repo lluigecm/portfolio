@@ -5,12 +5,12 @@ import { expect, test } from "@playwright/test";
 // O site de teste (porta 3000) é montado contra a API falsa de tests/mock-github.mjs.
 const EXPECTED = {
   pt: {
-    autohealing: ["Linguagens", "TypeScript, JavaScript", "Atualizado em", "15 de set. de 2026"],
-    mygather: ["Linguagens", "TypeScript, HTML, CSS", "Atualizado em", "1 de ago. de 2026"],
+    autohealing: ["Atualizado em", "15 de set. de 2026"],
+    mygather: ["Atualizado em", "1 de ago. de 2026"],
   },
   en: {
-    autohealing: ["Languages", "TypeScript, JavaScript", "Updated", "Sep 15, 2026"],
-    mygather: ["Languages", "TypeScript, HTML, CSS", "Updated", "Aug 1, 2026"],
+    autohealing: ["Updated", "Sep 15, 2026"],
+    mygather: ["Updated", "Aug 1, 2026"],
   },
 };
 
@@ -21,7 +21,7 @@ for (const [locale, browserLocale] of [
   test.describe(`cards em ${locale.toUpperCase()}`, () => {
     test.use({ locale: browserLocale });
 
-    test("mostram linguagens e último push vindos da API", async ({ page }) => {
+    test("mostram o último push vindo da API", async ({ page }) => {
       await page.goto("/");
       for (const [id, facts] of Object.entries(EXPECTED[locale])) {
         const stats = page.locator(`[data-project="${id}"] [data-testid="repo-stats"]`);
@@ -31,22 +31,25 @@ for (const [locale, browserLocale] of [
   });
 }
 
-// Regra 12: os cards não exibem estrelas em nenhum caso. A API falsa devolve
-// 7 e 1234 estrelas, então o número apareceria se o site o usasse.
+// Regra 12: os cards não exibem estrelas nem linguagens da API. A API falsa
+// devolve 7 e 1234 estrelas e as linguagens JavaScript, HTML, Shell e Dockerfile
+// (que não estão nas tags), então apareceriam se o site as usasse.
 for (const [locale, browserLocale] of [
   ["pt", "pt-BR"],
   ["en", "en-US"],
 ] as const) {
-  test.describe(`sem estrelas em ${locale.toUpperCase()}`, () => {
+  test.describe(`sem estrelas nem linguagens em ${locale.toUpperCase()}`, () => {
     test.use({ locale: browserLocale });
 
-    test("os cards não exibem estrelas", async ({ page }) => {
+    test("os cards não exibem estrelas nem linguagens da API", async ({ page }) => {
       await page.goto("/");
       const cards = page.locator("[data-project]");
       await expect(cards.locator('[data-testid="repo-stats"]')).toHaveCount(2);
       for (const text of await cards.allInnerTexts()) {
         expect(text).not.toMatch(/estrela|star|★|☆/i);
-        expect(text).not.toMatch(/(^|D)(7|1[.,]?234)(D|$)/m);
+        expect(text).not.toMatch(/linguagens|languages/i);
+        expect(text).not.toMatch(/\b(JavaScript|HTML|Shell|Dockerfile)\b/);
+        expect(text).not.toMatch(/(^|\D)(7|1[.,]?234)(\D|$)/m);
       }
     });
   });

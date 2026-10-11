@@ -71,20 +71,12 @@ function Media({ project, text, diagram, ui }: MediaProps) {
   );
 }
 
+// Regra 12: da API, só a data do último push.
 function RepoFacts({ stats, labels }: { stats: RepoStats; labels: Content["ui"]["repo"] }) {
-  const facts = [
-    [labels.languages, stats.languages.join(", ")],
-    [labels.updated, labels.date(stats.pushedAt)],
-  ].filter(([, value]) => value);
-
   return (
-    <dl data-testid="repo-stats" className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-linha pt-4 text-sm">
-      {facts.map(([label, value]) => (
-        <div key={label}>
-          <dt className="text-lapis">{label}</dt>
-          <dd>{value}</dd>
-        </div>
-      ))}
+    <dl data-testid="repo-stats" className="mt-4 border-t border-linha pt-4 text-sm">
+      <dt className="text-lapis">{labels.updated}</dt>
+      <dd>{labels.date(stats.pushedAt)}</dd>
     </dl>
   );
 }
