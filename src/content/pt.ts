@@ -95,6 +95,7 @@ export const pt: Content = {
   stack: [
     { label: "Linguagens", items: ["Python", "TypeScript", "C", "C++"] },
     { label: "Automação e testes", items: ["Playwright", "Robot Framework"] },
+    { label: "Web", items: ["Next.js", "Node.js"] },
     { label: "Computação paralela", items: ["MPI", "OpenMP"] },
   ],
   education: {

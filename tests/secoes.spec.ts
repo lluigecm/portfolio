@@ -233,3 +233,27 @@ for (const [locale, browserLocale] of [
     });
   });
 }
+
+// Seção 6.4: categorias e itens da Stack, na ordem da especificação. "Web"
+// entra na publicação (etapa 12), com o mesmo rótulo nos dois idiomas.
+const STACK = {
+  pt: ["Linguagens", "Automação e testes", "Web", "Computação paralela"],
+  en: ["Languages", "Testing and automation", "Web", "Parallel computing"],
+  items: ["Python, TypeScript, C, C++", "Playwright, Robot Framework", "Next.js, Node.js", "MPI, OpenMP"],
+};
+
+for (const [locale, browserLocale] of [
+  ["pt", "pt-BR"],
+  ["en", "en-US"],
+] as const) {
+  test.describe(`stack em ${locale.toUpperCase()}`, () => {
+    test.use({ locale: browserLocale });
+
+    test("segue a seção 6.4, com a categoria Web", async ({ page }) => {
+      await page.goto("/");
+      const stack = page.locator("#stack");
+      await expect(stack.locator("dt")).toHaveText(STACK[locale]);
+      await expect(stack.locator("dd")).toHaveText(STACK.items);
+    });
+  });
+}
