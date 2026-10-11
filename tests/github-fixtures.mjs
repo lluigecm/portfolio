@@ -1,14 +1,16 @@
 // Dados fixos da API falsa do GitHub (tests/mock-github.mjs), compartilhados com os testes.
 
-// As estrelas continuam aqui de propósito: os testes provam que o site não as mostra.
+// Estrelas e linguagens continuam aqui de propósito: os testes provam que o site
+// não as mostra (regra 12). As linguagens que não estão nas tags não aparecem em
+// nenhum texto do site, para o teste não confundir com conteúdo legítimo.
 export const REPOS = {
   "lluigecm/autohealing-e2e-tests": {
     info: { stargazers_count: 7, pushed_at: "2026-09-15T12:00:00Z" },
-    languages: { TypeScript: 9000, JavaScript: 1000 },
+    languages: { TypeScript: 9000, JavaScript: 1000, Dockerfile: 50 },
   },
   "lluigecm/MyGather": {
     info: { stargazers_count: 1234, pushed_at: "2026-08-01T12:00:00Z" },
-    languages: { TypeScript: 50000, HTML: 4000, CSS: 3000, JavaScript: 100 },
+    languages: { TypeScript: 50000, HTML: 4000, Shell: 3000, JavaScript: 100 },
   },
 };
 

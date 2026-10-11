@@ -62,7 +62,6 @@ export interface Content {
     navLabel: string;
     /** Rótulos dos dados que a API do GitHub acrescenta aos cards. */
     repo: {
-      languages: string;
       updated: string;
       /** Data do último push, formatada no idioma. */
       date: (iso: string) => string;

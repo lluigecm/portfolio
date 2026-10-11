@@ -24,7 +24,6 @@ export const pt: Content = {
     skipToContent: "Pular para o conteúdo",
     navLabel: "Seções",
     repo: {
-      languages: "Linguagens",
       updated: "Atualizado em",
       date: (iso) => date.format(new Date(iso)),
     },

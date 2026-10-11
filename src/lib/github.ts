@@ -13,7 +13,6 @@ import type { ContributionDay, Contributions, RepoStats } from "@/types/github";
 // Configurável para os testes apontarem para uma API falsa ou fora do ar.
 const API_URL = process.env.GITHUB_API_URL || "https://api.github.com";
 const TIMEOUT_MS = 8000;
-const MAX_LANGUAGES = 3;
 
 function client() {
   return new Octokit({
@@ -40,25 +39,15 @@ function onFailure(what: string, error: unknown): null {
   throw new Error(message, { cause: error });
 }
 
-/** Linguagens e data do último push de um repositório ("dono/nome"). */
+/** Data do último push de um repositório ("dono/nome"). */
 export async function getRepoStats(repo: string): Promise<RepoStats | null> {
   "use cache";
   cacheLife("github");
 
   const [owner, name] = repo.split("/");
   try {
-    const github = client();
-    const [{ data: info }, { data: languages }] = await Promise.all([
-      github.rest.repos.get({ owner, repo: name }),
-      github.rest.repos.listLanguages({ owner, repo: name }),
-    ]);
-    return {
-      languages: Object.entries(languages)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, MAX_LANGUAGES)
-        .map(([language]) => language),
-      pushedAt: info.pushed_at ?? info.updated_at,
-    };
+    const { data: info } = await client().rest.repos.get({ owner, repo: name });
+    return { pushedAt: info.pushed_at ?? info.updated_at };
   } catch (error) {
     return onFailure(repo, error);
   }

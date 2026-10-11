@@ -24,7 +24,6 @@ export const en: Content = {
     skipToContent: "Skip to content",
     navLabel: "Sections",
     repo: {
-      languages: "Languages",
       updated: "Updated",
       date: (iso) => date.format(new Date(iso)),
     },
@@ -60,7 +59,7 @@ export const en: Content = {
         title: "Test Automation Intern",
         period: "Jul 2024 to Mar 2026",
         description:
-          "Optimized existing process automations so they broke less often and needed less maintenance.",
+          "I optimized existing process automations so they broke less often and needed less maintenance.",
       },
     ],
   },
