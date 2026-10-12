@@ -3,7 +3,7 @@ import { content } from "../src/content";
 import { expectedTotal } from "./github-fixtures.mjs";
 
 // Este site de teste (porta 3002) renova os dados do GitHub a cada 2 s, em vez
-// de 1 hora, contra uma API falsa que o teste controla (tests/mock-github.mjs).
+// de 15 minutos, contra uma API falsa que o teste controla (tests/mock-github.mjs).
 const API = "http://localhost:4011";
 const REVALIDATE_MS = 2000;
 const NEW_DATA_BONUS = 100;
