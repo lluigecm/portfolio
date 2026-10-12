@@ -116,15 +116,14 @@
 }
 
 /*
- * Transição discreta, só durante a troca de tema (seção 5.1, princípio 3).
- * A classe é posta e retirada por src/lib/theme.ts.
+ * Troca de tema (seção 5.5): esmaecimento de 200 ms entre a página antes e
+ * depois, só com opacidade (View Transition do tipo "tema", aberta por
+ * src/lib/theme.ts). A curva vem da regra geral das transições, mais abaixo.
  */
 @media (prefers-reduced-motion: no-preference) {
-  :root.trocando-tema,
-  :root.trocando-tema * {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-duration: 200ms;
-    transition-timing-function: ease;
+  html:active-view-transition-type(tema)::view-transition-old(root),
+  html:active-view-transition-type(tema)::view-transition-new(root) {
+    animation-duration: 200ms;
   }
 }
 
@@ -151,6 +150,10 @@
   .grafico-semana {
     animation: grafico-preencher 300ms cubic-bezier(0, 0, 0.2, 1) backwards;
     animation-delay: calc(var(--semana) * 7.5ms);
+  }
+  /* Na troca de idioma, o gráfico chega pronto (src/lib/locale.ts). */
+  .grafico-pronto .grafico-semana {
+    animation: none;
   }
 
   /* Efeito 2: relevo, ligado por ChartRelief depois do efeito 1. */

@@ -236,6 +236,48 @@ test.describe("efeito 3: transição na troca de idioma", () => {
   });
 });
 
+test.describe("efeito 1 na troca de idioma", () => {
+  test.use({ locale: "en-US", viewport: { width: 1280, height: 900 } });
+
+  test("o gráfico chega pronto, sem repetir o preenchimento; recarregar preenche de novo", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    // Em cada documento, no primeiro quadro: semanas não opacas e animações de preenchimento.
+    await page.addInitScript(() => {
+      requestAnimationFrame(() => {
+        const weeks = [...document.querySelectorAll(".grafico-semana")];
+        const visits = JSON.parse(sessionStorage.getItem("primeiros-quadros") ?? "[]");
+        visits.push({
+          weeks: weeks.length,
+          transparent: weeks.filter((week) => getComputedStyle(week).opacity !== "1").length,
+          fills: document
+            .getAnimations()
+            .filter((animation) => (animation as CSSAnimation).animationName === "grafico-preencher").length,
+        });
+        sessionStorage.setItem("primeiros-quadros", JSON.stringify(visits));
+      });
+    });
+    const visits = () => page.evaluate(() => JSON.parse(sessionStorage.getItem("primeiros-quadros") ?? "[]"));
+
+    await page.goto("/");
+    await expect.poll(async () => (await visits()).length).toBe(1);
+    const [load] = await visits();
+    expect(load.fills, "carregamento normal: preenche").toBeGreaterThan(50);
+
+    await page.getByRole("button", { name: /Ver em português/ }).click();
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect.poll(async () => (await visits()).length).toBe(2);
+    const [, afterSwitch] = await visits();
+    expect(afterSwitch.weeks).toBeGreaterThan(50);
+    expect(afterSwitch.transparent, "semanas não opacas no primeiro quadro após a troca").toBe(0);
+    expect(afterSwitch.fills, "preenchimentos após a troca").toBe(0);
+
+    await page.reload();
+    await expect.poll(async () => (await visits()).length).toBe(3);
+    const [, , reloaded] = await visits();
+    expect(reloaded.fills, "recarregar: preenche de novo").toBeGreaterThan(50);
+  });
+});
+
 test.describe("com prefers-reduced-motion", () => {
   test.use({ viewport: { width: 1280, height: 900 }, locale: "en-US" });
 
