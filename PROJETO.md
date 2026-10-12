@@ -43,7 +43,7 @@
 ### 4.1 Geral
 1. Toda chamada ao GitHub fica em `src/lib/github.ts`. Componentes nunca chamam a API diretamente.
 2. Busca sempre no servidor, nunca no navegador do visitante.
-3. Cache por revalidação, com referência de 1 hora.
+3. Cache por revalidação, com referência de 15 minutos.
 4. Tipagem explícita dos dados em `src/types/`.
 
 ### 4.2 Segredos e configuração

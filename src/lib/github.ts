@@ -6,7 +6,7 @@ import type { ContributionDay, Contributions, RepoStats } from "@/types/github";
 
 /*
  * Toda chamada ao GitHub fica aqui (regras 1 a 4). Roda só no servidor; o
- * resultado entra nas páginas pré-renderizadas e se renova a cada hora
+ * resultado entra nas páginas pré-renderizadas e se renova a cada 15 minutos
  * (perfil "github" em next.config.ts).
  */
 

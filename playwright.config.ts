@@ -79,7 +79,7 @@ export default defineConfig({
     // Endereço público fictício, para conferir as URLs absolutas da prévia de link.
     site(3000, ".next-e2e", MOCK_API, { SITE_URL: "https://luige.example" }),
     site(3001, ".next-api-fora", DOWN_API),
-    // Renovação a cada 2 s em vez de 1 hora, para o teste não esperar.
+    // Renovação a cada 2 s em vez de 15 minutos, para o teste não esperar.
     site(3002, ".next-renovacao", CONTROLLED_API, { GITHUB_REVALIDATE_SECONDS: "2" }),
   ],
 });
