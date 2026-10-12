@@ -2,9 +2,8 @@ export type Theme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "theme";
 
-// Classe aplicada só durante a troca, para a transição não rodar no carregamento.
-const SWITCHING_CLASS = "trocando-tema";
-const TRANSITION_MS = 250;
+// Tipo da View Transition da troca de tema; o CSS dá a ela uma duração própria.
+const THEME_TRANSITION = "tema";
 
 /*
  * Roda no <head>, antes da primeira pintura: aplica a escolha salva, se houver.
@@ -33,14 +32,31 @@ export function subscribeToTheme(listener: () => void) {
 }
 
 export function setTheme(theme: Theme) {
-  const root = document.documentElement;
-  root.classList.add(SWITCHING_CLASS);
-  root.dataset.theme = theme;
+  // A escolha é salva na hora: a mudança visual abaixo pode acontecer um quadro
+  // depois, e um recarregamento nesse intervalo não pode perdê-la.
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
     // Armazenamento bloqueado: a troca vale só para esta visita.
   }
-  listeners.forEach((listener) => listener());
-  window.setTimeout(() => root.classList.remove(SWITCHING_CLASS), TRANSITION_MS);
+  const apply = () => {
+    document.documentElement.dataset.theme = theme;
+    listeners.forEach((listener) => listener());
+  };
+
+  /*
+   * Esmaecimento entre a página antes e depois da troca (seção 5.5): o
+   * navegador anima duas imagens só com opacidade, na placa de vídeo, em vez
+   * de repintar as cores de cada elemento a cada quadro (o que pesava mais
+   * quanto maior a tela). Sem o recurso, ou com movimento reduzido, a troca é
+   * instantânea.
+   */
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reducedMotion || typeof document.startViewTransition !== "function") return apply();
+  try {
+    document.startViewTransition({ update: apply, types: [THEME_TRANSITION] });
+  } catch {
+    // Navegadores com View Transitions, mas ainda sem tipos.
+    document.startViewTransition(apply);
+  }
 }

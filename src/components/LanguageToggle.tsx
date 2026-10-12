@@ -1,6 +1,6 @@
 "use client";
 
-import { HTML_LANG, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from "@/lib/locale";
+import { HTML_LANG, LANGUAGE_SWITCH_KEY, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from "@/lib/locale";
 import type { Locale } from "@/types/content";
 
 interface Props {
@@ -22,6 +22,12 @@ export function LanguageToggle({ target, label }: Props) {
     // (seção 5.5, efeito 3). Sem o #fragmento, senão seria só um salto dentro
     // da mesma página e o idioma não mudaria.
     document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
+    try {
+      // A página nova chega com o gráfico pronto (languageSwitchScript).
+      sessionStorage.setItem(LANGUAGE_SWITCH_KEY, String(Date.now()));
+    } catch {
+      // Armazenamento bloqueado: o gráfico só se preenche de novo.
+    }
     window.location.replace(window.location.pathname + window.location.search);
   }
 

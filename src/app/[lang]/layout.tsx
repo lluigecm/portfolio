@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { content } from "@/content";
-import { HTML_LANG, isLocale, LOCALES, OG_LOCALE } from "@/lib/locale";
+import { HTML_LANG, isLocale, languageSwitchScript, LOCALES, OG_LOCALE } from "@/lib/locale";
 import { siteUrl } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
 import "../globals.css";
@@ -68,7 +68,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript + languageSwitchScript }} />
       </head>
       <body className="bg-papel font-sans text-base text-grafite antialiased">
         {children}
