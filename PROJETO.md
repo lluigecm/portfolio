@@ -61,7 +61,7 @@
 11. Limitação aceita: buscadores e prévias de link enxergam essencialmente a versão em inglês.
 
 ### 4.4 Dados do GitHub
-12. **Projetos vêm de uma lista fixa** em `src/content/`, com textos próprios em PT e EN. A API só complementa cada card com estrelas, linguagens e data da última atualização.
+12. **Projetos vêm de uma lista fixa** em `src/content/`, com textos próprios em PT e EN. A API só complementa cada card com a data do último push (sem estrelas nem linguagens: a stack vem das tags).
 13. **Gráfico de contribuições único**, somando dia a dia os últimos 12 meses das contas pessoal e de trabalho. A legenda separa o total de cada conta (soma dos dias de cada calendário, para sempre fechar com o gráfico) e, se a conta de trabalho mostra as contribuições privadas no perfil, quantas delas são em repositórios privados (`restrictedContributionsCount`, só da conta de trabalho, na mesma consulta). Sem login nem nome de repositório na legenda.
 14. **Falhas:** o site nunca quebra por causa do GitHub.
     - Cards: sem dados da API, aparecem só com os textos próprios.
@@ -239,9 +239,8 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 |---|---|---|
 | Linguagens | Languages | Python, TypeScript, C, C++ |
 | Automação e testes | Testing and automation | Playwright, Robot Framework |
+| Web | Web | Next.js, Node.js |
 | Computação paralela | Parallel computing | MPI, OpenMP |
-
-Next.js entra na lista quando o portfólio estiver no ar.
 
 ### 6.5 Formação
 
@@ -296,8 +295,8 @@ Next.js entra na lista quando o portfólio estiver no ar.
 ## 9. Pendências antes do desenvolvimento
 
 - [ ] Nome do domínio comprado
-- [ ] Endereço de e-mail exibido no Contato
-- [ ] URL do perfil no LinkedIn
+- [x] Endereço de e-mail exibido no Contato
+- [x] URL do perfil no LinkedIn
 
 ## 10. Tarefas do Luige (fora do código)
 
@@ -360,4 +359,5 @@ Next.js entra na lista quando o portfólio estiver no ar.
 | 18/10/2026 | Seção 5.5 criada com os efeitos de movimento da etapa 13, que o código já citava; 5.1.3 passa a apontar para ela |
 | 18/10/2026 | Card do TCC ganha três casos reais do protótipo (M1-T8, M5-T8, M5-T10), com destaque do caminho no diagrama, trecho literal do log e link para a linha no repositório; o score no diagrama passa a dizer que é ajustado pelo texto |
 | 18/10/2026 | Números do TCC no site só como contagens de cada caso do protótipo, sem a taxa geral, e limiar citado como provisório |
+| 18/10/2026 | Documento posto em dia com o código: regra 12 (só a data do último push), Stack com a categoria Web, e-mail e LinkedIn já no site |
 | 18/10/2026 | Legenda do gráfico separa conta de trabalho e pessoal e, quando houver, as contribuições privadas da conta de trabalho (regra 13, seção 6.1) |

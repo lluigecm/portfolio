@@ -187,7 +187,7 @@ test.describe("princípios de design (seção 5.1)", () => {
         ],
         // Numeração gerada por CSS: contadores ou texto como "01", "1.", "02 /".
         generatedNumbers: generated
-          .filter(({ style, text }) => /counter/.test(style.content) || /^s*d+s*[./)]?s*$/.test(text))
+          .filter(({ style, text }) => /counter/.test(style.content) || /^\s*\d+\s*[./)]?\s*$/.test(text))
           .map(({ el, pseudo }) => label(el, pseudo)),
       };
     });
