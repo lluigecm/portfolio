@@ -40,8 +40,11 @@ export const pt: Content = {
     title: "Desenvolvedor de Automação de Testes",
     intro:
       "Testes automatizados quebram quando a interface muda. Na X-Testing, automatizo testes e processos desde 2024. No TCC, pesquiso como esses testes podem se recuperar sozinhos.",
-    chartCaption: (total) =>
-      `${number.format(total)} contribuições no GitHub nos últimos 12 meses, somando a conta pessoal e a de trabalho.`,
+    chartCaption: ({ total, personal, work, workPrivate }) => {
+      // As privadas só aparecem se a conta de trabalho as mostra no perfil.
+      const hidden = workPrivate > 0 ? `, ${number.format(workPrivate)} delas em repositórios privados,` : "";
+      return `${number.format(total)} contribuições no GitHub nos últimos 12 meses: ${number.format(work)} na conta de trabalho${hidden} e ${number.format(personal)} na pessoal.`;
+    },
     chartMonth: (iso) => month.format(new Date(iso)),
   },
   experience: {

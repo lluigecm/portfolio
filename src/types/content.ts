@@ -1,3 +1,5 @@
+import type { ContributionTotals } from "./github";
+
 export type Locale = "pt" | "en";
 
 export type ProjectId = "autohealing" | "mygather";
@@ -112,8 +114,8 @@ export interface Content {
     name: string;
     title: string;
     intro: string;
-    /** Legenda do gráfico, com o total já formatado no idioma. */
-    chartCaption: (total: number) => string;
+    /** Legenda do gráfico, com os totais já formatados no idioma. */
+    chartCaption: (totals: ContributionTotals) => string;
     /** Rótulo curto do mês no topo do gráfico (ex.: "out.", "Oct"). */
     chartMonth: (date: string) => string;
   };

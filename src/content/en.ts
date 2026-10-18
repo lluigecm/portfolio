@@ -40,8 +40,11 @@ export const en: Content = {
     title: "Test Automation Developer",
     intro:
       "Automated tests break when the interface changes. At X-Testing, I've been automating tests and processes since 2024. In my undergraduate thesis, I'm researching how those tests can heal themselves.",
-    chartCaption: (total) =>
-      `${number.format(total)} GitHub contributions over the last 12 months, combining my personal and work accounts.`,
+    chartCaption: ({ total, personal, work, workPrivate }) => {
+      // As privadas só aparecem se a conta de trabalho as mostra no perfil.
+      const hidden = workPrivate > 0 ? `, ${number.format(workPrivate)} of them in private repositories,` : "";
+      return `${number.format(total)} GitHub contributions over the last 12 months: ${number.format(work)} on my work account${hidden} and ${number.format(personal)} on my personal one.`;
+    },
     chartMonth: (iso) => month.format(new Date(iso)),
   },
   experience: {

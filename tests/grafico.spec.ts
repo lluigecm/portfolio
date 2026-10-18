@@ -1,10 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 import { content } from "../src/content";
-import { calendarDays, expectedTotal, USERS } from "./github-fixtures.mjs";
+import { calendarDays, expectedTotals, USERS } from "./github-fixtures.mjs";
 import { checkA11y } from "./a11y";
 
-// O site de teste (porta 3000) usa a API falsa: o total esperado vem dos mesmos dados.
-const TOTAL = expectedTotal();
+// O site de teste (porta 3000) usa a API falsa: os totais esperados vêm dos mesmos dados.
+const TOTALS = expectedTotals();
+const TOTAL = TOTALS.total;
 const DAYS = calendarDays(USERS.personal);
 const FIRST = DAYS[0].date;
 const LAST = DAYS[DAYS.length - 1].date;
@@ -16,7 +17,8 @@ for (const [locale, browserLocale] of [
   ["pt", "pt-BR"],
   ["en", "en-US"],
 ] as const) {
-  const caption = content[locale].hero.chartCaption(TOTAL);
+  const caption = content[locale].hero.chartCaption(TOTALS);
+  const format = new Intl.NumberFormat(browserLocale).format;
 
   test.describe(`gráfico em ${locale.toUpperCase()}`, () => {
     test.use({ locale: browserLocale });
@@ -24,8 +26,19 @@ for (const [locale, browserLocale] of [
     test("mostra a soma das duas contas, com a legenda aprovada", async ({ page }) => {
       await page.goto("/");
       await expect(chart(page).locator("figcaption")).toHaveText(caption);
-      // Total formatado no idioma: 1.234 em PT, 1,234 em EN.
-      expect(caption).toContain(new Intl.NumberFormat(browserLocale).format(TOTAL));
+      // Totais formatados no idioma (1.234 em PT, 1,234 em EN): o geral, o de cada
+      // conta e as privadas só da conta de trabalho.
+      for (const value of [TOTAL, TOTALS.work, TOTALS.workPrivate, TOTALS.personal]) {
+        expect(caption).toContain(format(value));
+      }
+      expect(TOTALS.personal + TOTALS.work).toBe(TOTAL);
+    });
+
+    test("sem contribuições privadas, a legenda não fala delas", async () => {
+      const without = content[locale].hero.chartCaption({ ...TOTALS, workPrivate: 0 });
+      expect(without).not.toContain(format(TOTALS.workPrivate));
+      expect(without).not.toMatch(/privad|private/i);
+      expect(without).toContain(format(TOTALS.work));
     });
 
     test("leitores de tela recebem a alternativa textual", async ({ page }) => {
