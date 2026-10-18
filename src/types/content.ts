@@ -30,6 +30,40 @@ export interface DiagramText {
   note: string[];
 }
 
+/** Texto com trechos de código (seletores, HTML), que aparecem em `<code>`. */
+export type RichText = (string | { code: string })[];
+
+export type RecoveryCaseId = "price-renamed" | "price-removed" | "rating-removed";
+
+/** Textos de um caso real do protótipo do TCC (seção 6.3). */
+export interface RecoveryCaseText {
+  /** Rótulo da opção. */
+  label: string;
+  /** O que aconteceu, em poucas frases. */
+  summary: string;
+  change: RichText;
+  candidate: RichText;
+  score: string;
+  outcome: string;
+}
+
+export interface RecoveryCasesText {
+  legend: string;
+  intro: string;
+  fields: {
+    selector: string;
+    change: string;
+    candidate: string;
+    score: string;
+    outcome: string;
+  };
+  /** Rótulo do trecho da linha de log. */
+  logLabel: string;
+  /** Link para a linha completa no repositório do protótipo. */
+  logLink: string;
+  cases: Record<RecoveryCaseId, RecoveryCaseText>;
+}
+
 export interface Role {
   title: string;
   period: string;
@@ -90,6 +124,7 @@ export interface Content {
   };
   projects: Record<ProjectId, ProjectText>;
   diagram: DiagramText;
+  recoveryCases: RecoveryCasesText;
   stack: { label: string; items: string[] }[];
   education: {
     degree: string;

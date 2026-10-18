@@ -50,8 +50,11 @@ ainda marca a etapa 4 como "Próxima"; 6.4 sem a categoria Web).
 - [x] Branch atualizada com a `main` (PR #21).
 - [x] Suíte de referência verde localmente: 113 testes (chromium, api-fora-do-ar, renovacao).
       WebKit não existe neste ambiente; o CI cobre.
-- [ ] Levantamento dos repositórios (em andamento).
-- [ ] Parte 1: casos reais no diagrama do TCC.
+- [x] Levantamento dos repositórios (resultados em `experiments/analysis` do protótipo; monografia
+      privada ainda em rascunho, cap. 5 vazio; regra de recuperação da tese diverge da do protótipo,
+      por isso o site não cita a taxa geral).
+- [x] Parte 1: casos reais no diagrama do TCC (M1-T8, M5-T8, M5-T10). Commit "Parte 1". Revisão
+      adversarial em seguida.
 - [ ] Parte 3: legenda por conta.
 - [ ] Parte 4: demo interativa.
 - [ ] Partes 2, 5 e 6: aguardam respostas do Luige.

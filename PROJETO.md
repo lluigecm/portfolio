@@ -1,7 +1,7 @@
 # Portfólio — Especificação do Projeto
 
 > Fonte única de verdade do projeto. Todo chat ou sessão de desenvolvimento deve ler este arquivo antes de começar.
-> Última atualização: 09/10/2026 · Status: **especificação aprovada em 09/10/2026** · plano de implementação em `PLANO.md`
+> Última atualização: 18/10/2026 · Status: **especificação aprovada em 09/10/2026** · plano de implementação em `PLANO.md`
 
 ---
 
@@ -101,7 +101,7 @@ PLANO.md            # plano de implementação
 ### 5.1 Princípios
 1. **Uma única peça marcante:** o gráfico de contribuições, em largura total logo abaixo da apresentação. Todo o resto é discreto.
 2. **Estrutura é informação:** a linha do tempo aparece só na Experiência, a única sequência real. Sem rótulos decorativos, sem numeração de seções, sem pontos médios separando metadados.
-3. **Movimento só em resposta a uma ação** (troca de tema e de idioma), respeitando `prefers-reduced-motion`. Sem animações de entrada nem efeitos de hover decorativos.
+3. **Movimento só em resposta a uma ação** do visitante, respeitando `prefers-reduced-motion`. A única animação de entrada é o preenchimento do gráfico. Sem efeitos decorativos; a lista completa fica na seção 5.5.
 4. **Cards de projeto como fichas:** mídia grande, borda fina, sem sombras nem gradientes.
 5. Alinhamento à esquerda, coluna estreita (até 70 caracteres por linha).
 
@@ -155,6 +155,16 @@ PLANO.md            # plano de implementação
 - No celular, os links das seções podem ser recolhidos; os botões de idioma e tema continuam visíveis.
 - Espaçamentos exatos e detalhes de cada seção ficam a cargo do desenvolvimento, seguindo estes princípios.
 
+### 5.5 Movimento e interação
+
+Tudo respeita `prefers-reduced-motion`: com ele, nada se move e o site funciona igual. Só `transform` e `opacity`, nunca curva linear, sem sombras.
+
+1. **Preenchimento do gráfico (efeito 1):** uma vez por carregamento, as semanas aparecem da mais antiga para a mais recente, só com opacidade, em até 700 ms. Na troca de idioma, o gráfico chega pronto.
+2. **Relevo no gráfico (efeito 2):** com mouse, as células perto do cursor sobem e crescem na proporção do nível do dia; dias sem contribuição não se mexem. Começa depois do preenchimento e não existe em telas de toque.
+3. **Troca de idioma (efeito 3):** esmaecimento de 350 ms entre as duas versões da página.
+4. **Troca de tema:** esmaecimento de 200 ms, só com opacidade, sem animar cores.
+5. **Casos reais do TCC:** escolher um caso mostra o texto dele e pinta de âmbar, no diagrama, o caminho que o mecanismo seguiu. É troca de estado, sem animação, feita só com HTML e CSS: funciona sem JavaScript, e as setas do teclado trocam de caso.
+
 ## 6. Conteúdo
 
 ### 6.1 Topo
@@ -200,9 +210,19 @@ PLANO.md            # plano de implementação
 - Mídia: diagrama de arquitetura do TCC (regra 20)
 - Tags: TypeScript, Playwright, POM
 
-> **PT:** Testes E2E quebram quando o DOM ou o CSS mudam e o seletor deixa de encontrar o elemento. Este protótipo procura o elemento por similaridade estrutural e atributos estáveis e calcula um score de confiança. Acima do limiar, troca o seletor e registra a troca para revisão. Abaixo, o teste falha como falharia sem o mecanismo.
+> **PT:** Testes E2E quebram quando o DOM ou o CSS mudam e o seletor deixa de encontrar o elemento. Este protótipo procura o elemento por similaridade estrutural e atributos estáveis e calcula um score de confiança, ajustado pelo texto do elemento. Acima do limiar, troca o seletor e registra a troca para revisão. Abaixo, o teste falha como falharia sem o mecanismo.
 >
-> **EN:** E2E tests break when a DOM or CSS change leaves a selector unable to find its element. This prototype searches for the element using structural similarity and stable attributes, then computes a confidence score. Above the threshold, it replaces the selector and logs the change for review. Below it, the test fails just as it would without the mechanism.
+> **EN:** E2E tests break when a DOM or CSS change leaves a selector unable to find its element. This prototype searches for the element using structural similarity and stable attributes, then computes a confidence score, adjusted by the element's text. Above the threshold, it replaces the selector and logs the change for review. Below it, the test fails just as it would without the mechanism.
+
+**Casos reais do protótipo** (abaixo do diagrama; textos em `src/content/pt.ts` e `en.ts`, dados em `src/content/recovery-cases.ts`): três casos da rodada principal de 12/10/2026, todos na mesma página de produto do books.toscrape.com, para comparar.
+- **Classe do preço renomeada** (M1-T8): score 1,00, seletor substituído, testes passam (96 de 96 execuções).
+- **Preço removido** (M5-T8): a estrutura confere, o texto não; score 0,50, o teste falha como deveria (96 de 96).
+- **Estrelas removidas** (M5-T10): sem texto para conferir, score 0,925; o mecanismo troca pelo elemento errado. É o único falso positivo da rodada e aparece como limitação, não como defeito corrigido.
+
+Cada caso mostra seletor, mudança na página, candidato, score, resultado, um trecho literal da linha de log (campos selecionados) e o link para a linha completa num commit fixo do repositório. Cuidados:
+- Sem a taxa geral de recuperação: a monografia ainda pode mudar a regra de contagem. Os números são as contagens de execuções de cada caso, citadas como resultado do protótipo.
+- O limiar 0,7 aparece como provisório, como o próprio repositório pede (ADR-016).
+- Nada da monografia (repositório privado) vai para o site.
 
 **MyGather**
 - Repositório: https://github.com/lluigecm/MyGather
@@ -337,3 +357,6 @@ Next.js entra na lista quando o portfólio estiver no ar.
 | 09/10/2026 | Âmbar do tema claro ajustado de `#B45309` para `#A84E08` (contraste 4,56 → 5,07 sobre o papel) |
 | 09/10/2026 | Gráfico: níveis 1–4 com 3:1 contra o papel; nível 0 = linha; total visível na legenda |
 | 09/10/2026 | `adjustFontFallback` sem efeito no Next 16.4; fallback calibrado gerado automaticamente |
+| 18/10/2026 | Seção 5.5 criada com os efeitos de movimento da etapa 13, que o código já citava; 5.1.3 passa a apontar para ela |
+| 18/10/2026 | Card do TCC ganha três casos reais do protótipo (M1-T8, M5-T8, M5-T10), com destaque do caminho no diagrama, trecho literal do log e link para a linha no repositório; o score no diagrama passa a dizer que é ajustado pelo texto |
+| 18/10/2026 | Números do TCC no site só como contagens de cada caso do protótipo, sem a taxa geral, e limiar citado como provisório |

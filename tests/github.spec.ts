@@ -45,7 +45,17 @@ for (const [locale, browserLocale] of [
       await page.goto("/");
       const cards = page.locator("[data-project]");
       await expect(cards.locator('[data-testid="repo-stats"]')).toHaveCount(2);
-      for (const text of await cards.allInnerTexts()) {
+      // Fora a mídia, que é conteúdo próprio: os casos do TCC citam a classificação
+      // por estrelas do site testado e o limiar 0,7, e nada ali vem da API.
+      const texts = await cards.evaluateAll((elements) =>
+        elements.map((card) =>
+          [...card.children]
+            .filter((child) => child.tagName !== "FIGURE")
+            .map((child) => (child as HTMLElement).innerText)
+            .join("\n"),
+        ),
+      );
+      for (const text of texts) {
         expect(text).not.toMatch(/estrela|star|★|☆/i);
         expect(text).not.toMatch(/linguagens|languages/i);
         expect(text).not.toMatch(/\b(JavaScript|HTML|Shell|Dockerfile)\b/);

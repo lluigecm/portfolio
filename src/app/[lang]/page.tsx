@@ -31,7 +31,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <Experience text={text.experience} />
         </Section>
         <Section id="projects" title={text.ui.nav.projects}>
-          <Projects text={text.projects} diagram={text.diagram} ui={text.ui} />
+          <Projects
+            text={text.projects}
+            diagram={text.diagram}
+            cases={text.recoveryCases}
+            ui={text.ui}
+          />
         </Section>
         <Section id="stack" title={text.ui.nav.stack}>
           <Stack text={text.stack} />

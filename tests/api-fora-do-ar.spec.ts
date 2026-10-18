@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { content } from "../src/content";
+import { projects } from "../src/content/projects";
 import { checkA11y } from "./a11y";
 
 // Este site de teste (porta 3001) foi montado com a API do GitHub recusando
@@ -9,11 +10,12 @@ test("com a API fora do ar, os cards aparecem só com os textos próprios", asyn
   const response = await page.goto("/");
   expect(response?.status()).toBe(200);
 
-  for (const [id, project] of Object.entries(content.en.projects)) {
+  for (const { id, repo } of projects) {
+    const project = content.en.projects[id];
     const card = page.locator(`[data-project="${id}"]`);
     await expect(card.getByRole("heading", { name: project.title })).toBeVisible();
     await expect(card.getByText(project.description)).toBeVisible();
-    await expect(card.locator("code")).toBeVisible();
+    await expect(card.getByRole("link", { name: repo })).toBeVisible();
     await expect(card.locator('[data-testid="repo-stats"]')).toHaveCount(0);
   }
 });
