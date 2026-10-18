@@ -85,7 +85,7 @@ function Rich({ text }: { text: RichText }) {
     typeof part === "string" ? (
       part
     ) : (
-      <code key={i} className="font-mono [overflow-wrap:anywhere]">
+      <code key={i} lang={part.lang} className="font-mono [overflow-wrap:anywhere]">
         {part.code}
       </code>
     ),

@@ -55,8 +55,9 @@ ainda marca a etapa 4 como "Próxima"; 6.4 sem a categoria Web).
       por isso o site não cita a taxa geral).
 - [x] Parte 1: casos reais no diagrama do TCC (M1-T8, M5-T8, M5-T10). Commit "Parte 1". Revisão
       adversarial em seguida.
-- [x] Parte 1: CI verde (inclusive WebKit). A revisão adversarial falhou por limite de sessão:
-      rodar de novo.
+- [x] Parte 1: CI verde (inclusive WebKit). Revisão adversarial das partes 1 e 3 feita: 3 achados
+      confirmados e corrigidos (limiar "provisório" nos três casos, lang="en" no texto em inglês,
+      plural "os testes"); 13 descartados pelo verificador.
 - [x] Parte 3: legenda por conta (trabalho, pessoal e privadas da de trabalho). Commit "Parte 3".
       Depende de o Luige confirmar que a conta de trabalho mostra as privadas no perfil; se não
       mostrar, o trecho das privadas some sozinho.

@@ -32,8 +32,12 @@ export interface DiagramText {
   note: string[];
 }
 
-/** Texto com trechos de código (seletores, HTML), que aparecem em `<code>`. */
-export type RichText = (string | { code: string })[];
+/**
+ * Texto com trechos de código (seletores, HTML), que aparecem em `<code>`.
+ * `lang` marca um trecho em outro idioma, como o texto em inglês do site testado
+ * citado na página em português (WCAG 3.1.2).
+ */
+export type RichText = (string | { code: string; lang?: string })[];
 
 export type RecoveryCaseId = "price-renamed" | "price-removed" | "rating-removed";
 

@@ -91,6 +91,16 @@ for (const [locale, browserLocale] of LOCALES) {
   });
 }
 
+test.describe("idioma dos trechos", () => {
+  test.use({ locale: "pt-BR" });
+
+  test("texto em inglês do site testado vem marcado na página em português", async ({ page }) => {
+    await page.goto("/");
+    await card(page).getByRole("radio", { name: content.pt.recoveryCases.cases["price-removed"].label }).check();
+    await expect(panel(page, "price-removed").getByText("In stock (19 available)")).toHaveAttribute("lang", "en");
+  });
+});
+
 test.describe("sem JavaScript", () => {
   test.use({ javaScriptEnabled: false, locale: "en-US" });
 

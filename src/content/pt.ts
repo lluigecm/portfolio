@@ -128,13 +128,13 @@ export const pt: Content = {
           "o parágrafo seguinte, ",
           { code: '<p class="instock availability">' },
           ", com o texto ",
-          { code: "In stock (19 available)" },
+          { code: "In stock (19 available)", lang: "en" },
           " no lugar de ",
           { code: "£45.17" },
         ],
-        score: "0,50: estrutura idêntica (1,00), reduzida à metade porque o texto não confere; abaixo do limiar de 0,7",
+        score: "0,50: estrutura idêntica (1,00), reduzida à metade porque o texto não confere; abaixo do limiar provisório de 0,7",
         outcome:
-          "Seletor mantido. O teste falhou nas 96 execuções, como deveria: o mecanismo não escondeu o defeito.",
+          "Seletor mantido. Os testes falharam nas 96 execuções, como deveriam: o mecanismo não escondeu o defeito.",
       },
       "rating-removed": {
         label: "Estrelas removidas: falso positivo",
@@ -142,9 +142,9 @@ export const pt: Content = {
           "A classificação por estrelas não tem texto: a nota fica só na classe. Sem o elemento, a estrutura aponta o vizinho, e não há texto para conferir. Foi o único falso positivo da rodada, e o repositório o registra como limitação do método.",
         change: ["o parágrafo ", { code: '<p class="star-rating Two">' }, " é removido"],
         candidate: ["o vizinho de cima, ", { code: '<p class="instock availability">' }, ": o elemento errado"],
-        score: "0,925: estrutura quase idêntica e nenhum texto para conferir, acima do limiar de 0,7",
+        score: "0,925: estrutura quase idêntica e nenhum texto para conferir, acima do limiar provisório de 0,7",
         outcome:
-          "Seletor substituído pelo elemento errado nas 48 execuções. O teste falhou mesmo assim, porque a nota lida virou 0, mas a troca é justamente o erro que o mecanismo deveria evitar.",
+          "Seletor substituído pelo elemento errado nas 48 execuções. Os testes falharam mesmo assim, porque a nota lida virou 0, mas a troca é justamente o erro que o mecanismo deveria evitar.",
       },
     },
   },

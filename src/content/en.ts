@@ -132,9 +132,9 @@ export const en: Content = {
           " instead of ",
           { code: "£45.17" },
         ],
-        score: "0.50: identical structure (1.00), halved because the text doesn't match; below the threshold of 0.7",
+        score: "0.50: identical structure (1.00), halved because the text doesn't match; below the provisional threshold of 0.7",
         outcome:
-          "Selector kept. The test failed in all 96 runs, as it should: the mechanism didn't hide the defect.",
+          "Selector kept. The tests failed in all 96 runs, as they should: the mechanism didn't hide the defect.",
       },
       "rating-removed": {
         label: "Star rating removed: false positive",
@@ -142,9 +142,9 @@ export const en: Content = {
           "The star rating has no text: the rating lives only in the class. With the element gone, the structure points to its neighbor, and there's no text to check. It was the run's only false positive, and the repository records it as a limitation of the method.",
         change: ["the ", { code: '<p class="star-rating Two">' }, " paragraph is removed"],
         candidate: ["the neighbor above it, ", { code: '<p class="instock availability">' }, ": the wrong element"],
-        score: "0.925: nearly identical structure and no text to check, above the threshold of 0.7",
+        score: "0.925: nearly identical structure and no text to check, above the provisional threshold of 0.7",
         outcome:
-          "Selector replaced with the wrong element in all 48 runs. The test failed anyway, because the rating it read became 0, but the swap is exactly the mistake the mechanism should avoid.",
+          "Selector replaced with the wrong element in all 48 runs. The tests failed anyway, because the rating they read became 0, but the swap is exactly the mistake the mechanism should avoid.",
       },
     },
   },
