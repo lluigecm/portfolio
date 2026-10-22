@@ -1,7 +1,7 @@
 # Portfólio — Plano de Implementação
 
 > Baseado na especificação aprovada em `PROJETO.md` (09/10/2026).
-> Status: **aprovado em 09/10/2026** · execução no chat de desenvolvimento (claude.ai)
+> Status: **aprovado em 09/10/2026; etapa 14 (redesign) acrescentada em 22/10/2026** · execução no chat de desenvolvimento (claude.ai)
 
 ## Como usar este plano
 
@@ -19,16 +19,23 @@
 | 0 | Pré-requisitos (Luige) | — | ✅ Concluída |
 | 1 | Setup e deploy inicial | 0 | ✅ Concluída em 09/10/2026 |
 | 2 | Base de testes e CI | 1 | ✅ Concluída em 09/10/2026 |
-| 3 | Tokens de design e tipografia | 2 | ✅ Concluída em 09/10/2026 (ajuste de contraste pendente) |
-| 4 | Tema claro/escuro | 3 | ⏳ Próxima |
-| 5 | Idioma PT/EN | 3 |  |
-| 6 | Layout e seções estáticas | 4, 5 |  |
-| 7 | Integração com o GitHub: cards | 6 |  |
-| 8 | Mídia dos projetos | 7 |  |
-| 9 | Gráfico de contribuições | 7 |  |
-| 10 | SEO e prévia de link | 6 |  |
-| 11 | Auditoria e polimento | 8, 9, 10 |  |
-| 12 | Publicação | 11 |  |
+| 3 | Tokens de design e tipografia | 2 | ✅ Concluída em 09/10/2026 |
+| 4 | Tema claro/escuro | 3 | ✅ Concluída em 09/10/2026 |
+| 5 | Idioma PT/EN | 3 | ✅ Concluída em 09/10/2026 |
+| 6 | Layout e seções estáticas | 4, 5 | ✅ Concluída em 10/10/2026 |
+| 7 | Integração com o GitHub: cards | 6 | ✅ Concluída em 10/10/2026 |
+| 8 | Mídia dos projetos | 7 | ✅ Concluída em 10/10/2026 |
+| 9 | Gráfico de contribuições | 7 | ✅ Concluída em 10/10/2026 |
+| 10 | SEO e prévia de link | 6 | ✅ Concluída em 10/10/2026 |
+| 11 | Auditoria e polimento | 8, 9, 10 | ✅ Concluída em 10/10/2026 |
+| 12 | Publicação | 11 | ⏸ Em parte: falta o domínio |
+| 13 | Movimento (fora do plano original; seção 5.5) | 11 | ✅ Concluída em 10/10/2026 |
+| 14.1 | Redesign: tokens e fontes | 13 | ⏳ Próxima |
+| 14.2 | Redesign: componentes de apresentação por seção | 14.1 |  |
+| 14.3 | Redesign: cena com o bot | 14.2 |  |
+| 14.4 | Redesign: gráfico reestilizado | 14.1 |  |
+| 14.5 | Redesign: imagem de prévia e favicon | 14.1 |  |
+| 14.6 | Redesign: ajuste final dos testes e auditoria | 14.2 a 14.5 |  |
 
 ---
 
@@ -261,3 +268,109 @@
 - [ ] O domínio abre o site com HTTPS.
 - [ ] A prévia de link mostra o domínio novo.
 - [ ] Verificação final completa nos dois idiomas e nos dois temas, no celular e no desktop.
+
+---
+
+## Etapa 14 — Redesign "retrô platformer"
+
+**Objetivo:** implementar a seção 5 revisada e aprovada em 22/10/2026 (decisões nos blocos A a D da seção 13 do `PROJETO.md`). O conteúdo da seção 6 não muda.
+
+**Regras de todas as subetapas**
+- Uma subetapa por vez, na ordem da tabela, cada uma numa branch própria e com PR de CI verde.
+- Os testes de cada subetapa nascem com ela. Toda asserção nova é vista falhando por uma injeção própria antes de valer, e o PR registra a injeção usada (seção 7).
+- O preview em HTML é referência de aparência e de comportamento, não código a copiar. Nada de texto dele entra no site.
+- Entre uma subetapa e outra, o site pode ficar visualmente intermediário, mas nunca quebrado: todos os testes verdes, contraste AA e nenhuma rolagem horizontal.
+
+### 14.1 — Tokens e fontes
+
+**Entregas**
+- Tokens da seção 5.2 em `src/app/globals.css`, nos dois temas, substituindo os do Grafite: cena, painéis, texto, secundário, linha, amarelo, teal, rosa, destaque de texto e foco por tema.
+- Escala verde do gráfico (níveis 1 a 4) e nível 0 = linha.
+- Utilitário de sombra dura (5.1.7): deslocada, sem desfoque nem espalhamento, na cor da linha.
+- Press Start 2P via `next/font` (latin e latin-ext), ao lado da Plex Sans e da Plex Mono; peso único, sem negrito sintético nos títulos.
+- `src/lib/palette.ts` (cores das imagens geradas) com a paleta nova.
+
+**Critérios de aceite**
+- [ ] Teste de contraste com os pares novos nos dois temas: texto e secundário sobre os dois painéis, destaque de texto, linha a 3:1 ou mais, foco, texto `#1A1A2E` sobre amarelo e sobre teal.
+- [ ] Escala do gráfico: níveis 1 a 4 a 3:1 ou mais contra o painel, em ordem crescente, nos dois temas.
+- [ ] Cores só nos tokens (teste de tokens).
+- [ ] A Press Start 2P carrega; nenhum elemento com ela abaixo de 14 px.
+- [ ] A Plex continua calibrada, sem deslocamento de layout na troca de fonte.
+
+### 14.2 — Componentes de apresentação por seção
+
+**Entregas**
+- **HUD** como cabeçalho fixo: nome, links das seções, contador "CONTRIBUIÇÕES" / "CONTRIBUTIONS" (mesmo total da legenda; some quando o gráfico é ocultado), idioma, tema e GitHub. Abaixo de 640 px, o contador na segunda linha e os links recolhíveis. `scroll-padding-top` com a altura da HUD.
+- **Topo:** caixa de diálogo de jogo (borda grossa, cantos retos) com nome, título e apresentação da 6.1, alinhados à esquerda.
+- **Placas** MUNDO 1-1 a 1-5 / WORLD 1-1 a 1-5, uma por seção, decorativas (`aria-hidden`), no idioma da página.
+- **Experiência:** trilha de checkpoints; o cargo atual destacado só pela cor.
+- **Projetos:** cartuchos, com a mídia atual (diagrama com os casos do TCC, vídeo) como rótulo; os casos do TCC no visual novo.
+- **Stack:** inventário com os quatro grupos da 6.4 e seus itens.
+- **Formação e Contato:** painéis; botões de contato no estilo de jogo, que afundam no `:active`.
+- Sombras duras só em painéis, placas, botões e cartuchos; nenhum `text-shadow`; sem hover que mova elementos.
+
+**Critérios de aceite**
+- [ ] Os textos da seção 6 continuam intactos, e os títulos das seções (h2) são os nomes da seção 6.
+- [ ] As placas são invisíveis ao leitor de tela e trazem o texto do idioma da página.
+- [ ] Teste de design: caixa alta e numeração só na placa, na HUD e no balão; mono só em código; sem pontos médios.
+- [ ] Teste de sombras: desfoque e espalhamento zero, cor igual ao token linha, só nos elementos permitidos; nenhum `text-shadow`.
+- [ ] O contador da HUD mostra o mesmo total da legenda e some com a API fora do ar e sem cache.
+- [ ] Cada link da HUD leva à seção com o título visível abaixo da HUD.
+- [ ] Navegação completa por teclado, com foco visível nas cores de foco do tema.
+- [ ] Sem violações do axe nos dois temas e nos dois idiomas.
+- [ ] A 360 px: sem rolagem horizontal, HUD em no máximo duas linhas, idioma e tema visíveis.
+
+### 14.3 — Cena com o bot
+
+**Entregas**
+- Cena fixa no rodapé da tela, atrás do conteúdo, sem receber cliques e invisível ao leitor de tela: céu em degradê no fundo da página, estrelas fixas no tema escuro (posições fixas no código, sem `Math.random`), colinas paradas e chão.
+- A página reserva o espaço da cena no fim, para o Contato não ficar escondido atrás dela.
+- Bot em pixel art original, com dois quadros de caminhada (formato a cargo do desenvolvimento, sem personagens de terceiros).
+- Movimento ligado à rolagem com listener **passivo** e **`requestAnimationFrame`**: troca de quadro ao rolar, vira ao rolar para cima, para quando a rolagem para; o chão desliza só com `transform`.
+- Balão de fala na Experiência e em Projetos, uma vez por seção por visita, invisível ao leitor de tela, com as falas da 5.5 nos dois idiomas.
+- Com `prefers-reduced-motion`: bot e chão parados, balão sem esmaecer.
+- Sai o relevo do gráfico (efeito 2 antigo), com os seus testes.
+
+**Critérios de aceite**
+- [ ] Nenhuma animação em loop: `document.getAnimations()` chega a zero depois de carregar e depois de rolar.
+- [ ] Ao rolar, o bot troca de quadro; ao rolar para cima, vira; quando a rolagem para, para.
+- [ ] O balão aparece só na Experiência e em Projetos, uma vez por seção por visita, e é invisível ao leitor de tela.
+- [ ] Com movimento reduzido, nada se move.
+- [ ] O fim da página (Contato) fica inteiro visível acima da cena.
+- [ ] Nenhum texto sobre a cena.
+
+### 14.4 — Gráfico reestilizado
+
+**Entregas**
+- Células como blocos de pixel art na escala verde, sobre o painel.
+- Preenchimento ao carregar em degraus (`steps`), em até 700 ms; pronto na troca de idioma.
+- Mantidos: legenda por conta (regra 13), regra 14, rolagem horizontal no celular começando pelos meses recentes.
+
+**Critérios de aceite**
+- [ ] Níveis na escala nova; nível 0 só para dias sem contribuição.
+- [ ] Preenchimento em degraus, uma vez, em até 700 ms; nenhum com movimento reduzido.
+- [ ] O total da legenda e o do contador batem com a soma do gráfico.
+
+### 14.5 — Imagem de prévia e favicon
+
+**Entregas**
+- Pacote `@fontsource/press-start-2p` (OFL). A fonte entra no `next/og` em `.woff`: o `next/og` (Satori) não aceita `.woff2`.
+- Imagem de prévia única, noturna, 1200 × 630: céu, colinas, chão, o bot e a caixa de diálogo com nome e título.
+- Favicon em SVG com a cabeça do bot; ícone do iPhone no mesmo desenho.
+
+**Critérios de aceite**
+- [ ] As imagens de prévia existem, em PNG de 1200 × 630, nos dois idiomas.
+- [ ] As cores das imagens geradas são as dos tokens.
+- [ ] Favicon e ícone do iPhone próprios, no desenho do bot.
+
+### 14.6 — Ajuste final dos testes e auditoria
+
+**Entregas**
+- Revisão de todos os testes contra a seção 5 nova: nada do Grafite sobrando (âmbar, papel, fichas, relevo).
+- `PROJETO.md` e `PLANO.md` com o status final.
+
+**Critérios de aceite**
+- [ ] Lighthouse ≥ 90 em todas as categorias, no celular, com atenção ao peso das fontes e ao custo do bot na rolagem.
+- [ ] Todos os testes E2E verdes no Chromium e no WebKit (celular), inclusive HUD e cena fixas, áreas seguras do iPhone e altura em `svh`.
+- [ ] Verificação manual nos dois idiomas e nos dois temas, no celular e no desktop.
+- [ ] Nenhum item da seção 5 sem implementação.

@@ -1,7 +1,7 @@
 # Portfólio — Especificação do Projeto
 
 > Fonte única de verdade do projeto. Todo chat ou sessão de desenvolvimento deve ler este arquivo antes de começar.
-> Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026; seção 5 em revisão** · plano de implementação em `PLANO.md`
+> Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026; seção 5 revisada e aprovada em 22/10/2026** · plano de implementação em `PLANO.md`
 
 ---
 
@@ -98,7 +98,7 @@ PLANO.md            # plano de implementação
 
 ## 5. Design
 
-> **Em revisão (22/10/2026):** direção visual "retrô platformer", em pixel art 8-bit. Decisões nos blocos A a D da seção 13. Substitui o visual Grafite quando aprovada.
+> **Revisada e aprovada em 22/10/2026:** direção visual "retrô platformer", em pixel art 8-bit, no lugar do visual Grafite. Decisões nos blocos A a D da seção 13; implementação na etapa 14 do `PLANO.md`.
 
 ### 5.1 Princípios
 1. **Uma única peça marcante:** o gráfico de contribuições, em largura total logo abaixo da apresentação, em blocos de pixel art. O bot e a cena são moldura, não conteúdo.
@@ -106,7 +106,8 @@ PLANO.md            # plano de implementação
 3. **Movimento só em resposta a uma ação** do visitante (rolar, trocar tema ou idioma, escolher um caso), respeitando `prefers-reduced-motion`. Nada em loop. A única animação de entrada é o preenchimento do gráfico. Lista completa na seção 5.5.
 4. **Cards de projeto como cartuchos:** a mídia grande (diagrama com os casos, vídeo) é o rótulo do cartucho; bordas grossas e cantos retos.
 5. **Duas camadas:** a cena (céu, estrelas, colinas, chão, bot) é só decoração e nunca tem texto por cima; todo texto fica sobre painel sólido.
-6. Alinhamento à esquerda dentro dos painéis, coluna estreita (até 70 caracteres por linha).
+6. Alinhamento à esquerda dentro dos painéis, inclusive na caixa de diálogo do topo; só a HUD tem layout próprio. Coluna estreita (até 70 caracteres por linha).
+7. **Sombras duras, sem desfoque:** desfoque e espalhamento sempre zero, cor sempre o token linha do tema, e só em painéis, placas, botões e cartuchos. Nenhum `text-shadow`, nem no nome do topo.
 
 ### 5.2 Cores
 
@@ -173,7 +174,7 @@ Cada cor tem um papel. Escuro = céu noturno; claro = céu diurno.
 
 ### 5.5 Movimento e interação
 
-Tudo respeita `prefers-reduced-motion`: com ele, nada se move e o site funciona igual (o bot aparece parado). Nada fica em loop. Só `transform` e `opacity`; curvas suaves ou em degraus (`steps`), nunca linear; sem sombras com desfoque.
+Tudo respeita `prefers-reduced-motion`: com ele, nada se move e o site funciona igual (o bot aparece parado). Nada fica em loop. Só `transform` e `opacity`; curvas suaves ou em degraus (`steps`), nunca linear. Sombras só as duras do princípio 5.1.7.
 
 1. **Bot:** anda conforme a página rola (troca de quadro), vira ao rolar para cima e para quando a rolagem para. O chão desliza junto. As colinas ficam paradas.
 2. **Balão de fala:** aparece ao entrar na Experiência e em Projetos, uma vez por seção por visita (ao voltar, não reaparece). Invisível ao leitor de tela e sem informação que não esteja na página. Falas: Experiência "NA X-TESTING DESDE 2024!" / "AT X-TESTING SINCE 2024!"; Projetos "O TCC TEM CASOS REAIS!" / "MY THESIS HAS REAL CASES!". Formação, Contato e Stack em silêncio.
@@ -403,3 +404,6 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 22/10/2026 | Redesign, bloco D (2/3): imagem de prévia noturna única e favicon com a cabeça do bot; entra o pacote @fontsource/press-start-2p (OFL), carregado em .woff, porque o next/og (Satori) não aceita .woff2 |
 | 22/10/2026 | Redesign, bloco D (3/3): testes ajustados sem afrouxar o que provam; regra escrita na seção 7: toda asserção nova é vista falhando por injeção própria, registrada no PR. Requisitos da etapa: bot com listener de scroll passivo e requestAnimationFrame; teste de "nenhuma animação em loop" via document.getAnimations(), depois de carregar e depois de rolar |
 | 22/10/2026 | Nova seção 5 escrita para aprovação; 6.7 e 7 atualizadas conforme os blocos C e D |
+| 22/10/2026 | Sombras duras aceitas (princípio 5.1.7): desfoque e espalhamento zero, cor = token linha, só em painéis, placas, botões e cartuchos; nenhum text-shadow. O teste passa a proibir desfoque e espalhamento, não a sombra |
+| 22/10/2026 | Alinhamento à esquerda dentro dos painéis, inclusive na caixa de diálogo do topo; só a HUD tem layout próprio |
+| 22/10/2026 | Seção 5 revisada aprovada; redesign planejado na etapa 14 do PLANO.md |
