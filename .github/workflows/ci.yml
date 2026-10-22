@@ -1,14 +1,27 @@
 name: CI
 
+# Uma execução por mudança: nos PRs, pelo evento do PR; na main, pelo push.
+# Antes, cada push num PR rodava tudo duas vezes.
 on:
   push:
+    branches: [main]
   pull_request:
+
+# Um push novo cancela a execução anterior do mesmo PR ou branch.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
     name: Lint, build e testes E2E
     # Fixado: a troca de versão do Ubuntu é uma decisão planejada, não automática.
     runs-on: ubuntu-24.04
+    # Imagem oficial do Playwright, com Chromium, WebKit e as dependências do
+    # sistema já instaladas: sem o apt-get, que às vezes travava até o limite de
+    # tempo. A versão tem de ser a mesma do @playwright/test no package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
     timeout-minutes: 15
     env:
       NEXT_TELEMETRY_DISABLED: 1
@@ -23,10 +36,6 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-
-      - name: Instalar navegadores do Playwright (Chromium e WebKit)
-        run: npx playwright install --with-deps chromium webkit
-
       - run: npm run test:e2e
 
       - name: Publicar relatório do Playwright
