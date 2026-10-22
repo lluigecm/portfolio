@@ -12,6 +12,7 @@ export const en: Content = {
   ui: {
     skipToContent: "Skip to content",
     theme: { toggle: "Day or night", toDay: "Switch to day mode", toNight: "Switch to night mode" },
+    sound: { effects: "Sound effects", music: "Music" },
   },
   hud: {
     lvl: "LVL: TRAINEE @ X-TESTING",

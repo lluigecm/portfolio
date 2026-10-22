@@ -649,3 +649,13 @@ h2.entra { width: fit-content; max-width: 100% }
 @keyframes mais { from { translate: 0 0 } 70% { opacity: 1 } to { translate: 0 -64px; opacity: 0 } }
 @keyframes caco { to { translate: var(--dx) var(--dy); opacity: 0 } }
 @keyframes pulsa { 40% { scale: 1.35; color: var(--pink) } }
+
+/* ---------- Som (HUD) ---------- */
+.hud .som-btn { display: grid; place-items: center; padding: .45rem }
+.hud .som-btn svg { width: 1.2em; height: 1.2em; fill: currentColor }
+/* Cinco botões cabem a 360 px com folgas menores. */
+@media (max-width: 420px) {
+  .hud button { padding: .4rem .45rem }
+  .hud .theme-btn, .hud .som-btn { padding: .35rem }
+  .hud .r { gap: .3rem }
+}

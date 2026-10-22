@@ -51,6 +51,8 @@ export interface Content {
     skipToContent: string;
     /** Botão de dia e noite: rótulo antes de saber o tema e para cada destino. */
     theme: { toggle: string; toDay: string; toNight: string };
+    /** Botões de som da HUD. */
+    sound: { effects: string; music: string };
   };
   hud: {
     lvl: string;

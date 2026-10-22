@@ -40,8 +40,8 @@
 | 14.6 | Redesign: ajuste final dos testes e auditoria | 14.2 a 14.5 |  |
 | 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | ✅ Concluída em 22/10/2026 |
 | 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 | ✅ Concluída em 22/10/2026 |
-| 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 | 🔍 Em revisão (PR) |
-| 15.4 | Motion no site: efeitos sonoros e música | 15.1 |  |
+| 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 | ✅ Concluída em 22/10/2026 |
+| 15.4 | Motion no site: efeitos sonoros e música | 15.1 | 🔍 Em revisão (PR) |
 
 ---
 
@@ -431,7 +431,19 @@
 - Com movimento reduzido, sem bugs.
 
 **Critérios de aceite**
-- [ ] Rolar bastante traz um bug; o bot pisa nele, o "+100" aparece e o placar soma 100.
-- [ ] Com movimento reduzido, nenhum bug aparece.
-- [ ] O bot não some depois de pular.
+- [x] Rolar bastante traz um bug; o bot pisa nele, o "+100" aparece e o placar soma 100.
+- [x] Com movimento reduzido, nenhum bug aparece.
+- [x] O bot não some depois de pular.
+
+### 15.4 — Efeitos sonoros e música
+
+**Entregas**
+- `src/lib/som.ts`: motor em Web Audio. A trilha é o tema principal do vídeo (16 compassos, 150 BPM) em loop sem emenda, renderizada uma vez num `OfflineAudioContext` (vozes monofônicas com as notas como automação, para custar pouco). Os efeitos são sintetizados na hora: pulo, pisão, moeda, fala do bot, entradas, confete, dia e noite, seleção e equipar.
+- Dois botões na HUD (`SoundButtons`), efeitos sonoros e música, **ligados por padrão** e salvos no navegador. Como os navegadores só liberam áudio depois de um gesto, o som começa no primeiro clique, toque ou tecla na página (`data-musica` no `<html>` depois disso). Aba escondida pausa o som.
+- A 360 px, a HUD com os cinco botões cabe sem cortar.
+
+**Critérios de aceite**
+- [ ] Efeitos e música começam ligados, cada um com o seu botão, e a escolha fica salva.
+- [ ] A música começa no primeiro gesto e para no botão.
+- [ ] A HUD cabe a 360 px.
 
