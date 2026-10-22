@@ -194,6 +194,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   80% { transform: translateY(-16px); scale: 1 } 90% { transform: none; scale: 1.2 .8 } 100% { transform: none; scale: 1 }
 }
 .walker .px, .queda .px { position: absolute; left: 0; top: 0; width: 4px; height: 4px; background: transparent; font: 0/0 a; transform-origin: 32px 64px }
+.walker .corpo { position: absolute; inset: 0; transform-origin: 50% 100% }
 .walker.flip { transform: scaleX(-1) }
 .walker.idle { animation: bob 1.4s steps(2) infinite }
 @keyframes bob { 50% { transform: translateY(-3px) } }
@@ -430,7 +431,7 @@ h2.entra { width: fit-content; max-width: 100% }
     display: block; position: fixed; left: clamp(16px, 7vw, 90px); bottom: 46px; width: 64px; height: 64px; z-index: 21;
     pointer-events: none; animation: queda .5s cubic-bezier(.55, 0, 1, .45) .95s both, some 0s 1.45s forwards
   }
-  .tv .walker .px:not(.jump) { animation: some-ate 0s 1.45s backwards, pousa .45s 1.45s }
+  .tv .walker .corpo { animation: some-ate 0s 1.45s backwards, pousa .45s 1.45s }
   .tv .poeira { display: block; position: absolute; left: calc(clamp(16px, 7vw, 90px) + 29px); bottom: 46px }
   .poeira i { position: absolute; left: 0; bottom: 0; width: 6px; height: 6px; background: #fff8e7; opacity: 0; animation: poeira .55s ease-out 1.45s }
 
@@ -632,3 +633,19 @@ h2.entra { width: fit-content; max-width: 100% }
 @keyframes astro-desce { to { translate: 0 75vh; opacity: 0 } }
 @keyframes astro-sobe { from { translate: 0 75vh; opacity: 0 } }
 @keyframes brilho { 50% { opacity: var(--pico) } }
+
+/* ---------- Bugs no chão (Scene) ---------- */
+.bichos { position: absolute; left: 0; right: 0; bottom: 46px; height: 0 }
+.bug { position: absolute; left: 0; bottom: 0; width: 52px; height: 40px }
+.bug .px { position: absolute; left: 0; top: 0; width: 4px; height: 4px; transform-origin: 26px 40px }
+.bug.achatado .px { animation: achata .5s ease-out forwards }
+.mais {
+  position: absolute; left: 0; bottom: 30px; font-family: var(--pixel); font-size: .7rem; color: var(--yellow);
+  text-shadow: 3px 3px 0 #1a1a2e; animation: mais .9s ease-out forwards
+}
+.caco { position: absolute; left: 24px; bottom: 8px; width: 6px; height: 6px; animation: caco .6s cubic-bezier(.2, .6, .4, 1) forwards }
+.pontos.pulsa { display: inline-block; animation: pulsa .4s cubic-bezier(.34, 1.56, .64, 1) }
+@keyframes achata { 0% { scale: 1.3 .5 } 60% { scale: 1.15 .7; opacity: 1 } 100% { scale: 1.1 .7; opacity: 0 } }
+@keyframes mais { from { translate: 0 0 } 70% { opacity: 1 } to { translate: 0 -64px; opacity: 0 } }
+@keyframes caco { to { translate: var(--dx) var(--dy); opacity: 0 } }
+@keyframes pulsa { 40% { scale: 1.35; color: var(--pink) } }

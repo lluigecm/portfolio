@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { content } from "../src/content";
-import { waitForHydration } from "./apoio";
+import { waitForEntrances, waitForHydration } from "./apoio";
 
 test.use({ locale: "pt-BR" });
 const text = content.pt;
@@ -115,6 +115,7 @@ test("o inventário equipa o item escolhido e mostra os detalhes", async ({ page
   await expect(info).toContainText(text.stack.items.playwright.description);
 
   await page.getByRole("button", { name: /Robot/ }).click();
+  await waitForEntrances(page);
   await expect(slots.nth(3)).toHaveAttribute("aria-pressed", "true");
   await expect(slots.first()).toHaveAttribute("aria-pressed", "false");
   await expect(info).toContainText("Robot Framework");
@@ -137,7 +138,9 @@ test("passar o mouse num card faz o bot comentar", async ({ page, isMobile }) =>
   test.skip(isMobile, "sem mouse no celular");
   await page.goto("/");
   await waitForHydration(page);
-  await page.locator(".cart").first().scrollIntoViewIfNeeded();
+  // Rolagem instantânea e cartuchos parados: a fala da fase não chega depois da do card.
+  await page.locator(".cart").first().evaluate((cart) => cart.scrollIntoView({ behavior: "instant", block: "center" }));
+  await waitForEntrances(page);
   await page.locator(".cart").nth(1).hover();
   await expect(page.getByTestId("bubble")).toHaveText(text.projects.falas.mygather);
   await expect(page.getByTestId("bubble")).toHaveClass(/show/);

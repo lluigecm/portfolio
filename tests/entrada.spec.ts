@@ -18,7 +18,19 @@ test("a TV liga ao abrir o site, sem bloquear cliques, e some", async ({ page })
   // O bot cai por cima de tudo e some ao pousar no lugar do de baixo.
   await expect(tv).toBeHidden();
   await expect(page.locator(".queda")).toBeHidden();
-  await expect.poll(() => opacity(page, "[data-testid=walker] .px")).toBe("1");
+  await expect.poll(() => opacity(page, "[data-testid=walker] .corpo")).toBe("1");
+});
+
+test("a aterrissagem da abertura não se repete quando o bot pula", async ({ page }) => {
+  await page.goto("/");
+  await waitForHydration(page);
+  await expect.poll(() => opacity(page, "[data-testid=walker] .corpo")).toBe("1");
+  await page.getByTestId("walker").click();
+  await expect(page.locator("[data-testid=walker] .px")).not.toHaveClass(/jump/);
+  // Logo depois do pulo, o bot continua na tela.
+  expect(await opacity(page, "[data-testid=walker] .corpo")).toBe("1");
+  await page.waitForTimeout(300);
+  expect(await opacity(page, "[data-testid=walker] .corpo")).toBe("1");
 });
 
 test("cada bloco fica escondido até chegar na tela e então entra", async ({ page }) => {

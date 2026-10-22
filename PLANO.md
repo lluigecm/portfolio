@@ -39,8 +39,8 @@
 | 14.5 | Redesign: imagem de prévia e favicon | 14.1 |  |
 | 14.6 | Redesign: ajuste final dos testes e auditoria | 14.2 a 14.5 |  |
 | 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | ✅ Concluída em 22/10/2026 |
-| 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 | 🔍 Em revisão (PR) |
-| 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 |  |
+| 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 | ✅ Concluída em 22/10/2026 |
+| 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 | 🔍 Em revisão (PR) |
 | 15.4 | Motion no site: efeitos sonoros e música | 15.1 |  |
 
 ---
@@ -417,8 +417,21 @@
 - Navegadores sem `@property` e o movimento reduzido trocam na hora, como antes.
 
 **Critérios de aceite**
-- [ ] Para o dia: o céu passa por cores intermediárias, a Lua desce e some, o Sol nasce.
-- [ ] Para a noite: o Sol se põe pelo entardecer e a Lua nasce.
-- [ ] Com movimento reduzido, a troca é na hora, sem animações.
-- [ ] A escolha continua salva (teste existente).
+- [x] Para o dia: o céu passa por cores intermediárias, a Lua desce e some, o Sol nasce.
+- [x] Para a noite: o Sol se põe pelo entardecer e a Lua nasce.
+- [x] Com movimento reduzido, a troca é na hora, sem animações.
+- [x] A escolha continua salva (teste existente).
+
+### 15.3 — Bugs no chão, pisão e placar
+
+**Entregas**
+- A cada 1.800 px rolados para baixo, um bug (pixel art própria, dois quadros de passo) entra pela direita no chão e anda até o bot, correndo junto com o chão quando a página rola; uma rolagem rápida não o passa por baixo do bot.
+- A um pulo de distância, o bot pula e pousa nele: o bug achata, sobem cacos e um "+100", e o placar da HUD ganha 100 e pula (`BUG_EVENT`, `Score`).
+- Correção da 15.1: a aterrissagem da abertura passa para um elemento próprio (`.corpo`) e não se repete mais depois de um pulo.
+- Com movimento reduzido, sem bugs.
+
+**Critérios de aceite**
+- [ ] Rolar bastante traz um bug; o bot pisa nele, o "+100" aparece e o placar soma 100.
+- [ ] Com movimento reduzido, nenhum bug aparece.
+- [ ] O bot não some depois de pular.
 
