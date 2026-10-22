@@ -12,6 +12,10 @@ export const REPOS = {
     info: { stargazers_count: 1234, pushed_at: "2026-08-01T12:00:00Z" },
     languages: { TypeScript: 50000, HTML: 4000, Shell: 3000, JavaScript: 100 },
   },
+  "lluigecm/portfolio": {
+    info: { stargazers_count: 7, pushed_at: "2026-10-01T12:00:00Z" },
+    languages: { TypeScript: 40000, CSS: 3000, JavaScript: 2000 },
+  },
 };
 
 // Usuários que os sites de teste recebem em GITHUB_PERSONAL_USER e GITHUB_WORK_USER.

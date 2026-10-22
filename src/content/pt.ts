@@ -83,6 +83,31 @@ export const pt: Content = {
         "Gravação do MyGather: um avatar atravessa o escritório em pixel art até outro, e o áudio entre os dois liga quando eles ficam próximos.",
       credit: "arte: LPC (CC-BY-SA 3.0) e DyLESTorm",
     },
+    portfolio: {
+      title: "Este site",
+      description:
+        "Este portfólio também é um projeto de testes. Uma suíte E2E em Playwright roda a cada push no Chromium e no WebKit, o motor do Safari, simulando um iPhone, contra builds de produção e uma API do GitHub falsa. Nada entra na main sem ela passar. Entre outras coisas, ela prova que:",
+      proofs: [
+        {
+          text: "com a API do GitHub fora do ar, a página continua de pé: os cards ficam só com os textos e o gráfico é ocultado",
+          file: "tests/api-fora-do-ar.spec.ts",
+        },
+        {
+          text: "se a renovação dos dados falhar, continuam no ar os últimos dados válidos, que se atualizam sozinhos quando a API volta",
+          file: "tests/renovacao.spec.ts",
+        },
+        {
+          text: "o token do GitHub não aparece em nenhum arquivo entregue ao navegador",
+          file: "tests/github.spec.ts",
+        },
+        {
+          text: "o axe não encontra violações das regras WCAG A e AA, nos dois temas e nos dois idiomas",
+          file: "tests/a11y.ts",
+        },
+      ],
+      ciLabel: "Ver as execuções no GitHub Actions",
+      mediaAlt: "Um dos testes da suíte, copiado de",
+    },
   },
   diagram: {
     selectorFails: ["O seletor não encontra", "o elemento"],

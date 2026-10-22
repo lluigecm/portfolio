@@ -21,7 +21,7 @@
 
 ## 2. Escopo
 
-**Inclui:** site de página única, bilíngue (PT/EN), com experiência, dois projetos em cards, stack, formação, contato e gráfico de contribuições do GitHub.
+**Inclui:** site de página única, bilíngue (PT/EN), com experiência, três projetos em cards (TCC, MyGather e o próprio site), stack, formação, contato e gráfico de contribuições do GitHub.
 
 **Não inclui:** blog, currículo em PDF, página de detalhe por projeto, analytics, CMS, área administrativa, conteúdo fora da carreira tech.
 
@@ -102,7 +102,7 @@ PLANO.md            # plano de implementação
 1. **Uma única peça marcante:** o gráfico de contribuições, em largura total logo abaixo da apresentação. Todo o resto é discreto.
 2. **Estrutura é informação:** a linha do tempo aparece só na Experiência, a única sequência real. Sem rótulos decorativos, sem numeração de seções, sem pontos médios separando metadados.
 3. **Movimento só em resposta a uma ação** do visitante, respeitando `prefers-reduced-motion`. A única animação de entrada é o preenchimento do gráfico. Sem efeitos decorativos; a lista completa fica na seção 5.5.
-4. **Cards de projeto como fichas:** mídia grande, borda fina, sem sombras nem gradientes.
+4. **Cards de projeto como fichas:** mídia grande, borda fina, sem sombras nem gradientes. No card deste site, a mídia é um trecho literal de um teste.
 5. Alinhamento à esquerda, coluna estreita (até 70 caracteres por linha).
 
 ### 5.2 Cores
@@ -232,6 +232,25 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 > **PT:** Escritório virtual 2D em pixel art. Quando dois avatares se aproximam, o áudio entre eles liga sozinho. O servidor valida cada movimento, então ninguém entra numa sala fechada sem passar pela porta. Feito para uso real por uma equipe pequena.
 >
 > **EN:** A 2D pixel-art virtual office. When two avatars get close, audio between them turns on by itself. The server validates every move, so nobody gets into a closed room without walking through the door. Built for real use by a small team.
+
+**Este site / This site**
+- Repositório: https://github.com/lluigecm/portfolio
+- Mídia: trecho literal de `tests/api-fora-do-ar.spec.ts` (o gráfico some com a API fora do ar), com o arquivo na legenda. Um teste confere que o trecho continua igual ao arquivo.
+- Tags: TypeScript, Next.js, Playwright, axe-core, GitHub Actions
+- Abaixo da descrição, quatro provas, cada uma com o link para o arquivo do teste, e o link para as execuções no GitHub Actions. Sem contagem de testes digitada à mão.
+- Autoria da suíte: do Luige (decisão de 22/10/2026).
+
+> **PT:** Este portfólio também é um projeto de testes. Uma suíte E2E em Playwright roda a cada push no Chromium e no WebKit, o motor do Safari, simulando um iPhone, contra builds de produção e uma API do GitHub falsa. Nada entra na main sem ela passar. Entre outras coisas, ela prova que:
+> - com a API do GitHub fora do ar, a página continua de pé: os cards ficam só com os textos e o gráfico é ocultado (`tests/api-fora-do-ar.spec.ts`);
+> - se a renovação dos dados falhar, continuam no ar os últimos dados válidos, que se atualizam sozinhos quando a API volta (`tests/renovacao.spec.ts`);
+> - o token do GitHub não aparece em nenhum arquivo entregue ao navegador (`tests/github.spec.ts`);
+> - o axe não encontra violações das regras WCAG A e AA, nos dois temas e nos dois idiomas (`tests/a11y.ts`).
+>
+> **EN:** This portfolio is a testing project too. An end-to-end Playwright suite runs on every push in Chromium and in WebKit, Safari's engine, emulating an iPhone, against production builds and a fake GitHub API. Nothing reaches main unless it passes. Among other things, it proves that:
+> - with the GitHub API down, the page stays up: the cards keep only their own text and the chart is hidden;
+> - if a data refresh fails, the last valid data stays online and updates on its own once the API is back;
+> - the GitHub token never shows up in any file sent to the browser;
+> - axe finds no WCAG A or AA violations, in both themes, in Portuguese and in English.
 
 ### 6.4 Stack
 
@@ -364,3 +383,4 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 22/10/2026 | Experiência continua com o texto atual: por motivos contratuais, nada além do que já está descrito sobre o trabalho na X-Testing |
 | 22/10/2026 | Demonstração interativa "quebre a interface" no card do TCC adiada |
 | 22/10/2026 | A suíte de testes deste site é de autoria do Luige |
+| 22/10/2026 | Terceiro card, "Este site": a suíte de testes do portfólio como amostra pública do trabalho de testes, com links para os testes e para o CI |

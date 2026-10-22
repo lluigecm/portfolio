@@ -2,17 +2,28 @@ import type { ContributionTotals } from "./github";
 
 export type Locale = "pt" | "en";
 
-export type ProjectId = "autohealing" | "mygather";
+export type ProjectId = "autohealing" | "mygather" | "portfolio";
 
 export interface ProjectText {
   title: string;
   /** Selo opcional, ex.: "TCC, em andamento". */
   badge?: string;
   description: string;
-  /** Texto alternativo da mídia do card. */
+  /** Texto alternativo da mídia do card; no trecho de código, a legenda dele. */
   mediaAlt: string;
   /** Crédito da arte, quando a licença exige (regra 19). */
   credit?: string;
+  /** Só no card deste site: o que a suíte de testes prova, com o arquivo de cada teste. */
+  proofs?: TestProof[];
+  /** Só no card deste site: link para as execuções do CI. */
+  ciLabel?: string;
+}
+
+export interface TestProof {
+  /** Continua a frase da descrição ("…ela prova que:"). */
+  text: string;
+  /** Arquivo do teste, a partir da raiz do repositório. */
+  file: string;
 }
 
 /**

@@ -83,6 +83,31 @@ export const en: Content = {
         "MyGather recording: an avatar walks across the pixel-art office to another one, and audio between them turns on once they are close.",
       credit: "art: LPC (CC-BY-SA 3.0) and DyLESTorm",
     },
+    portfolio: {
+      title: "This site",
+      description:
+        "This portfolio is a testing project too. An end-to-end Playwright suite runs on every push in Chromium and in WebKit, Safari's engine, emulating an iPhone, against production builds and a fake GitHub API. Nothing reaches main unless it passes. Among other things, it proves that:",
+      proofs: [
+        {
+          text: "with the GitHub API down, the page stays up: the cards keep only their own text and the chart is hidden",
+          file: "tests/api-fora-do-ar.spec.ts",
+        },
+        {
+          text: "if a data refresh fails, the last valid data stays online and updates on its own once the API is back",
+          file: "tests/renovacao.spec.ts",
+        },
+        {
+          text: "the GitHub token never shows up in any file sent to the browser",
+          file: "tests/github.spec.ts",
+        },
+        {
+          text: "axe finds no WCAG A or AA violations, in both themes, in Portuguese and in English",
+          file: "tests/a11y.ts",
+        },
+      ],
+      ciLabel: "See the runs on GitHub Actions",
+      mediaAlt: "One of the suite's tests, copied from",
+    },
   },
   diagram: {
     selectorFails: ["The selector can't", "find the element"],
