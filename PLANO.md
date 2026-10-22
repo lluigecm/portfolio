@@ -30,7 +30,7 @@
 | 11 | Auditoria e polimento | 8, 9, 10 | ✅ Concluída em 10/10/2026 |
 | 12 | Publicação | 11 | ⏸ Em parte: falta o domínio |
 | 13 | Movimento (fora do plano original; seção 5.5) | 11 | ✅ Concluída em 10/10/2026 |
-| 14.1 | Redesign: tokens e fontes | 13 | ⏳ Próxima |
+| 14.1 | Redesign: tokens e fontes | 13 | 🔍 Em revisão (PR) |
 | 14.2 | Redesign: componentes de apresentação por seção | 14.1 |  |
 | 14.3 | Redesign: cena com o bot | 14.2 |  |
 | 14.4 | Redesign: gráfico reestilizado | 14.1 |  |
@@ -291,11 +291,11 @@
 - `src/lib/palette.ts` (cores das imagens geradas) com a paleta nova.
 
 **Critérios de aceite**
-- [ ] Teste de contraste com os pares novos nos dois temas: texto e secundário sobre os dois painéis, destaque de texto, linha a 3:1 ou mais, foco, texto `#1A1A2E` sobre amarelo e sobre teal.
-- [ ] Escala do gráfico: níveis 1 a 4 a 3:1 ou mais contra o painel, em ordem crescente, nos dois temas.
-- [ ] Cores só nos tokens (teste de tokens).
-- [ ] A Press Start 2P carrega; nenhum elemento com ela abaixo de 14 px.
-- [ ] A Plex continua calibrada, sem deslocamento de layout na troca de fonte.
+- [x] Teste de contraste com os pares novos nos dois temas: texto e secundário sobre os dois painéis, destaque de texto, linha a 3:1 ou mais, foco, texto `#1A1A2E` sobre amarelo e sobre teal.
+- [x] Escala do gráfico: níveis 1 a 4 a 3:1 ou mais contra o painel, em ordem crescente, nos dois temas.
+- [x] Cores só nos tokens (teste de tokens).
+- [x] A Press Start 2P carrega; nenhum elemento com ela abaixo de 14 px.
+- [x] A Plex continua calibrada, sem deslocamento de layout na troca de fonte.
 
 ### 14.2 — Componentes de apresentação por seção
 

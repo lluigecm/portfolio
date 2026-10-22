@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { checkA11y } from "./a11y";
 
-// Papel (fundo) de cada tema, como o navegador o resolve (seção 5.2).
-const PAPEL = { light: "rgb(243, 244, 245)", dark: "rgb(22, 24, 27)" };
+// Painel (fundo da página) de cada tema, como o navegador o resolve (seção 5.2).
+const PAINEL = { light: "rgb(255, 253, 244)", dark: "rgb(18, 26, 82)" };
 
 const background = (page: Page) =>
   page.evaluate(() => getComputedStyle(document.body).backgroundColor);
@@ -13,14 +13,14 @@ test("com o sistema escuro e nenhuma escolha salva, a página abre escura", asyn
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
   await expect(page.locator("html")).not.toHaveAttribute("data-theme");
-  expect(await background(page)).toBe(PAPEL.dark);
+  expect(await background(page)).toBe(PAINEL.dark);
   await expect(toggle(page)).toHaveAccessibleName("Switch to light theme");
 });
 
 test("com o sistema claro e nenhuma escolha salva, a página abre clara", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
-  expect(await background(page)).toBe(PAPEL.light);
+  expect(await background(page)).toBe(PAINEL.light);
   await expect(toggle(page)).toHaveAccessibleName("Switch to dark theme");
 });
 
@@ -31,18 +31,18 @@ test("alternar o tema, recarregar e o tema escolhido continua", async ({ page })
   await toggle(page).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(toggle(page)).toHaveAccessibleName("Switch to light theme");
-  await expect.poll(() => background(page)).toBe(PAPEL.dark);
+  await expect.poll(() => background(page)).toBe(PAINEL.dark);
 
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  expect(await background(page)).toBe(PAPEL.dark);
+  expect(await background(page)).toBe(PAINEL.dark);
 
   // E volta: a escolha do claro também fica salva, mesmo com o sistema escuro.
   await page.emulateMedia({ colorScheme: "dark" });
   await toggle(page).click();
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  expect(await background(page)).toBe(PAPEL.light);
+  expect(await background(page)).toBe(PAINEL.light);
 });
 
 test("o botão funciona pelo teclado", async ({ page }) => {
@@ -69,14 +69,14 @@ test("o tema salvo já vale no primeiro quadro, antes de qualquer pintura", asyn
     requestAnimationFrame(() => {
       (window as unknown as { firstFrame: string }).firstFrame = getComputedStyle(
         document.documentElement,
-      ).getPropertyValue("--papel");
+      ).getPropertyValue("--painel");
     });
   });
   await page.goto("/");
   const firstFrame = await page.evaluate(
     () => (window as unknown as { firstFrame: string }).firstFrame,
   );
-  expect(firstFrame).toMatch(/#16181b/i);
+  expect(firstFrame).toMatch(/#121a52/i);
 });
 
 test("a troca esmaece só com opacidade, sem animar cores, e não esmaece com movimento reduzido", async ({
@@ -139,6 +139,6 @@ test("sem violações de acessibilidade depois de trocar o tema", async ({ page 
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
   await toggle(page).click();
-  await expect.poll(() => background(page)).toBe(PAPEL.dark);
+  await expect.poll(() => background(page)).toBe(PAINEL.dark);
   expect(await checkA11y(page)).toEqual([]);
 });

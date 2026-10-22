@@ -8,7 +8,7 @@ import type { Locale } from "@/types/content";
 
 /*
  * Imagem de prévia (Open Graph e Twitter Card, seção 6.7): nome e título no
- * visual Grafite, uma por idioma. Gerada no build, sem buscar nada na rede:
+ * visual provisório até a etapa 14.5, uma por idioma. Gerada no build, sem buscar nada na rede:
  * a IBM Plex vem do pacote @fontsource (o gerador não lê WOFF2).
  */
 const size = { width: 1200, height: 630 };
@@ -42,15 +42,15 @@ export default async function Image({ params }: { params: Promise<{ lang: string
           flexDirection: "column",
           justifyContent: "center",
           padding: "0 96px",
-          background: colors.papel,
+          background: colors.painel,
           fontFamily: "IBM Plex Sans",
         }}
       >
-        <div style={{ fontSize: 144, fontWeight: 600, color: colors.grafite, letterSpacing: -3 }}>
+        <div style={{ fontSize: 144, fontWeight: 600, color: colors.texto, letterSpacing: -3 }}>
           {hero.name}
         </div>
-        <div style={{ marginTop: 8, fontSize: 52, color: colors.lapis }}>{hero.title}</div>
-        {/* A escala de âmbar do gráfico de contribuições, a peça marcante do site. */}
+        <div style={{ marginTop: 8, fontSize: 52, color: colors.secundario }}>{hero.title}</div>
+        {/* A escala do gráfico de contribuições, a peça marcante do site. */}
         <div style={{ display: "flex", gap: 10, marginTop: 72 }}>
           {colors.grafico.map((color) => (
             <div key={color} style={{ width: 36, height: 36, borderRadius: 6, background: color }} />

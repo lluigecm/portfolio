@@ -21,6 +21,31 @@ test("as fontes Plex carregam", async ({ page }) => {
   expect(loaded.some((family) => family.includes("IBM Plex Sans"))).toBe(true);
 });
 
+test("a Press Start 2P carrega e nunca fica abaixo de 14 px", async ({ page }) => {
+  for (const width of [360, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+
+    const report = await page.evaluate(() => ({
+      loaded: [...document.fonts].some(
+        (font) => font.family.includes("Press Start 2P") && font.status === "loaded",
+      ),
+      // Elementos com texto próprio na Press Start 2P e o tamanho de cada um.
+      small: [...document.querySelectorAll("body *")]
+        .filter((el) => [...el.childNodes].some((node) => node.nodeType === 3 && node.textContent!.trim()))
+        .map((el) => ({ el, style: getComputedStyle(el) }))
+        .filter(({ style }) => style.fontFamily.includes("Press Start 2P"))
+        .filter(({ style }) => parseFloat(style.fontSize) < 14)
+        .map(({ el, style }) => `${el.tagName} ${style.fontSize}: ${el.textContent!.trim().slice(0, 30)}`),
+      used: [...document.querySelectorAll("h1, h2, h3")].every((el) =>
+        getComputedStyle(el).fontFamily.includes("Press Start 2P"),
+      ),
+    }));
+    expect(report, `${width} px`).toEqual({ loaded: true, small: [], used: true });
+  }
+});
+
 test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {
   // O next/font gera uma fonte de reserva com as métricas da Plex
   // (size-adjust e afins); é ela que evita o salto quando a Plex chega.

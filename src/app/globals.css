@@ -1,54 +1,96 @@
 @import "tailwindcss";
 
 /*
- * Tokens de cor (PROJETO.md, seção 5.2).
- * Claro por padrão; escuro quando o sistema pede, a menos que a página force
- * o claro. O atributo data-theme é o ponto de entrada do botão de tema (etapa 4).
+ * Tokens de cor (PROJETO.md, seção 5.2): cada cor tem um papel.
+ * Claro (céu diurno) por padrão; escuro (céu noturno) quando o sistema pede, a
+ * menos que a página force o claro. O atributo data-theme é o ponto de entrada
+ * do botão de tema.
  */
 :root {
   color-scheme: light;
-  --papel: #f3f4f5;
-  --superficie: #ffffff;
-  --grafite: #1f2328;
-  --lapis: #5c636b;
-  --linha: #d9dce0;
-  --ambar: #a84e08;
-
-  /* Gráfico (seção 5.2): nível 0 = linha; 1 a 4 com 3:1 ou mais contra o papel. */
-  --grafico-1: #c3672c;
-  --grafico-2: var(--ambar);
-  --grafico-3: #8c3e00;
-  --grafico-4: #753301;
+  /* Cena (seção 5.2): só decoração, nunca com texto por cima. */
+  --ceu: #8fd3ff;
+  --ceu-2: #d8f1ff;
+  --horizonte: #fff1c9;
+  --colina: #5fb86b;
+  --colina-2: #86d58f;
+  --grama: #6fd66f;
+  --terra: #9a5e3c;
+  --terra-2: #6d3f27;
+  /* Conteúdo: todo texto fica sobre um painel. */
+  --painel: #fffdf4;
+  --painel-2: #f0ecd6;
+  --texto: #1a1a2e;
+  --secundario: #3a4a7a;
+  --linha: #1a1a2e;
+  --destaque: #9c1c5c;
+  --foco: #1a1a2e;
+  /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
+  --grafico-1: #4a944a;
+  --grafico-2: #3a7f3c;
+  --grafico-3: #2a6230;
+  --grafico-4: #1b4422;
+  /* Iguais nos dois temas. Amarelo e teal só como fundo, com a tinta por cima;
+     o amarelo marca o que é interativo ou escolhido. Rosa: destaque de texto no
+     escuro; no claro, só fundo decorativo. */
+  --amarelo: #ffd23f;
+  --teal: #39d6c4;
+  --rosa: #ff5d9e;
+  --tinta: #1a1a2e;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --papel: #16181b;
-    --superficie: #1e2125;
-    --grafite: #e6e8eb;
-    --lapis: #9aa1a9;
-    --linha: #30353b;
-    --ambar: #e0a458;
-    --grafico-1: #976102;
-    --grafico-2: #c4893c;
-    --grafico-3: var(--ambar);
-    --grafico-4: #fec074;
+    /* Cena (seção 5.2): só decoração, nunca com texto por cima. */
+    --ceu: #0c1445;
+    --ceu-2: #1d2b7a;
+    --horizonte: #4c3f91;
+    --colina: #1e6b4a;
+    --colina-2: #2e8f5e;
+    --grama: #58c46a;
+    --terra: #6b3f2a;
+    --terra-2: #4a2a1c;
+    /* Conteúdo: todo texto fica sobre um painel. */
+    --painel: #121a52;
+    --painel-2: #0a0f33;
+    --texto: #fff8e7;
+    --secundario: #b9c3ff;
+    --linha: #6676dd;
+    --destaque: #ffd23f;
+    --foco: #ffd23f;
+    /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
+    --grafico-1: #2f7d45;
+    --grafico-2: #3fa35a;
+    --grafico-3: #58c46a;
+    --grafico-4: #9be38f;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --papel: #16181b;
-  --superficie: #1e2125;
-  --grafite: #e6e8eb;
-  --lapis: #9aa1a9;
-  --linha: #30353b;
-  --ambar: #e0a458;
-  --grafico-1: #976102;
-  --grafico-2: #c4893c;
-  --grafico-3: var(--ambar);
-  --grafico-4: #fec074;
+  /* Cena (seção 5.2): só decoração, nunca com texto por cima. */
+  --ceu: #0c1445;
+  --ceu-2: #1d2b7a;
+  --horizonte: #4c3f91;
+  --colina: #1e6b4a;
+  --colina-2: #2e8f5e;
+  --grama: #58c46a;
+  --terra: #6b3f2a;
+  --terra-2: #4a2a1c;
+  /* Conteúdo: todo texto fica sobre um painel. */
+  --painel: #121a52;
+  --painel-2: #0a0f33;
+  --texto: #fff8e7;
+  --secundario: #b9c3ff;
+  --linha: #6676dd;
+  --destaque: #ffd23f;
+  --foco: #ffd23f;
+  /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
+  --grafico-1: #2f7d45;
+  --grafico-2: #3fa35a;
+  --grafico-3: #58c46a;
+  --grafico-4: #9be38f;
 }
 
 /*
@@ -76,22 +118,44 @@
 }
 
 @theme inline {
-  --color-papel: var(--papel);
-  --color-superficie: var(--superficie);
-  --color-grafite: var(--grafite);
-  --color-lapis: var(--lapis);
+  --color-ceu: var(--ceu);
+  --color-ceu-2: var(--ceu-2);
+  --color-horizonte: var(--horizonte);
+  --color-colina: var(--colina);
+  --color-colina-2: var(--colina-2);
+  --color-grama: var(--grama);
+  --color-terra: var(--terra);
+  --color-terra-2: var(--terra-2);
+  --color-painel: var(--painel);
+  --color-painel-2: var(--painel-2);
+  --color-texto: var(--texto);
+  --color-secundario: var(--secundario);
   --color-linha: var(--linha);
-  --color-ambar: var(--ambar);
+  --color-destaque: var(--destaque);
+  --color-foco: var(--foco);
+  --color-amarelo: var(--amarelo);
+  --color-teal: var(--teal);
+  --color-rosa: var(--rosa);
+  --color-tinta: var(--tinta);
 
   /* Gráfico de contribuições: 5 níveis (seção 5.2). */
-  --color-grafico-0: var(--linha);
+  --color-grafico-0: var(--painel-2);
   --color-grafico-1: var(--grafico-1);
   --color-grafico-2: var(--grafico-2);
   --color-grafico-3: var(--grafico-3);
   --color-grafico-4: var(--grafico-4);
 
+  /*
+   * Sombra dura (princípio 5.1.7): deslocada, sem desfoque nem espalhamento,
+   * sempre na cor da linha. Só em painéis, placas, botões e cartuchos.
+   */
+  --shadow-dura: 4px 4px 0 0 var(--linha);
+  --shadow-dura-lg: 8px 8px 0 0 var(--linha);
+
   --font-sans: var(--font-plex-sans), "IBM Plex Sans Reserva", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  /* Press Start 2P (seção 5.3): títulos, HUD, placas e balão, nunca abaixo de 14 px. */
+  --font-display: var(--font-press-start), ui-monospace, monospace;
 }
 
 /* Escala tipográfica clássica (seção 5.3): corpo 18px, nome 48px. */
@@ -129,7 +193,7 @@
 
 /*
  * Casos reais do TCC (seção 5.5): só o caso escolhido aparece, e o caminho que
- * ele percorre no diagrama fica em âmbar. É uma troca de estado, sem transição
+ * ele percorre no diagrama fica na cor de destaque. É uma troca de estado, sem transição
  * (a troca de tema também não anima cores), feita só com CSS sobre o radio
  * marcado, para funcionar sem JavaScript.
  */
@@ -143,7 +207,7 @@
 }
 .casos:has([data-caminho="replaced"]:checked) :is(rect, line, polygon)[data-path~="replaced"],
 .casos:has([data-caminho="fails"]:checked) :is(rect, line, polygon)[data-path~="fails"] {
-  stroke: var(--ambar);
+  stroke: var(--destaque);
   stroke-width: 2.5;
 }
 .casos:has([data-caminho="replaced"]:checked) line[data-path~="replaced"],
@@ -152,15 +216,28 @@
 }
 .casos:has([data-caminho="replaced"]:checked) text[data-path~="replaced"],
 .casos:has([data-caminho="fails"]:checked) text[data-path~="fails"] {
-  fill: var(--ambar);
+  fill: var(--destaque);
   font-weight: 600;
 }
 
-/* Foco sempre visível, no âmbar (contraste 5:1 ou mais sobre os fundos). */
+/* Foco sempre visível, na cor de foco do tema (seção 5.2). */
 @layer base {
   :focus-visible {
-    outline: 2px solid var(--ambar);
+    outline: 2px solid var(--foco);
     outline-offset: 2px;
+  }
+
+  /*
+   * Títulos em Press Start 2P (seção 5.3). A fonte tem um peso só: nada de
+   * negrito sintético. Ela é larga e alta, então pede entrelinha folgada.
+   */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: 1.5;
   }
 }
 

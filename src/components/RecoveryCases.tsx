@@ -15,19 +15,19 @@ export function RecoveryCases({ text }: { text: RecoveryCasesText }) {
     <div className="mx-auto mt-6 max-w-texto">
       <fieldset>
         <legend className="font-semibold">{text.legend}</legend>
-        <p className="mt-1 text-sm text-lapis">{text.intro}</p>
+        <p className="mt-1 text-sm text-secundario">{text.intro}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {recoveryCases.map(({ id, path }) => (
             <label
               key={id}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-linha bg-superficie px-3 py-2 text-sm has-checked:border-ambar"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-linha bg-painel-2 px-3 py-2 text-sm has-checked:border-destaque"
             >
               <input
                 type="radio"
                 name="recovery-case"
                 value={id}
                 data-caminho={path}
-                className="accent-ambar"
+                className="accent-destaque"
               />
               {text.cases[id].label}
             </label>
@@ -53,14 +53,14 @@ export function RecoveryCases({ text }: { text: RecoveryCasesText }) {
               <Field term={fields.score}>{item.score}</Field>
               <Field term={fields.outcome}>{item.outcome}</Field>
             </dl>
-            <p className="mt-3 text-lapis">{text.logLabel}</p>
+            <p className="mt-3 text-secundario">{text.logLabel}</p>
             {/* O pre fica na fonte do corpo: a mono é só do código (seção 5.3). */}
-            <pre className="mt-1 rounded-md border border-linha bg-superficie p-3 font-sans text-xs whitespace-pre-wrap [overflow-wrap:anywhere]">
+            <pre className="mt-1 rounded-md border border-linha bg-painel-2 p-3 font-sans text-xs whitespace-pre-wrap [overflow-wrap:anywhere]">
               <code className="font-mono">{logExcerpt(log)}</code>
             </pre>
             <a
               href={source}
-              className="mt-2 inline-block underline decoration-linha underline-offset-4 hover:decoration-grafite"
+              className="mt-2 inline-block underline decoration-linha underline-offset-4 hover:decoration-texto"
             >
               {text.logLink}
             </a>
@@ -74,7 +74,7 @@ export function RecoveryCases({ text }: { text: RecoveryCasesText }) {
 function Field({ term, children }: { term: string; children: ReactNode }) {
   return (
     <>
-      <dt className="mt-2 text-lapis md:mt-1">{term}</dt>
+      <dt className="mt-2 text-secundario md:mt-1">{term}</dt>
       <dd className="md:mt-1">{children}</dd>
     </>
   );

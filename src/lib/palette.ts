@@ -5,16 +5,17 @@
  */
 export const palette = {
   light: {
-    papel: "#f3f4f5",
-    grafite: "#1f2328",
-    lapis: "#5c636b",
-    linha: "#d9dce0",
-    ambar: "#a84e08",
-    grafico: ["#d9dce0", "#c3672c", "#a84e08", "#8c3e00", "#753301"],
+    painel: "#fffdf4",
+    "painel-2": "#f0ecd6",
+    texto: "#1a1a2e",
+    secundario: "#3a4a7a",
+    linha: "#1a1a2e",
+    destaque: "#9c1c5c",
+    grafico: ["#f0ecd6", "#4a944a", "#3a7f3c", "#2a6230", "#1b4422"],
   },
   dark: {
-    papel: "#16181b",
-    grafite: "#e6e8eb",
-    ambar: "#e0a458",
+    painel: "#121a52",
+    texto: "#fff8e7",
+    destaque: "#ffd23f",
   },
 } as const;

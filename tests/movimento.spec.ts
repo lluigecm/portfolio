@@ -185,7 +185,7 @@ test.describe("efeito 2: relevo no gráfico", () => {
 test.describe("efeito 3: transição na troca de idioma", () => {
   test.use({ locale: "en-US", viewport: { width: 1280, height: 900 } });
 
-  /** Registra, em cada documento novo, se houve transição e o papel no primeiro quadro. */
+  /** Registra, em cada documento novo, se houve transição e o painel no primeiro quadro. */
   async function recordNavigation(page: Page) {
     await page.addInitScript(() => {
       window.addEventListener("pagereveal", (event) => {
@@ -193,15 +193,15 @@ test.describe("efeito 3: transição na troca de idioma", () => {
         sessionStorage.setItem("transicao", String(!!transition));
       });
       requestAnimationFrame(() => {
-        const papel = getComputedStyle(document.documentElement).getPropertyValue("--papel");
-        sessionStorage.setItem("papel-primeiro-quadro", papel.trim());
+        const painel = getComputedStyle(document.documentElement).getPropertyValue("--painel");
+        sessionStorage.setItem("painel-primeiro-quadro", painel.trim());
       });
     });
   }
   const recorded = (page: Page) =>
     page.evaluate(() => ({
       transition: sessionStorage.getItem("transicao"),
-      paper: sessionStorage.getItem("papel-primeiro-quadro"),
+      painel: sessionStorage.getItem("painel-primeiro-quadro"),
       lang: document.documentElement.lang,
     }));
   const switchToPortuguese = (page: Page) => page.getByRole("button", { name: /Ver em português/ }).click();
@@ -216,7 +216,7 @@ test.describe("efeito 3: transição na troca de idioma", () => {
     await page.getByRole("button", { name: /theme/ }).click(); // escolhe o tema escuro
     await switchToPortuguese(page);
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    expect(await recorded(page)).toEqual({ transition: "true", paper: "#16181b", lang: "pt-BR" });
+    expect(await recorded(page)).toEqual({ transition: "true", painel: "#121a52", lang: "pt-BR" });
   });
 
   test("sem suporte, a troca continua funcionando, com tema e idioma certos", async ({ page }) => {
@@ -232,7 +232,7 @@ test.describe("efeito 3: transição na troca de idioma", () => {
     await page.getByRole("button", { name: /theme/ }).click();
     await switchToPortuguese(page);
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    expect(await recorded(page)).toEqual({ transition: "false", paper: "#16181b", lang: "pt-BR" });
+    expect(await recorded(page)).toEqual({ transition: "false", painel: "#121a52", lang: "pt-BR" });
   });
 });
 

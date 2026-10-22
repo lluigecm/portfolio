@@ -131,8 +131,8 @@ Cada cor tem um papel. Escuro = céu noturno; claro = céu diurno.
 - Nenhum texto sobre o céu ou outra cor de cena.
 
 **Escala do gráfico de contribuições (5 níveis, blocos de grama):**
-- Nível 0 (sem contribuição) = cor da linha.
-- Níveis 1 a 4 em verde, cada um com contraste mínimo de **3:1 contra o painel**, em ordem crescente, nos dois temas (WCAG 1.4.11). Escuro: `#2F7D45`, `#3FA35A`, `#58C46A`, `#9BE38F` (~3,2:1 a ~10,6:1). Claro: `#4F9B4F`, `#3A7F3C`, `#2A6230`, `#1B4422` (~3,4:1 a ~10,9:1).
+- Nível 0 (sem contribuição) = painel 2, a casa vazia, nos dois temas.
+- Níveis 1 a 4 em verde, cada um com contraste mínimo de **3:1 contra o painel**, em ordem crescente, nos dois temas (WCAG 1.4.11). O nível 1 também tem 3:1 ou mais contra o painel 2 (a cor adjacente); se faltar, ajusta-se o nível 1, não o 0. Escuro: `#2F7D45`, `#3FA35A`, `#58C46A`, `#9BE38F` (~3,2:1 a ~10,6:1). Claro: `#4A944A`, `#3A7F3C`, `#2A6230`, `#1B4422` (~3,7:1 a ~10,9:1; nível 1 a ~3,1:1 contra o painel 2).
 - O total de contribuições aparece em texto visível na legenda e no contador da HUD.
 
 ### 5.3 Tipografia
@@ -407,3 +407,4 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 22/10/2026 | Sombras duras aceitas (princípio 5.1.7): desfoque e espalhamento zero, cor = token linha, só em painéis, placas, botões e cartuchos; nenhum text-shadow. O teste passa a proibir desfoque e espalhamento, não a sombra |
 | 22/10/2026 | Alinhamento à esquerda dentro dos painéis, inclusive na caixa de diálogo do topo; só a HUD tem layout próprio |
 | 22/10/2026 | Seção 5 revisada aprovada; redesign planejado na etapa 14 do PLANO.md |
+| 22/10/2026 | Escala do gráfico: nível 0 = painel 2 (casa vazia) nos dois temas, no lugar de "nível 0 = linha", que deixava os dias vazios mais fortes que os cheios na paleta nova. O nível 1 passa a ter 3:1 também contra o painel 2; no claro, ajustado de #4F9B4F para #4A944A. Se, com o site no ar, as casas vazias do claro sumirem a ponto de a grade perder a forma, abre-se um tom próprio só para o claro, como exceção registrada |

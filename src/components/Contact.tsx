@@ -1,7 +1,7 @@
 import { profile } from "@/content/profile";
 import type { Content } from "@/types/content";
 
-const button = "inline-flex items-center rounded-md border border-linha px-4 py-2 hover:border-grafite";
+const button = "inline-flex items-center rounded-md border border-linha px-4 py-2 hover:border-texto";
 
 export function Contact({ text }: { text: Content["contact"] }) {
   return (

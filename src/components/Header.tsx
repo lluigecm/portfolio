@@ -25,7 +25,7 @@ export function Header({ locale }: { locale: Locale }) {
           <ul className="flex flex-wrap justify-between gap-x-2 text-xs md:justify-start md:gap-x-5 md:text-sm">
             {SECTIONS.map((id) => (
               <li key={id}>
-                <a href={`#${id}`} className="inline-block py-2 text-lapis hover:text-grafite">
+                <a href={`#${id}`} className="inline-block py-2 text-secundario hover:text-texto">
                   {text.ui.nav[id]}
                 </a>
               </li>
@@ -38,7 +38,7 @@ export function Header({ locale }: { locale: Locale }) {
           <ThemeToggle labels={text.ui.theme} />
           <a
             href={profile.github}
-            className="inline-block px-2 py-2 text-sm text-lapis hover:text-grafite"
+            className="inline-block px-2 py-2 text-sm text-secundario hover:text-texto"
           >
             GitHub
           </a>

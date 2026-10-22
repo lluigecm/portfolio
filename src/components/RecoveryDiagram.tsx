@@ -4,7 +4,7 @@ import type { DiagramText } from "@/types/content";
 /*
  * Metade da recuperação da figura de arquitetura do TCC (regra 20), redesenhada
  * em coluna para caber a 360 px: falha do seletor → heurísticas → score →
- * decisão (em âmbar) → seletor substituído ou falha normal; o log sai da decisão.
+ * decisão (na cor de destaque) → seletor substituído ou falha normal; o log sai da decisão.
  * Medidas em unidades do viewBox; a largura máxima no CSS mantém o texto
  * perto do tamanho do corpo no desktop.
  *
@@ -64,7 +64,7 @@ export function RecoveryDiagram({ text, alt }: Props) {
       aria-label={alt}
       viewBox={`0 0 ${WIDTH} ${height}`}
       fontSize={FONT}
-      className="mx-auto block h-auto w-full max-w-[22rem] fill-grafite"
+      className="mx-auto block h-auto w-full max-w-[22rem] fill-texto"
     >
       <defs>
         <marker
@@ -77,7 +77,7 @@ export function RecoveryDiagram({ text, alt }: Props) {
           markerUnits="userSpaceOnUse"
           orient="auto"
         >
-          <path d="M0 0L10 5L0 10z" className="fill-lapis" />
+          <path d="M0 0L10 5L0 10z" className="fill-secundario" />
         </marker>
         {/* Ponta das setas do caminho destacado (globals.css). */}
         <marker
@@ -90,11 +90,11 @@ export function RecoveryDiagram({ text, alt }: Props) {
           markerUnits="userSpaceOnUse"
           orient="auto"
         >
-          <path d="M0 0L10 5L0 10z" className="fill-ambar" />
+          <path d="M0 0L10 5L0 10z" className="fill-destaque" />
         </marker>
       </defs>
 
-      <g className="stroke-lapis" strokeWidth={1.5} markerEnd="url(#recovery-arrow)">
+      <g className="stroke-secundario" strokeWidth={1.5} markerEnd="url(#recovery-arrow)">
         <Arrow path={BOTH} x1={CENTER} y1={selector.y + selector.height} x2={CENTER} y2={heuristics.y} />
         <Arrow path={BOTH} x1={CENTER} y1={heuristics.y + heuristics.height} x2={CENTER} y2={score.y} />
         <Arrow path={BOTH} x1={CENTER} y1={score.y + score.height} x2={CENTER} y2={decision.y} />
@@ -111,14 +111,14 @@ export function RecoveryDiagram({ text, alt }: Props) {
         <polygon
           points={diamond}
           data-path={BOTH}
-          className="fill-superficie stroke-ambar"
+          className="fill-painel-2 stroke-destaque"
           strokeWidth={2}
         />
         <Lines lines={text.decision} x={CENTER} y={middle - (text.decision.length * LINE) / 2} />
       </g>
 
       {/* Rótulos das saídas, do lado de dentro, longe das pontas do losango. */}
-      <g className="fill-lapis">
+      <g className="fill-secundario">
         <text data-path="replaced" x={BRANCH.left + 8} y={middle + GAP} dominantBaseline="central">
           {text.yes}
         </text>
@@ -183,7 +183,7 @@ function Box({ node, path, lines, x, y, width, height, dashed }: BoxProps) {
         height={height}
         rx={4}
         data-path={path}
-        className="fill-superficie stroke-lapis"
+        className="fill-painel-2 stroke-secundario"
         strokeWidth={1.5}
         strokeDasharray={dashed ? "4 4" : undefined}
       />
