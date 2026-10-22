@@ -1,7 +1,7 @@
 # Portfólio — Especificação do Projeto
 
 > Fonte única de verdade do projeto. Todo chat ou sessão de desenvolvimento deve ler este arquivo antes de começar.
-> Última atualização: 18/10/2026 · Status: **especificação aprovada em 09/10/2026** · plano de implementação em `PLANO.md`
+> Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026** · plano de implementação em `PLANO.md`
 
 ---
 
@@ -300,7 +300,7 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 
 ## 10. Tarefas do Luige (fora do código)
 
-- [ ] Ativar a exibição de contribuições privadas no perfil das duas contas do GitHub
+- [x] Ativar a exibição de contribuições privadas no perfil das duas contas do GitHub (confirmado pelo Luige em 22/10/2026)
 - [ ] Adicionar descrição e topics ao repositório MyGather
 - [ ] Adicionar topics ao repositório do TCC
 - [ ] Exportar o diagrama de arquitetura do TCC como imagem
@@ -361,3 +361,6 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 18/10/2026 | Números do TCC no site só como contagens de cada caso do protótipo, sem a taxa geral, e limiar citado como provisório |
 | 18/10/2026 | Documento posto em dia com o código: regra 12 (só a data do último push), Stack com a categoria Web, e-mail e LinkedIn já no site |
 | 18/10/2026 | Legenda do gráfico separa conta de trabalho e pessoal e, quando houver, as contribuições privadas da conta de trabalho (regra 13, seção 6.1) |
+| 22/10/2026 | Experiência continua com o texto atual: por motivos contratuais, nada além do que já está descrito sobre o trabalho na X-Testing |
+| 22/10/2026 | Demonstração interativa "quebre a interface" no card do TCC adiada |
+| 22/10/2026 | A suíte de testes deste site é de autoria do Luige |
