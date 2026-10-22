@@ -38,8 +38,8 @@
 | 14.4 | Redesign: gráfico reestilizado | 14.1 |  |
 | 14.5 | Redesign: imagem de prévia e favicon | 14.1 |  |
 | 14.6 | Redesign: ajuste final dos testes e auditoria | 14.2 a 14.5 |  |
-| 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | 🔍 Em revisão (PR) |
-| 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 |  |
+| 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | ✅ Concluída em 22/10/2026 |
+| 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 | 🔍 Em revisão (PR) |
 | 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 |  |
 | 15.4 | Motion no site: efeitos sonoros e música | 15.1 |  |
 
@@ -404,9 +404,21 @@
 - A fala do bot se digita; o pulo do bot estica e achata; a fase do chefe estoura um confete.
 
 **Critérios de aceite**
-- [ ] A TV liga ao abrir o site, sem bloquear cliques, e some; na volta da troca de idioma não liga e a página chega pronta.
-- [ ] Um bloco fora da tela fica escondido até chegar nela e então aparece inteiro.
-- [ ] Sem JavaScript, nada fica escondido e a TV não liga.
-- [ ] Com movimento reduzido: sem TV, sem entradas, sem confete.
-- [ ] Os testes E2E existentes continuam verdes no Chromium e no WebKit.
+- [x] A TV liga ao abrir o site, sem bloquear cliques, e some; na volta da troca de idioma não liga e a página chega pronta.
+- [x] Um bloco fora da tela fica escondido até chegar nela e então aparece inteiro.
+- [x] Sem JavaScript, nada fica escondido e a TV não liga.
+- [x] Com movimento reduzido: sem TV, sem entradas, sem confete.
+- [x] Os testes E2E existentes continuam verdes no Chromium e no WebKit.
+
+### 15.2 — Nascer e pôr do sol no botão de tema
+
+**Entregas**
+- As cores do tema registradas com `@property`, para transitarem. Só durante a troca pelo botão (classes `amanhece` e `anoitece` no `<html>`, `lib/theme.ts`): o céu e a cena mudam em 1,4 s, a interface vira no meio do caminho (0,35 s), a Lua desce e o Sol nasce, ou o Sol se põe e a Lua nasce, e o horizonte esquenta com o laranja do amanhecer ou do entardecer.
+- Navegadores sem `@property` e o movimento reduzido trocam na hora, como antes.
+
+**Critérios de aceite**
+- [ ] Para o dia: o céu passa por cores intermediárias, a Lua desce e some, o Sol nasce.
+- [ ] Para a noite: o Sol se põe pelo entardecer e a Lua nasce.
+- [ ] Com movimento reduzido, a troca é na hora, sem animações.
+- [ ] A escolha continua salva (teste existente).
 
