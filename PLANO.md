@@ -38,6 +38,10 @@
 | 14.4 | Redesign: gráfico reestilizado | 14.1 |  |
 | 14.5 | Redesign: imagem de prévia e favicon | 14.1 |  |
 | 14.6 | Redesign: ajuste final dos testes e auditoria | 14.2 a 14.5 |  |
+| 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | 🔍 Em revisão (PR) |
+| 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 |  |
+| 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 |  |
+| 15.4 | Motion no site: efeitos sonoros e música | 15.1 |  |
 
 ---
 
@@ -376,3 +380,33 @@
 - [ ] Todos os testes E2E verdes no Chromium e no WebKit (celular), inclusive HUD e cena fixas, áreas seguras do iPhone e altura em `svh`.
 - [ ] Verificação manual nos dois idiomas e nos dois temas, no celular e no desktop.
 - [ ] Nenhum item da seção 5 sem implementação.
+
+---
+
+## Etapa 15 — Animações do motion no site
+
+> Acrescentada em 22/10/2026, a pedido do Luige, depois do vídeo em `motion/`: levar as animações do vídeo para o site, em tempo real. No site, cada animação dispara com uma ação do visitante (abrir a página, rolar até um bloco, clicar), não com o relógio do vídeo; `motion/index.html` é a referência visual.
+
+**Decisões do Luige (22/10/2026)**
+- A TV ligando fica no site: faz parte da identidade. Toda visita abre com ela, menos a volta da troca de idioma, que chega pronta.
+- Som **ligado por padrão**, em dois controles separados na HUD: efeitos sonoros e música. Os navegadores só liberam áudio depois do primeiro clique ou tecla do visitante, então o som começa nesse momento.
+
+**Regras que valem para as quatro partes**
+- Tudo respeita `prefers-reduced-motion`: com ele, nada se move, como hoje.
+- Sem JavaScript, tudo aparece parado e visível. Nada fica escondido à espera de um script.
+- Só `transform`/`translate`/`scale`/`opacity`/`clip-path` nas animações.
+
+### 15.1 — Abertura com a TV e entradas das fases
+
+**Entregas**
+- Abertura (classe `tv` no `<html>`, decidida antes da primeira pintura por `src/lib/intro.ts`): a TV liga (linha clara no meio, imagem abrindo do centro, brilho baixando), a HUD desce, a cena sobe do chão, o bot cai do céu e pousa achatado com poeira, as letras do nome caem uma a uma ganhando a sombra, a frase entra palavra a palavra (a piada depois de uma pausa) e o PRESS TO START salta.
+- Entradas: cada bloco `.entra` (placas, títulos, painéis, nós do mapa, cartuchos, inventário, contato) fica escondido até chegar na tela e então anima: a placa cai e quica, o título se digita, o painel surge com mola, a trilha da Experiência se desenha, os cartuchos caem e encaixam, as casas do inventário surgem uma a uma. O que já está na tela quando o JavaScript chega, e tudo na volta da troca de idioma, chega pronto (`.pronto`).
+- A fala do bot se digita; o pulo do bot estica e achata; a fase do chefe estoura um confete.
+
+**Critérios de aceite**
+- [ ] A TV liga ao abrir o site, sem bloquear cliques, e some; na volta da troca de idioma não liga e a página chega pronta.
+- [ ] Um bloco fora da tela fica escondido até chegar nela e então aparece inteiro.
+- [ ] Sem JavaScript, nada fica escondido e a TV não liga.
+- [ ] Com movimento reduzido: sem TV, sem entradas, sem confete.
+- [ ] Os testes E2E existentes continuam verdes no Chromium e no WebKit.
+

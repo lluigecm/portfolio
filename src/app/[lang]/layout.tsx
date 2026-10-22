@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { content } from "@/content";
 import { HTML_LANG, isLocale, LOCALES, OG_LOCALE } from "@/lib/locale";
 import { siteUrl } from "@/lib/site";
+import { introScript } from "@/lib/intro";
 import { themeScript } from "@/lib/theme";
 import "../globals.css";
 
@@ -68,10 +69,10 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   if (!isLocale(lang)) notFound();
 
   return (
-    // O script do tema altera data-theme antes da hidratação; a diferença é esperada.
+    // Os scripts do tema e da abertura alteram o <html> antes da hidratação; a diferença é esperada.
     <html lang={HTML_LANG[lang]} className={`${pressStart.variable} ${vt323.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript + introScript }} />
       </head>
       <body>{children}</body>
     </html>
