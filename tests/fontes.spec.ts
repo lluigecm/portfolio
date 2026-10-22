@@ -132,21 +132,31 @@ for (const viewport of [
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
 
-    const cls = await page.evaluate(
+    // Além do total, guarda o que se deslocou, para a falha dizer onde olhar.
+    const { cls, shifts } = await page.evaluate(
       () =>
-        new Promise<number>((resolve) => {
-          let total = 0;
+        new Promise<{ cls: number; shifts: string[] }>((resolve) => {
+          let cls = 0;
+          const shifts: string[] = [];
           new PerformanceObserver((list) => {
             for (const entry of list.getEntries() as unknown as {
               value: number;
               hadRecentInput: boolean;
+              sources: { node?: Node; previousRect: DOMRectReadOnly; currentRect: DOMRectReadOnly }[];
             }[]) {
-              if (!entry.hadRecentInput) total += entry.value;
+              if (entry.hadRecentInput) continue;
+              cls += entry.value;
+              for (const { node, previousRect: a, currentRect: b } of entry.sources) {
+                const name = node instanceof Element ? node.tagName : node?.nodeName;
+                const text = (node?.textContent ?? "").trim().slice(0, 30);
+                const rect = (r: DOMRectReadOnly) => `${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.width)}x${Math.round(r.height)}`;
+                shifts.push(`${name} "${text}": ${rect(a)} -> ${rect(b)}`);
+              }
             }
           }).observe({ type: "layout-shift", buffered: true });
-          setTimeout(() => resolve(total), 500);
+          setTimeout(() => resolve({ cls, shifts }), 500);
         }),
     );
-    expect(cls).toBeLessThan(0.01);
+    expect(cls, shifts.join("\n")).toBeLessThan(0.01);
   });
 }
