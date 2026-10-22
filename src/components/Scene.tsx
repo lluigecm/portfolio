@@ -126,8 +126,6 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       },
       { threshold: 0.35 },
     );
-    // Com o JavaScript no ar, o gráfico espera a fase aparecer para entrar.
-    document.documentElement.classList.add("jogo");
     document.querySelectorAll(".level").forEach((level) => observer.observe(level));
 
     // Uma fala por card: só fala de novo depois de sair dele.
@@ -158,6 +156,9 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
     document.addEventListener("mouseover", onPoint);
     document.addEventListener("focusin", onPoint);
     walker.addEventListener("click", onJump);
+    // Página pronta: o gráfico passa a esperar a fase aparecer para entrar, e os
+    // testes sabem que as escutas acima já estão ativas.
+    document.documentElement.classList.add("jogo");
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKey);
