@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
+import { ContributionChart } from "@/components/ContributionChart";
 import { Education } from "@/components/Education";
 import { Experience } from "@/components/Experience";
 import { Hero } from "@/components/Hero";
@@ -13,6 +14,7 @@ import { Scene } from "@/components/Scene";
 import { Sky } from "@/components/Sky";
 import { Stars } from "@/components/Stars";
 import { getContent } from "@/content";
+import { getContributions } from "@/lib/github";
 import { isLocale } from "@/lib/locale";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
@@ -20,6 +22,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!isLocale(lang)) notFound();
 
   const text = getContent(lang);
+  // Sem dados (GitHub fora do ar no build), o gráfico não aparece.
+  const contributions = await getContributions();
 
   return (
     <>
@@ -36,6 +40,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <LevelMap text={text.map} />
           <Level id="sobre" sign="WORLD 1-1" title={text.about.title}>
             <About text={text.about} />
+            {contributions && <ContributionChart contributions={contributions} text={text.chart} />}
           </Level>
           <Level id="exp" sign="WORLD 1-2" title={text.experience.title}>
             <Experience text={text.experience} />

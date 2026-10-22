@@ -1,5 +1,10 @@
 import type { Content } from "@/types/content";
 
+const number = new Intl.NumberFormat("pt-BR");
+const month = new Intl.DateTimeFormat("pt-BR", { month: "short", timeZone: "UTC" });
+// "out." vira "OUT", para a fala do bot.
+const shortMonth = (iso: string) => month.format(new Date(iso)).replace(".", "").toUpperCase();
+
 export const pt: Content = {
   meta: {
     title: "Luige · Automação de testes e RPA",
@@ -47,6 +52,20 @@ export const pt: Content = {
     coffee: "Café",
     statsFala: "CAFÉ NO NÍVEL MÁXIMO.",
   },
+  chart: {
+    title: "XP no GitHub",
+    caption: ({ total, personal, work, workPrivate }) => {
+      // As privadas só aparecem se a conta de trabalho as mostra no perfil.
+      const hidden = workPrivate > 0 ? `, ${number.format(workPrivate)} delas em repositórios privados,` : "";
+      return `${number.format(total)} contribuições no GitHub nos últimos 12 meses: ${number.format(work)} na conta de trabalho${hidden} e ${number.format(personal)} na pessoal.`;
+    },
+    month: (iso) => month.format(new Date(iso)),
+    day: (iso, count) => {
+      const day = `${Number(iso.slice(8))} ${shortMonth(iso)}`;
+      if (count === 0) return `${day}: DIA DE DESCANSO.`;
+      return `${day}: ${number.format(count)} ${count === 1 ? "CONTRIBUIÇÃO" : "CONTRIBUIÇÕES"}`;
+    },
+  },
   experience: {
     title: "Experiência",
     roles: [
@@ -67,7 +86,7 @@ export const pt: Content = {
         fala: "ONDE TUDO COMEÇOU.",
         bullets: [
           "Primeiro contato com automação profissional: Playwright, Robot Framework e pipelines de teste.",
-          "Evoluí de tarefas pontuais até assumir projetos inteiros.",
+          "Evoluí de tarefas pontuais até integrar projetos importantes.",
         ],
       },
     ],

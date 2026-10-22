@@ -52,6 +52,15 @@ test("cada fase ganha uma fala do bot e as barras enchem", async ({ page }) => {
   await expect(bubble).toHaveText(text.bubble.sobre);
   await expect(bubble).toHaveClass(/show/);
   await expect(page.locator("#sobre .bar i").first()).toHaveAttribute("style", /width: 92%/);
+  // A barra ocupa a linha toda e enche 92% dela.
+  await expect
+    .poll(() =>
+      page.locator("#sobre .bar").first().evaluate((bar) => {
+        const fill = bar.querySelector("i")!.getBoundingClientRect().width;
+        return Math.round((fill / bar.clientWidth) * 100);
+      }),
+    )
+    .toBe(92);
 
   await goTo("contato");
   await expect(bubble).toHaveText(text.bubble.contato);

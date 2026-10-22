@@ -1,5 +1,9 @@
 import type { Content } from "@/types/content";
 
+const number = new Intl.NumberFormat("en-US");
+const month = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
+const shortMonth = (iso: string) => month.format(new Date(iso)).toUpperCase();
+
 export const en: Content = {
   meta: {
     title: "Luige · Test automation and RPA",
@@ -46,6 +50,20 @@ export const en: Content = {
     coffee: "Café",
     statsFala: "COFFEE AT MAX LEVEL.",
   },
+  chart: {
+    title: "GitHub XP",
+    caption: ({ total, personal, work, workPrivate }) => {
+      // As privadas só aparecem se a conta de trabalho as mostra no perfil.
+      const hidden = workPrivate > 0 ? `, ${number.format(workPrivate)} of them in private repositories,` : "";
+      return `${number.format(total)} GitHub contributions over the last 12 months: ${number.format(work)} on my work account${hidden} and ${number.format(personal)} on my personal one.`;
+    },
+    month: (iso) => month.format(new Date(iso)),
+    day: (iso, count) => {
+      const day = `${shortMonth(iso)} ${Number(iso.slice(8))}`;
+      if (count === 0) return `${day}: REST DAY.`;
+      return `${day}: ${number.format(count)} ${count === 1 ? "CONTRIBUTION" : "CONTRIBUTIONS"}`;
+    },
+  },
   experience: {
     title: "Experience",
     roles: [
@@ -66,7 +84,7 @@ export const en: Content = {
         fala: "WHERE IT ALL STARTED.",
         bullets: [
           "First professional automation work: Playwright, Robot Framework and test pipelines.",
-          "Grew from small tasks to owning whole projects.",
+          "Grew from small tasks to working on key projects.",
         ],
       },
     ],

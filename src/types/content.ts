@@ -1,3 +1,5 @@
+import type { ContributionTotals } from "./github";
+
 export type Locale = "pt" | "en";
 
 /** Ids das fases, iguais às âncoras do modelo. */
@@ -75,6 +77,16 @@ export interface Content {
     coffee: string;
     /** Fala do bot ao passar o mouse nas barras de status. */
     statsFala: string;
+  };
+  /** Gráfico de contribuições do GitHub, na fase "Sobre". */
+  chart: {
+    title: string;
+    /** Legenda com os totais já formatados no idioma. */
+    caption: (totals: ContributionTotals) => string;
+    /** Rótulo curto do mês no topo do gráfico. */
+    month: (date: string) => string;
+    /** Fala do bot sobre um dia do gráfico. */
+    day: (date: string, count: number) => string;
   };
   experience: {
     title: string;

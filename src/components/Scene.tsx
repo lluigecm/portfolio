@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { LevelId } from "@/types/content";
 import { BushStrip } from "./Bushes";
+import { HillStrip } from "./Hills";
 
 /* Bot de 16 × 16 pixels (4 px cada), desenhado com box-shadow em dois quadros de passo. */
 const COLORS: Record<string, string> = {
@@ -46,21 +47,9 @@ function shadow(frame: string[]) {
 const SHADOW_A = shadow(FRAME_A);
 const SHADOW_B = shadow(FRAME_B);
 
-/** Morros em degraus; três cópias lado a lado para o paralaxe dar a volta. */
-function Hills() {
-  return (
-    <svg viewBox="0 0 600 120" preserveAspectRatio="none" shapeRendering="crispEdges">
-      <path fill="var(--hill)" d="M0 120V70h20V50h20V36h20V26h20V18h20V26h20V36h20V50h20V70h20V90h20V120Z" />
-      <path fill="var(--hill2)" d="M200 120V80h30V60h30V46h30V40h30V46h30V60h30V80h30V120Z" />
-      <path fill="var(--hill)" d="M430 120V74h20V54h20V40h20V32h20V40h20V54h20V74h20V120Z" />
-      <rect fill="var(--hill)" x="0" y="100" width="600" height="20" />
-    </svg>
-  );
-}
-
-/** Faixas de moitas lado a lado: cobrem telas de até 3000 px mesmo deslocadas. */
-const BUSH_STRIPS = 6;
-const BUSH_STRIP_WIDTH = 600;
+/** Faixas de morros e de moitas lado a lado: cobrem telas de até 3000 px mesmo deslocadas. */
+const STRIPS = 6;
+const STRIP_WIDTH = 600;
 
 /*
  * Chão fixo no rodapé da tela. Rolar a página faz o bot andar (dois quadros,
@@ -97,8 +86,8 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       const dy = y - lastY;
       lastY = y;
       if (reduce) return;
-      hills.style.transform = `translateX(${-((y * 0.25) % (hills.offsetWidth / 3))}px)`;
-      bushes.style.transform = `translateX(${-((y * 0.45) % BUSH_STRIP_WIDTH)}px)`;
+      hills.style.transform = `translateX(${-((y * 0.25) % STRIP_WIDTH)}px)`;
+      bushes.style.transform = `translateX(${-((y * 0.45) % STRIP_WIDTH)}px)`;
       ground.style.backgroundPosition = `0 0,${-(y * 0.6)}px 0`;
       walker.classList.toggle("flip", dy < 0);
       walker.classList.remove("idle");
@@ -129,6 +118,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
           if (!entry.isIntersecting) continue;
           const line = lines[entry.target.id as LevelId];
           if (line) say(line);
+          entry.target.classList.add("visto");
           entry.target.querySelectorAll<HTMLElement>(".bar i").forEach((bar) => {
             bar.style.width = bar.dataset.w ?? "";
           });
@@ -136,6 +126,8 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       },
       { threshold: 0.35 },
     );
+    // Com o JavaScript no ar, o gráfico espera a fase aparecer para entrar.
+    document.documentElement.classList.add("jogo");
     document.querySelectorAll(".level").forEach((level) => observer.observe(level));
 
     // Uma fala por card: só fala de novo depois de sair dele.
@@ -182,12 +174,12 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
   return (
     <div className="scene" aria-hidden="true">
       <div className="hills" ref={hillsRef}>
-        <Hills />
-        <Hills />
-        <Hills />
+        {Array.from({ length: STRIPS }, (_, i) => (
+          <HillStrip key={i} />
+        ))}
       </div>
       <div className="bushes" ref={bushesRef}>
-        {Array.from({ length: BUSH_STRIPS }, (_, i) => (
+        {Array.from({ length: STRIPS }, (_, i) => (
           <BushStrip key={i} />
         ))}
       </div>
