@@ -1,7 +1,7 @@
 # Portfólio — Especificação do Projeto
 
 > Fonte única de verdade do projeto. Todo chat ou sessão de desenvolvimento deve ler este arquivo antes de começar.
-> Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026** · plano de implementação em `PLANO.md`
+> Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026; seção 5 revisada e aprovada em 22/10/2026** · plano de implementação em `PLANO.md`
 
 ---
 
@@ -98,72 +98,93 @@ PLANO.md            # plano de implementação
 
 ## 5. Design
 
+> **Revisada e aprovada em 22/10/2026:** direção visual "retrô platformer", em pixel art 8-bit, no lugar do visual Grafite. Decisões nos blocos A a D da seção 13; implementação na etapa 14 do `PLANO.md`.
+
 ### 5.1 Princípios
-1. **Uma única peça marcante:** o gráfico de contribuições, em largura total logo abaixo da apresentação. Todo o resto é discreto.
-2. **Estrutura é informação:** a linha do tempo aparece só na Experiência, a única sequência real. Sem rótulos decorativos, sem numeração de seções, sem pontos médios separando metadados.
-3. **Movimento só em resposta a uma ação** do visitante, respeitando `prefers-reduced-motion`. A única animação de entrada é o preenchimento do gráfico. Sem efeitos decorativos; a lista completa fica na seção 5.5.
-4. **Cards de projeto como fichas:** mídia grande, borda fina, sem sombras nem gradientes.
-5. Alinhamento à esquerda, coluna estreita (até 70 caracteres por linha).
+1. **Uma única peça marcante:** o gráfico de contribuições, em largura total logo abaixo da apresentação, em blocos de pixel art. O bot e a cena são moldura, não conteúdo.
+2. **Estrutura é informação:** a linha do tempo aparece só na Experiência, a única sequência real. Sem pontos médios separando metadados. **Exceção registrada:** uma placa por seção ("MUNDO 1-1" / "WORLD 1-1"), a HUD e o balão de fala podem ter caixa alta e numeração; a placa e o balão são decorativos e invisíveis ao leitor de tela. Fora deles, sem rótulos decorativos, numeração ou caixa alta.
+3. **Movimento só em resposta a uma ação** do visitante (rolar, trocar tema ou idioma, escolher um caso), respeitando `prefers-reduced-motion`. Nada em loop. A única animação de entrada é o preenchimento do gráfico. Lista completa na seção 5.5.
+4. **Cards de projeto como cartuchos:** a mídia grande (diagrama com os casos, vídeo) é o rótulo do cartucho; bordas grossas e cantos retos.
+5. **Duas camadas:** a cena (céu, estrelas, colinas, chão, bot) é só decoração e nunca tem texto por cima; todo texto fica sobre painel sólido.
+6. Alinhamento à esquerda dentro dos painéis, inclusive na caixa de diálogo do topo; só a HUD tem layout próprio. Coluna estreita (até 70 caracteres por linha).
+7. **Sombras duras, sem desfoque:** desfoque e espalhamento sempre zero, cor sempre o token linha do tema, e só em painéis, placas, botões e cartuchos. Nenhum `text-shadow`, nem no nome do topo.
 
 ### 5.2 Cores
 
-| Token | Claro | Escuro |
-|---|---|---|
-| Papel (fundo) | `#F3F4F5` | `#16181B` |
-| Superfície | `#FFFFFF` | `#1E2125` |
-| Grafite (texto) | `#1F2328` | `#E6E8EB` |
-| Lápis (secundário) | `#5C636B` | `#9AA1A9` |
-| Linha (borda) | `#D9DCE0` | `#30353B` |
-| Âmbar (destaque) | `#A84E08` | `#E0A458` |
+Cada cor tem um papel. Escuro = céu noturno; claro = céu diurno.
 
-- O âmbar é o único elemento quente e a única cor de destaque.
-- Todo texto atende contraste AA (WCAG), com folga: nenhum par texto/fundo abaixo de 5:1 no tema claro para o âmbar.
+| Token | Escuro | Claro | Papel |
+|---|---|---|---|
+| Céu, céu 2, horizonte | `#0C1445`, `#1D2B7A`, `#4C3F91` | `#8FD3FF`, `#D8F1FF`, `#FFF1C9` | Só a cena (degradê do fundo) |
+| Colina, colina 2, grama, terra, terra 2 | `#1E6B4A`, `#2E8F5E`, `#58C46A`, `#6B3F2A`, `#4A2A1C` | `#5FB86B`, `#86D58F`, `#6FD66F`, `#9A5E3C`, `#6D3F27` | Só a cena |
+| Painel / painel 2 | `#121A52` / `#0A0F33` | `#FFFDF4` / `#F0ECD6` | Fundo de todo conteúdo e da HUD |
+| Texto | `#FFF8E7` | `#1A1A2E` | Corpo |
+| Secundário | `#B9C3FF` | `#3A4A7A` | Metadados, legendas |
+| Linha | `#6676DD` | `#1A1A2E` | Bordas que carregam informação (4:1 ou mais sobre o painel) |
+| Amarelo | `#FFD23F` | `#FFD23F` | Só como fundo, com texto `#1A1A2E`: marca o que é interativo ou escolhido (botões, placas, opção marcada) |
+| Teal | `#39D6C4` | `#39D6C4` | Só como fundo, com texto `#1A1A2E`; cor do bot |
+| Rosa | `#FF5D9E` | — | Destaque de texto no escuro; no claro, só fundo decorativo |
+| Destaque de texto | `#FFD23F` | `#9C1C5C` | Nome no topo, selos ("TCC, em andamento"), texto das placas |
+| Foco | `#FFD23F` | `#1A1A2E` | Contorno de foco |
 
-**Escala do gráfico de contribuições (5 níveis):**
+- Todo par texto/fundo atende AA com folga (referência: texto e secundário a 9,5:1 ou mais; destaque a 7,5:1 ou mais).
+- Nenhum texto sobre o céu ou outra cor de cena.
+
+**Escala do gráfico de contribuições (5 níveis, blocos de grama):**
 - Nível 0 (sem contribuição) = cor da linha.
-- Níveis 1 a 4 em âmbar, cada um com contraste mínimo de **3:1 contra o papel**, nos dois temas (WCAG 1.4.11).
-- Referência: claro de ~3,6:1 a ~8,5:1; escuro de ~3,4:1 a ~11:1.
-- O total de contribuições aparece em texto visível na legenda, para a cor não ser o único meio de obter a informação.
+- Níveis 1 a 4 em verde, cada um com contraste mínimo de **3:1 contra o painel**, em ordem crescente, nos dois temas (WCAG 1.4.11). Escuro: `#2F7D45`, `#3FA35A`, `#58C46A`, `#9BE38F` (~3,2:1 a ~10,6:1). Claro: `#4F9B4F`, `#3A7F3C`, `#2A6230`, `#1B4422` (~3,4:1 a ~10,9:1).
+- O total de contribuições aparece em texto visível na legenda e no contador da HUD.
 
 ### 5.3 Tipografia
-- **IBM Plex Sans** para todo o texto.
-- **IBM Plex Mono** apenas para conteúdo que é código de verdade (ex.: `lluigecm/MyGather` nos cards).
-- Corpo em 18px; nome no topo em 48px; escala tipográfica clássica.
+- **Press Start 2P** em títulos (h1, h2, h3), HUD, placas e balão de fala; nunca abaixo de 14 px. Um peso só: títulos sem negrito.
+- **IBM Plex Sans** em todo o resto, inclusive tags, períodos e rótulos. Corpo em 18 px.
+- **IBM Plex Mono** apenas para conteúdo que é código de verdade.
+- As três via `next/font`, baixadas no build, sem chamadas a outros sites. VT323 fica fora; só entra como exceção registrada se, com o site pronto, as tags pedirem.
 
 ### 5.4 Layout
 
 ```
-┌──────────────────────────────────────────────────────┐
-│ Luige   Experiência Projetos Stack Formação Contato  PT/EN ◐ GitHub │
-├──────────────────────────────────────────────────────┤
-│ Luige                                                 │
-│ Desenvolvedor de Automação de Testes                  │
-│ Apresentação                                          │
-│                                                       │
-│ ▓▓▒▒░░▓▓▓▒░░▒▓▓▓▒░▒▓▓░░▒▓▓▓▓▒░▒▓▒░░▓▓▓▒▒░▓▓▒░▓▓▓▒░▒▓▓ │  gráfico, largura total
-│ legenda                                               │
-├──────────────────────────────────────────────────────┤
-│ Experiência   linha do tempo vertical                 │
-│ Projetos      dois cards, mídia em destaque           │
-│ Stack         grupos em linha                         │
-│ Formação                                              │
-│ Contato       LinkedIn e e-mail                       │
-└──────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│ HUD fixa: LUIGE  Experiência Projetos Stack Formação Contato     │
+│           CONTRIBUIÇÕES 1.234    PT/EN  ◐  GitHub                │
+├──────────────────────────────────────────────────────────────────┤
+│ ╔═══ caixa de diálogo ═══════════════════════╗                   │
+│ ║ Luige                                      ║                   │
+│ ║ Desenvolvedor de Automação de Testes       ║                   │
+│ ║ Apresentação                               ║                   │
+│ ╚════════════════════════════════════════════╝                   │
+│ ▓▓▒▒░░▓▓▓▒░░▒▓▓▓▒░▒▓▓░░▒▓▓▓▓▒░▒▓▒░░▓▓▓▒▒░▓▓▒░▓▓▓  gráfico em blocos │
+│ legenda                                                          │
+├──────────────────────────────────────────────────────────────────┤
+│ [MUNDO 1-1] Experiência  trilha de checkpoints                    │
+│ [MUNDO 1-2] Projetos     cartuchos, mídia como rótulo            │
+│ [MUNDO 1-3] Stack        inventário: os quatro grupos da 6.4     │
+│ [MUNDO 1-4] Formação                                             │
+│ [MUNDO 1-5] Contato      LinkedIn e e-mail, botões de jogo       │
+├──────────────────────────────────────────────────────────────────┤
+│ cena fixa no rodapé: colinas, chão, bot (e balão)                │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-- **Cabeçalho:** nome; links para Experiência, Projetos, Stack, Formação e Contato; botão de idioma; botão de tema; link para o perfil do GitHub.
-- No celular, os links das seções podem ser recolhidos; os botões de idioma e tema continuam visíveis.
+- **HUD (cabeçalho fixo):** nome; links para as seções; contador "CONTRIBUIÇÕES" / "CONTRIBUTIONS" com o mesmo total da legenda, que some junto com o gráfico quando ele é ocultado (regra 14); botões de idioma e tema; link para o GitHub. Abaixo de 640 px, o contador desce para a segunda linha e os links das seções podem ser recolhidos; idioma e tema continuam visíveis. A página reserva o espaço da HUD (`scroll-padding-top`) para os títulos não ficarem escondidos.
+- **Placas:** uma por seção, na ordem acima; o topo não tem placa. O título da seção (h2) continua o da seção 6.
+- **Topo:** caixa de diálogo de jogo (borda grossa, cantos retos), não card genérico.
+- **Cena:** fixa no rodapé da tela, atrás do conteúdo, sem receber cliques. Estrelas no céu escuro com posições fixas no código.
 - Espaçamentos exatos e detalhes de cada seção ficam a cargo do desenvolvimento, seguindo estes princípios.
 
 ### 5.5 Movimento e interação
 
-Tudo respeita `prefers-reduced-motion`: com ele, nada se move e o site funciona igual. Só `transform` e `opacity`, nunca curva linear, sem sombras.
+Tudo respeita `prefers-reduced-motion`: com ele, nada se move e o site funciona igual (o bot aparece parado). Nada fica em loop. Só `transform` e `opacity`; curvas suaves ou em degraus (`steps`), nunca linear. Sombras só as duras do princípio 5.1.7.
 
-1. **Preenchimento do gráfico (efeito 1):** uma vez por carregamento, as semanas aparecem da mais antiga para a mais recente, só com opacidade, em até 700 ms. Na troca de idioma, o gráfico chega pronto.
-2. **Relevo no gráfico (efeito 2):** com mouse, as células perto do cursor sobem e crescem na proporção do nível do dia; dias sem contribuição não se mexem. Começa depois do preenchimento e não existe em telas de toque.
-3. **Troca de idioma (efeito 3):** esmaecimento de 350 ms entre as duas versões da página.
-4. **Troca de tema:** esmaecimento de 200 ms, só com opacidade, sem animar cores.
-5. **Casos reais do TCC:** escolher um caso mostra o texto dele e pinta de âmbar, no diagrama, o caminho que o mecanismo seguiu. É troca de estado, sem animação, feita só com HTML e CSS: funciona sem JavaScript, e as setas do teclado trocam de caso.
+1. **Bot:** anda conforme a página rola (troca de quadro), vira ao rolar para cima e para quando a rolagem para. O chão desliza junto. As colinas ficam paradas.
+2. **Balão de fala:** aparece ao entrar na Experiência e em Projetos, uma vez por seção por visita (ao voltar, não reaparece). Invisível ao leitor de tela e sem informação que não esteja na página. Falas: Experiência "NA X-TESTING DESDE 2024!" / "AT X-TESTING SINCE 2024!"; Projetos "O TCC TEM CASOS REAIS!" / "MY THESIS HAS REAL CASES!". Formação, Contato e Stack em silêncio.
+3. **Preenchimento do gráfico:** uma vez por carregamento, as semanas aparecem da mais antiga para a mais recente, em degraus, em até 700 ms. Na troca de idioma, o gráfico chega pronto.
+4. **Troca de idioma:** esmaecimento de 350 ms entre as duas versões da página.
+5. **Troca de tema:** esmaecimento de 200 ms, só com opacidade, sem animar cores.
+6. **Botões:** "afundam" ao serem pressionados (`:active`). Sem efeitos de hover que movam elementos.
+7. **Casos reais do TCC:** escolher um caso mostra o texto dele e destaca, no diagrama, o caminho que o mecanismo seguiu. Troca de estado, sem animação, só com HTML e CSS: funciona sem JavaScript, e as setas do teclado trocam de caso.
+
+Fora: bot balançando parado, parallax das colinas, nome digitado letra a letra, cursor e PRESS START piscando, estrelas cintilando, checkpoint piscando, hover que levanta cards, scanlines, relevo do gráfico, setas do teclado rolando a página e contador animado.
 
 ## 6. Conteúdo
 
@@ -267,8 +288,8 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | Título | Luige \| Desenvolvedor de Automação de Testes | Luige \| Test Automation Developer |
 | Descrição | Desenvolvedor de automação de testes no Brasil. Experiência, projetos e atividade no GitHub. | Test automation developer in Brazil. Experience, projects, and live GitHub activity. |
 
-- Imagem de prévia (Open Graph): nome e título no visual Grafite.
-- Favicon próprio no visual Grafite.
+- Imagem de prévia (Open Graph): uma versão só, noturna: céu, colinas, chão, o bot e a caixa de diálogo com nome e título em Press Start 2P. Gerada com `next/og`, com a fonte do pacote `@fontsource/press-start-2p` (OFL) em `.woff`, porque o `next/og` (Satori) não aceita `.woff2`.
+- Favicon: a cabeça do bot em pixel art, em SVG; o ícone do iPhone no mesmo desenho.
 
 ## 7. Requisitos técnicos
 
@@ -285,6 +306,8 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 3. A troca de idioma funciona, persiste após recarregar e atualiza o atributo de idioma.
 4. Com a API do GitHub falhando (simulada), os cards aparecem com os textos e o gráfico é ocultado.
 5. Verificação automática de acessibilidade sem violações.
+
+**Regra para asserções novas:** toda asserção nova precisa ser vista falhando por uma injeção própria (quebrar de propósito o que ela verifica) antes de valer. O PR de cada etapa registra a injeção usada.
 
 ## 8. Publicação
 - Domínio próprio `.dev`. Nome **pendente**: Luige verifica a disponibilidade (sugestões: `luige.dev`, `lucasluige.dev`, `luigecm.dev`).
@@ -364,3 +387,23 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 22/10/2026 | Experiência continua com o texto atual: por motivos contratuais, nada além do que já está descrito sobre o trabalho na X-Testing |
 | 22/10/2026 | Demonstração interativa "quebre a interface" no card do TCC adiada |
 | 22/10/2026 | A suíte de testes deste site é de autoria do Luige |
+| 22/10/2026 | Card "Este site" (parte 5) descartado antes de chegar à main |
+| 22/10/2026 | Aberta a revisão de design: o visual Grafite (seção 5) dá lugar à direção "retrô platformer" (pixel art 8-bit). A seção 6 continua valendo integralmente; o preview em HTML é só referência de aparência e comportamento |
+| 22/10/2026 | Redesign, bloco A (1/4): o gráfico de contribuições continua a peça principal, no topo, reestilizado em pixel art; o bot anda num chão fixo e separado, no rodapé da tela |
+| 22/10/2026 | Redesign, bloco A (2/4): a HUD fixa vira o cabeçalho e mantém a navegação entre seções (recolhível no celular), idioma, tema e GitHub; sem o "mapa de fases" do preview |
+| 22/10/2026 | Redesign, bloco A (3/4): contador da HUD com rótulo verdadeiro ("CONTRIBUIÇÕES" / "CONTRIBUTIONS") e o mesmo total da legenda; some junto com o gráfico quando ele é ocultado (regra 14) |
+| 22/10/2026 | Redesign, bloco A (4/4): exceção à 5.1.2 para uma placa por seção ("MUNDO 1-1" / "WORLD 1-1"), decorativa e invisível ao leitor de tela; o título da seção continua o da seção 6; caixa alta e numeração só na placa e na HUD |
+| 22/10/2026 | Redesign, bloco B (1/3): tudo que se move responde a uma ação do visitante; nada em loop; com prefers-reduced-motion nada se move; curvas suaves ou em degraus (steps), nunca linear. Ficam: bot andando com a rolagem (troca de quadro, vira ao subir, para quando a rolagem para), chão deslizando, balão de fala, "afundar" de botões no :active. Saem: bot balançando parado, parallax das colinas, nome digitado e cursor piscando, PRESS START, estrelas cintilando (ficam fixas, com posições fixas no código), checkpoint piscando, hover que levanta cards, scanlines, setas do teclado rolando a página, contador animado |
+| 22/10/2026 | Redesign, bloco B (2/3): o balão de fala aparece uma vez por seção por visita (ao voltar, não reaparece), só nas seções com fato novo (Experiência, Projetos, Stack); Formação e Contato em silêncio. Invisível ao leitor de tela e sem informação que não esteja na página |
+| 22/10/2026 | Redesign, bloco B (3/3): o relevo do gráfico (efeito 2) sai; fica o preenchimento ao carregar, em degraus. Seguem o esmaecimento na troca de idioma e de tema e o destaque dos casos do TCC |
+| 22/10/2026 | Redesign, bloco C (1/4): duas camadas. A cena (céu, estrelas, colinas, chão, bot) é só decoração e nunca tem texto por cima; todo texto fica sobre painel sólido. O painel do topo é desenhado como caixa de diálogo de jogo (borda grossa, cantos retos), não como card genérico |
+| 22/10/2026 | Redesign, bloco C (2/4): paleta por papéis. Painéis escuro #121a52/#0a0f33 e claro #fffdf4/#f0ecd6; texto #fff8e7/#1a1a2e; secundário #b9c3ff/#3a4a7a; linha #6676dd/#1a1a2e (4:1 ou mais); amarelo e teal só como fundo com texto #1a1a2e, e o amarelo marca o que é interativo ou escolhido; destaque de texto amarelo #ffd23f no escuro e #9c1c5c no claro; foco amarelo no escuro e #1a1a2e no claro. Substitui "o âmbar é o único destaque" |
+| 22/10/2026 | Redesign, bloco C (3/4): escala do gráfico em verde, blocos de grama sobre o painel. Escuro #2f7d45, #3fa35a, #58c46a, #9be38f; claro #4f9b4f, #3a7f3c, #2a6230, #1b4422; 3:1 ou mais contra o painel, em ordem crescente; nível 0 = linha |
+| 22/10/2026 | Redesign, bloco C (4/4): Press Start 2P (via next/font, sem chamadas externas) em títulos, HUD, placas e balão, nunca abaixo de 14 px; IBM Plex Sans em todo o resto, inclusive tags, períodos e rótulos; Plex Mono só em código. VT323 fora; só entra como exceção registrada se, com o site pronto, as tags pedirem. Abaixo de 640 px, o contador desce para a segunda linha da HUD |
+| 22/10/2026 | Redesign, bloco D (1/3): a seção 6 continua integral; muda só a forma (caixa de diálogo no topo, trilha de checkpoints, cartuchos, inventário com os quatro grupos da 6.4, painéis). Placas MUNDO 1-1 a 1-5 na ordem das seções. Balão só na Experiência e em Projetos; caixa alta estendida ao balão |
+| 22/10/2026 | Redesign, bloco D (2/3): imagem de prévia noturna única e favicon com a cabeça do bot; entra o pacote @fontsource/press-start-2p (OFL), carregado em .woff, porque o next/og (Satori) não aceita .woff2 |
+| 22/10/2026 | Redesign, bloco D (3/3): testes ajustados sem afrouxar o que provam; regra escrita na seção 7: toda asserção nova é vista falhando por injeção própria, registrada no PR. Requisitos da etapa: bot com listener de scroll passivo e requestAnimationFrame; teste de "nenhuma animação em loop" via document.getAnimations(), depois de carregar e depois de rolar |
+| 22/10/2026 | Nova seção 5 escrita para aprovação; 6.7 e 7 atualizadas conforme os blocos C e D |
+| 22/10/2026 | Sombras duras aceitas (princípio 5.1.7): desfoque e espalhamento zero, cor = token linha, só em painéis, placas, botões e cartuchos; nenhum text-shadow. O teste passa a proibir desfoque e espalhamento, não a sombra |
+| 22/10/2026 | Alinhamento à esquerda dentro dos painéis, inclusive na caixa de diálogo do topo; só a HUD tem layout próprio |
+| 22/10/2026 | Seção 5 revisada aprovada; redesign planejado na etapa 14 do PLANO.md |
