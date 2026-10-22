@@ -1,12 +1,16 @@
 import { notFound } from "next/navigation";
+import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Education } from "@/components/Education";
 import { Experience } from "@/components/Experience";
-import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { Hud } from "@/components/Hud";
+import { Inventory } from "@/components/Inventory";
+import { Level } from "@/components/Level";
+import { LevelMap } from "@/components/LevelMap";
 import { Projects } from "@/components/Projects";
-import { Section } from "@/components/Section";
-import { Stack } from "@/components/Stack";
+import { Scene } from "@/components/Scene";
+import { Stars } from "@/components/Stars";
 import { getContent } from "@/content";
 import { isLocale } from "@/lib/locale";
 
@@ -15,41 +19,40 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!isLocale(lang)) notFound();
 
   const text = getContent(lang);
-  // Placas MUNDO 1-1 a 1-5, na ordem das seções (seção 5.4).
-  const sign = (index: number) => `${text.ui.world} 1-${index + 1}`;
 
   return (
     <>
-      <a
-        href="#content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-10 focus:rounded-md focus:bg-painel-2 focus:px-4 focus:py-2"
-      >
+      <a href="#content" className="skip">
         {text.ui.skipToContent}
       </a>
-      <Header locale={lang} />
-      <main id="content" className="mx-auto max-w-5xl px-4 md:px-6">
+      <Stars />
+      <div className="crt" aria-hidden="true" />
+      <Hud locale={lang} />
+      <main id="content">
         <Hero text={text.hero} />
-        <Section id="experience" title={text.ui.nav.experience} sign={sign(0)}>
-          <Experience text={text.experience} />
-        </Section>
-        <Section id="projects" title={text.ui.nav.projects} sign={sign(1)}>
-          <Projects
-            text={text.projects}
-            diagram={text.diagram}
-            cases={text.recoveryCases}
-            ui={text.ui}
-          />
-        </Section>
-        <Section id="stack" title={text.ui.nav.stack} sign={sign(2)}>
-          <Stack text={text.stack} />
-        </Section>
-        <Section id="education" title={text.ui.nav.education} sign={sign(3)}>
-          <Education text={text.education} />
-        </Section>
-        <Section id="contact" title={text.ui.nav.contact} sign={sign(4)}>
-          <Contact text={text.contact} />
-        </Section>
+        <div className="wrap">
+          <LevelMap text={text.map} />
+          <Level id="sobre" sign="WORLD 1-1" title={text.about.title}>
+            <About text={text.about} />
+          </Level>
+          <Level id="exp" sign="WORLD 1-2" title={text.experience.title}>
+            <Experience text={text.experience} />
+          </Level>
+          <Level id="proj" sign="WORLD 1-3" title={text.projects.title}>
+            <Projects text={text.projects} />
+          </Level>
+          <Level id="stack" sign="WORLD 1-4" title={text.stack.title}>
+            <Inventory />
+          </Level>
+          <Level id="edu" sign="WORLD 1-5" title={text.education.title}>
+            <Education text={text.education} />
+          </Level>
+          <Level id="contato" sign="BOSS STAGE" title={text.contact.title} boss>
+            <Contact text={text.contact} />
+          </Level>
+        </div>
       </main>
+      <Scene lines={text.bubble} />
     </>
   );
 }

@@ -3,6 +3,8 @@
 > Fonte única de verdade do projeto. Todo chat ou sessão de desenvolvimento deve ler este arquivo antes de começar.
 > Última atualização: 22/10/2026 · Status: **especificação aprovada em 09/10/2026; seção 5 revisada e aprovada em 22/10/2026** · plano de implementação em `PLANO.md`
 
+> **22/10/2026 — o modelo `docs/modelo.html` substitui esta especificação.** Por decisão do Luige, o site passa a ser exatamente esse modelo (visual, textos, seções e interações), e as regras e decisões anteriores deste arquivo e do `PLANO.md` deixam de valer onde conflitarem com ele. Únicas diferenças em relação ao modelo: os links de contato são os reais (`src/content/profile.ts`), o idioma continua no cookie com a página entregue pelo servidor, e o modelo não é carregado do Google Fonts (as fontes vêm do próprio site).
+
 ---
 
 ## 1. Intenção

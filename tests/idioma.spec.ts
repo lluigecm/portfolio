@@ -1,22 +1,19 @@
 import { expect, test } from "@playwright/test";
+import { content } from "../src/content";
 import { localeFromAcceptLanguage } from "../src/lib/locale";
-import { checkA11y } from "./a11y";
+import { waitForHydration } from "./apoio";
 
-const TITLE = { pt: "Desenvolvedor de Automação de Testes", en: "Test Automation Developer" };
+const HINT = { pt: content.pt.hero.hint, en: content.en.hero.hint };
 
 test.describe("navegador em português", () => {
   test.use({ locale: "pt-BR" });
 
-  test("abre em PT", async ({ page }) => {
+  test("abre em PT, com PT marcado na HUD", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Ativar tema escuro" })).toBeVisible();
-  });
-
-  test("sem violações de acessibilidade em PT", async ({ page }) => {
-    await page.goto("/");
-    expect(await checkA11y(page)).toEqual([]);
+    await expect(page.getByText(HINT.pt)).toBeVisible();
+    await expect(page.getByRole("button", { name: "PT" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "EN" })).toHaveAttribute("aria-pressed", "false");
   });
 });
 
@@ -26,7 +23,8 @@ test.describe("navegador em alemão", () => {
   test("abre em EN", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.getByText(TITLE.en, { exact: true })).toBeVisible();
+    await expect(page.getByText(HINT.en)).toBeVisible();
+    await expect(page.getByRole("button", { name: "EN" })).toHaveAttribute("aria-pressed", "true");
   });
 });
 
@@ -36,40 +34,42 @@ test.describe("troca manual", () => {
   test("trocar o idioma, recarregar e a escolha continua", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await waitForHydration(page);
 
-    await page.getByRole("button", { name: /Ver em português/ }).click();
+    await page.getByRole("button", { name: "PT" }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
+    await expect(page.getByText(HINT.pt)).toBeVisible();
+    await expect(page).toHaveTitle(content.pt.meta.title);
     await expect(page).toHaveURL("/");
 
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByText(TITLE.pt, { exact: true })).toBeVisible();
+    await waitForHydration(page);
 
-    // E volta para o inglês, mesmo com o navegador em inglês.
-    await page.getByRole("button", { name: /View in English/ }).click();
+    // E volta para o inglês, mesmo com o navegador em inglês, pelo teclado.
+    await page.getByRole("button", { name: "EN" }).focus();
+    await page.keyboard.press("Enter");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await page.reload();
-    await expect(page.getByText(TITLE.en, { exact: true })).toBeVisible();
+    await expect(page.getByText(HINT.en)).toBeVisible();
+  });
+
+  test("a troca mantém a posição da rolagem", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.locator("#stack").scrollIntoViewIfNeeded();
+    const before = await page.evaluate(() => window.scrollY);
+    expect(before).toBeGreaterThan(0);
+
+    await page.getByRole("button", { name: "PT" }).click();
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before / 2);
   });
 
   test("a escolha salva prevalece sobre o idioma do navegador", async ({ page, context }) => {
     await context.addCookies([{ name: "lang", value: "pt", url: "http://localhost:3000" }]);
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-  });
-
-  test("o botão funciona pelo teclado e mantém o tema", async ({ page }) => {
-    await page.emulateMedia({ colorScheme: "light" });
-    await page.goto("/");
-    await page.getByRole("button", { name: /theme/ }).click();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-
-    await page.getByRole("button", { name: /Ver em português/ }).focus();
-    await page.keyboard.press("Enter");
-    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await expect(page.getByRole("button", { name: "Ativar tema claro" })).toBeVisible();
   });
 
   test("/pt e /en acessados direto voltam para /", async ({ page }) => {

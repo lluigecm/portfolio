@@ -3,6 +3,8 @@
 > Baseado na especificação aprovada em `PROJETO.md` (09/10/2026).
 > Status: **aprovado em 09/10/2026; etapa 14 (redesign) acrescentada em 22/10/2026** · execução no chat de desenvolvimento (claude.ai)
 
+> **22/10/2026 — o modelo `docs/modelo.html` substitui esta especificação.** Por decisão do Luige, o site passa a ser exatamente esse modelo (visual, textos, seções e interações), e as regras e decisões anteriores deste arquivo e do `PROJETO.md` deixam de valer onde conflitarem com ele. Únicas diferenças em relação ao modelo: os links de contato são os reais (`src/content/profile.ts`), o idioma continua no cookie com a página entregue pelo servidor, e o modelo não é carregado do Google Fonts (as fontes vêm do próprio site).
+
 ## Como usar este plano
 
 - Cada etapa é pequena, entrega algo verificável e termina com os critérios de aceite cumpridos.

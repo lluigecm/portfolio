@@ -1,33 +1,27 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Press_Start_2P } from "next/font/google";
+import { Press_Start_2P, VT323 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { content } from "@/content";
-import { HTML_LANG, isLocale, languageSwitchScript, LOCALES, OG_LOCALE } from "@/lib/locale";
+import { HTML_LANG, isLocale, LOCALES, OG_LOCALE } from "@/lib/locale";
 import { siteUrl } from "@/lib/site";
-import { themeScript } from "@/lib/theme";
 import "../globals.css";
 
-const plexSans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  variable: "--font-plex-sans",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-plex-mono",
-});
-
-// Títulos, HUD, placas e balão (seção 5.3). latin-ext cobre os acentos do português.
-// A reserva calculada pelo next/font sai bem mais estreita que esta fonte pixelada,
-// e a troca deslocava o layout; a reserva calibrada fica em globals.css. O nome
-// não pode ter palavra começando com dígito ("2P"): o next/font o escreve sem aspas.
+// Fontes do modelo: Press Start 2P nos títulos e na HUD, VT323 no corpo.
+// Servidas pelo próprio site; até carregarem, a reserva é a Courier New.
 const pressStart = Press_Start_2P({
   subsets: ["latin", "latin-ext"],
   weight: "400",
   variable: "--font-press-start",
   adjustFontFallback: false,
-  fallback: ["Reserva Press Start", "monospace"],
+  fallback: ["Courier New", "monospace"],
+});
+
+const vt323 = VT323({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  variable: "--font-vt323",
+  adjustFontFallback: false,
+  fallback: ["Courier New", "monospace"],
 });
 
 /*
@@ -73,18 +67,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   if (!isLocale(lang)) notFound();
 
   return (
-    // O script do tema altera data-theme antes da hidratação; a diferença é esperada.
-    <html
-      lang={HTML_LANG[lang]}
-      className={`${plexSans.variable} ${plexMono.variable} ${pressStart.variable}`}
-      suppressHydrationWarning
-    >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript + languageSwitchScript }} />
-      </head>
-      <body className="bg-painel-2 font-sans text-base text-texto antialiased">
-        {children}
-      </body>
+    <html lang={HTML_LANG[lang]} className={`${pressStart.variable} ${vt323.variable}`}>
+      <body>{children}</body>
     </html>
   );
 }
