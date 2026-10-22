@@ -2,6 +2,8 @@ export type Theme = "light" | "dark";
 
 const STORAGE_KEY = "theme";
 export const THEME_EVENT = "tema";
+/** Duração do nascer e do pôr do sol (globals.css), com folga. */
+const SKY_CHANGE_MS = 1800;
 
 /*
  * Roda no <head>, antes da primeira pintura: aplica a escolha salva, se houver.
@@ -27,8 +29,20 @@ export function subscribeToTheme(listener: () => void) {
   };
 }
 
+let skyTimer: ReturnType<typeof setTimeout> | undefined;
+
+/*
+ * Troca o tema. Durante a troca, o <html> ganha "amanhece" ou "anoitece": o
+ * céu passa de uma cor à outra, a Lua desce e o Sol sobe (ou o contrário, pelo
+ * entardecer). Com movimento reduzido, o CSS ignora as classes e a troca é na hora.
+ */
 export function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
+  const root = document.documentElement;
+  root.classList.remove("amanhece", "anoitece");
+  root.classList.add(theme === "light" ? "amanhece" : "anoitece");
+  clearTimeout(skyTimer);
+  skyTimer = setTimeout(() => root.classList.remove("amanhece", "anoitece"), SKY_CHANGE_MS);
+  root.dataset.theme = theme;
   try {
     localStorage.setItem(STORAGE_KEY, theme);
   } catch {

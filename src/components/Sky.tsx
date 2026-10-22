@@ -4,7 +4,8 @@ import { Pixels } from "./Pixels";
 
 /*
  * Céu fixo atrás da página: Lua à noite, Sol de dia (globals.css escolhe qual
- * aparece) e nuvens atravessando a tela devagar.
+ * aparece) e nuvens atravessando a tela devagar. O brilho é o laranja do
+ * amanhecer e do entardecer, que só aparece na troca de tema.
  */
 
 // Lua cheia com crateras, sombreada à direita.
@@ -60,6 +61,7 @@ const CLOUDS = [
 export function Sky() {
   return (
     <div className="sky" aria-hidden="true">
+      <div className="brilho" />
       <svg className="moon" viewBox="0 0 16 16" shapeRendering="crispEdges">
         <Pixels grid={MOON} colors={{ m: "#fff1c9", s: "#e2d59f", c: "#cfc08a" }} />
       </svg>
