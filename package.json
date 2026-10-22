@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "motion": "node motion/render.mjs"
   },
   "dependencies": {
     "@fontsource/press-start-2p": "^5.3.0",

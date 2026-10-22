@@ -13,3 +13,5 @@ npm run dev
 ```
 
 Testes E2E (contra o build de produção): `npm run test:e2e`.
+
+Motion do portfólio (vídeo de 47 s no visual do site, com trilha): [motion/](motion/README.md) · `npm run motion` gera os MP4.

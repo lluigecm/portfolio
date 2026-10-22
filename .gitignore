@@ -51,3 +51,6 @@ skills-lock.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# vídeos gerados pelo motion/render.mjs
+/motion/out/
