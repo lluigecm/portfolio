@@ -1,3 +1,5 @@
+import { playEffect } from "./som";
+
 export type Theme = "light" | "dark";
 
 const STORAGE_KEY = "theme";
@@ -40,6 +42,7 @@ export function setTheme(theme: Theme) {
   const root = document.documentElement;
   root.classList.remove("amanhece", "anoitece");
   root.classList.add(theme === "light" ? "amanhece" : "anoitece");
+  playEffect(theme === "light" ? "dia" : "noite");
   clearTimeout(skyTimer);
   skyTimer = setTimeout(() => root.classList.remove("amanhece", "anoitece"), SKY_CHANGE_MS);
   root.dataset.theme = theme;

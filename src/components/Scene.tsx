@@ -1,6 +1,7 @@
 "use client";
 
 import { type CSSProperties, useEffect, useRef } from "react";
+import { playEffect } from "@/lib/som";
 import type { LevelId } from "@/types/content";
 import { BushStrip } from "./Bushes";
 import { HillStrip } from "./Hills";
@@ -201,6 +202,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       fala.style.setProperty("--n", String(line.length));
       fala.textContent = line;
       bubble.replaceChildren(fala);
+      playEffect("fala", line.length);
       bubble.classList.add("show");
       clearTimeout(bubbleTimer);
       bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 2600);
@@ -219,6 +221,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
           const boss = entry.target.id === "contato" && !entry.target.querySelector(".pronto");
           if (boss && !reduce && !confetti) {
             confetti = burst();
+            playEffect("confete");
             confettiTimer = setTimeout(() => confetti?.remove(), 3500);
           }
           entry.target.classList.add("visto");
@@ -237,6 +240,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
           if (!entry.isIntersecting) continue;
           entry.target.classList.add("entrou");
           entrance.unobserve(entry.target);
+          playEffect("entra");
         }
       },
       { rootMargin: "0px 0px -8% 0px" },
@@ -258,6 +262,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
 
     let jumpTimer: ReturnType<typeof setTimeout> | undefined;
     function jump() {
+      playEffect("pulo");
       sprite.classList.remove("jump");
       void sprite.offsetWidth;
       sprite.classList.add("jump");
@@ -328,6 +333,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
             target.el.append(bit);
           }
           window.dispatchEvent(new Event(BUG_EVENT));
+          playEffect("pisao");
         }, STOMP_MS),
         setTimeout(() => {
           target.el.remove();
