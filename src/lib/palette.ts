@@ -6,11 +6,12 @@
 export const palette = {
   light: {
     painel: "#fffdf4",
+    "painel-2": "#f0ecd6",
     texto: "#1a1a2e",
     secundario: "#3a4a7a",
     linha: "#1a1a2e",
     destaque: "#9c1c5c",
-    grafico: ["#1a1a2e", "#4f9b4f", "#3a7f3c", "#2a6230", "#1b4422"],
+    grafico: ["#f0ecd6", "#4a944a", "#3a7f3c", "#2a6230", "#1b4422"],
   },
   dark: {
     painel: "#121a52",

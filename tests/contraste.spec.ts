@@ -79,5 +79,12 @@ for (const colorScheme of ["light", "dark"] as const) {
         );
       }
     });
+
+    test("o nível 1 se distingue da casa vazia (painel-2) com 3:1", async ({ page }) => {
+      // Nível 0 = painel-2: o nível 1 é a cor adjacente na escala.
+      const tokens = await resolveTokens(page, ["--grafico-1", "--painel-2"]);
+      const ratio = contrast(tokens["--grafico-1"], tokens["--painel-2"]);
+      expect(ratio, "--grafico-1 sobre --painel-2").toBeGreaterThanOrEqual(3);
+    });
   });
 }

@@ -25,8 +25,8 @@
   --linha: #1a1a2e;
   --destaque: #9c1c5c;
   --foco: #1a1a2e;
-  /* Gráfico: nível 0 = linha; 1 a 4 com 3:1 ou mais contra o painel. */
-  --grafico-1: #4f9b4f;
+  /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
+  --grafico-1: #4a944a;
   --grafico-2: #3a7f3c;
   --grafico-3: #2a6230;
   --grafico-4: #1b4422;
@@ -59,7 +59,7 @@
     --linha: #6676dd;
     --destaque: #ffd23f;
     --foco: #ffd23f;
-    /* Gráfico: nível 0 = linha; 1 a 4 com 3:1 ou mais contra o painel. */
+    /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
     --grafico-1: #2f7d45;
     --grafico-2: #3fa35a;
     --grafico-3: #58c46a;
@@ -86,7 +86,7 @@
   --linha: #6676dd;
   --destaque: #ffd23f;
   --foco: #ffd23f;
-  /* Gráfico: nível 0 = linha; 1 a 4 com 3:1 ou mais contra o painel. */
+  /* Gráfico: nível 0 = painel-2 (casa vazia); 1 a 4 com 3:1 ou mais contra o painel, e o 1 também contra o painel-2. */
   --grafico-1: #2f7d45;
   --grafico-2: #3fa35a;
   --grafico-3: #58c46a;
@@ -139,7 +139,7 @@
   --color-tinta: var(--tinta);
 
   /* Gráfico de contribuições: 5 níveis (seção 5.2). */
-  --color-grafico-0: var(--linha);
+  --color-grafico-0: var(--painel-2);
   --color-grafico-1: var(--grafico-1);
   --color-grafico-2: var(--grafico-2);
   --color-grafico-3: var(--grafico-3);

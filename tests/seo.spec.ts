@@ -91,12 +91,12 @@ test("as cores das imagens geradas são as dos tokens", () => {
 
   const light = block(":root {");
   const dark = block(':root[data-theme="dark"] {');
-  for (const name of ["painel", "texto", "secundario", "linha", "destaque"] as const) {
+  for (const name of ["painel", "painel-2", "texto", "secundario", "linha", "destaque"] as const) {
     expect(palette.light[name], name).toBe(token(light, name));
   }
-  // Escala do gráfico: nível 0 = linha (seção 5.2).
+  // Escala do gráfico: nível 0 = painel-2, a casa vazia (seção 5.2).
   expect(palette.light.grafico).toEqual([
-    token(light, "linha"),
+    token(light, "painel-2"),
     token(light, "grafico-1"),
     token(light, "grafico-2"),
     token(light, "grafico-3"),
