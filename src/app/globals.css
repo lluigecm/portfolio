@@ -127,6 +127,35 @@
   }
 }
 
+/*
+ * Casos reais do TCC (seção 5.5): só o caso escolhido aparece, e o caminho que
+ * ele percorre no diagrama fica em âmbar. É uma troca de estado, sem transição
+ * (a troca de tema também não anima cores), feita só com CSS sobre o radio
+ * marcado, para funcionar sem JavaScript.
+ */
+.casos [data-caso] {
+  display: none;
+}
+.casos:has([value="price-renamed"]:checked) [data-caso="price-renamed"],
+.casos:has([value="price-removed"]:checked) [data-caso="price-removed"],
+.casos:has([value="rating-removed"]:checked) [data-caso="rating-removed"] {
+  display: block;
+}
+.casos:has([data-caminho="replaced"]:checked) :is(rect, line, polygon)[data-path~="replaced"],
+.casos:has([data-caminho="fails"]:checked) :is(rect, line, polygon)[data-path~="fails"] {
+  stroke: var(--ambar);
+  stroke-width: 2.5;
+}
+.casos:has([data-caminho="replaced"]:checked) line[data-path~="replaced"],
+.casos:has([data-caminho="fails"]:checked) line[data-path~="fails"] {
+  marker-end: url(#recovery-arrow-highlight);
+}
+.casos:has([data-caminho="replaced"]:checked) text[data-path~="replaced"],
+.casos:has([data-caminho="fails"]:checked) text[data-path~="fails"] {
+  fill: var(--ambar);
+  font-weight: 600;
+}
+
 /* Foco sempre visível, no âmbar (contraste 5:1 ou mais sobre os fundos). */
 @layer base {
   :focus-visible {

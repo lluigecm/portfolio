@@ -57,6 +57,7 @@ const CALENDAR_QUERY = `
   query ($login: String!) {
     user(login: $login) {
       contributionsCollection {
+        restrictedContributionsCount
         contributionCalendar {
           weeks {
             contributionDays {
@@ -73,6 +74,7 @@ const CALENDAR_QUERY = `
 interface CalendarResponse {
   user: {
     contributionsCollection: {
+      restrictedContributionsCount: number;
       contributionCalendar: {
         weeks: { contributionDays: { date: string; contributionCount: number }[] }[];
       };
@@ -80,14 +82,29 @@ interface CalendarResponse {
   } | null;
 }
 
+interface Calendar {
+  days: ContributionDay[];
+  /**
+   * Contribuições que o dono do token não pode ver: as feitas em repositórios
+   * privados, quando o usuário as mostra no perfil. O calendário já as conta.
+   */
+  restricted: number;
+}
+
 /** Calendário de um usuário: os últimos 12 meses, como no perfil do GitHub. */
-async function getCalendar(login: string): Promise<ContributionDay[]> {
+async function getCalendar(login: string): Promise<Calendar> {
   const response = await client().graphql<CalendarResponse>(CALENDAR_QUERY, { login });
   if (!response.user) throw new Error(`usuário não encontrado: ${login}`);
-  return response.user.contributionsCollection.contributionCalendar.weeks.flatMap((week) =>
-    week.contributionDays.map((day) => ({ date: day.date, count: day.contributionCount })),
-  );
+  const collection = response.user.contributionsCollection;
+  return {
+    days: collection.contributionCalendar.weeks.flatMap((week) =>
+      week.contributionDays.map((day) => ({ date: day.date, count: day.contributionCount })),
+    ),
+    restricted: collection.restrictedContributionsCount,
+  };
 }
+
+const sum = (days: ContributionDay[]) => days.reduce((total, day) => total + day.count, 0);
 
 /**
  * Contribuições das contas pessoal e de trabalho, somadas dia a dia (regra 13).
@@ -101,16 +118,24 @@ export async function getContributions(): Promise<Contributions | null> {
     const logins = [process.env.GITHUB_PERSONAL_USER, process.env.GITHUB_WORK_USER];
     if (logins.some((login) => !login)) throw new Error("usuários do GitHub não configurados");
 
-    const calendars = await Promise.all(logins.map((login) => getCalendar(login!)));
+    const [personal, work] = await Promise.all(logins.map((login) => getCalendar(login!)));
     const byDate = new Map<string, number>();
-    for (const day of calendars.flat()) {
+    for (const day of [...personal.days, ...work.days]) {
       byDate.set(day.date, (byDate.get(day.date) ?? 0) + day.count);
     }
 
     const days = [...byDate]
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date));
-    return { days, total: days.reduce((sum, day) => sum + day.count, 0) };
+    // Totais pela soma dos dias, para a legenda sempre fechar com o gráfico. As
+    // privadas são só da conta de trabalho: as da pessoal o token enxerga.
+    return {
+      days,
+      total: sum(days),
+      personal: sum(personal.days),
+      work: sum(work.days),
+      workPrivate: work.restricted,
+    };
   } catch (error) {
     return onFailure("contribuições", error);
   }

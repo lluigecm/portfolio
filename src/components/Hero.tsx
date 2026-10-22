@@ -14,7 +14,7 @@ export async function Hero({ text }: { text: Content["hero"] }) {
       {contributions && (
         <ContributionChart
           contributions={contributions}
-          caption={text.chartCaption(contributions.total)}
+          caption={text.chartCaption(contributions)}
           month={text.chartMonth}
         />
       )}

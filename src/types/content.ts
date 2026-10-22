@@ -1,3 +1,5 @@
+import type { ContributionTotals } from "./github";
+
 export type Locale = "pt" | "en";
 
 export type ProjectId = "autohealing" | "mygather";
@@ -28,6 +30,44 @@ export interface DiagramText {
   replaced: string[];
   fails: string[];
   note: string[];
+}
+
+/**
+ * Texto com trechos de código (seletores, HTML), que aparecem em `<code>`.
+ * `lang` marca um trecho em outro idioma, como o texto em inglês do site testado
+ * citado na página em português (WCAG 3.1.2).
+ */
+export type RichText = (string | { code: string; lang?: string })[];
+
+export type RecoveryCaseId = "price-renamed" | "price-removed" | "rating-removed";
+
+/** Textos de um caso real do protótipo do TCC (seção 6.3). */
+export interface RecoveryCaseText {
+  /** Rótulo da opção. */
+  label: string;
+  /** O que aconteceu, em poucas frases. */
+  summary: string;
+  change: RichText;
+  candidate: RichText;
+  score: string;
+  outcome: string;
+}
+
+export interface RecoveryCasesText {
+  legend: string;
+  intro: string;
+  fields: {
+    selector: string;
+    change: string;
+    candidate: string;
+    score: string;
+    outcome: string;
+  };
+  /** Rótulo do trecho da linha de log. */
+  logLabel: string;
+  /** Link para a linha completa no repositório do protótipo. */
+  logLink: string;
+  cases: Record<RecoveryCaseId, RecoveryCaseText>;
 }
 
 export interface Role {
@@ -78,8 +118,8 @@ export interface Content {
     name: string;
     title: string;
     intro: string;
-    /** Legenda do gráfico, com o total já formatado no idioma. */
-    chartCaption: (total: number) => string;
+    /** Legenda do gráfico, com os totais já formatados no idioma. */
+    chartCaption: (totals: ContributionTotals) => string;
     /** Rótulo curto do mês no topo do gráfico (ex.: "out.", "Oct"). */
     chartMonth: (date: string) => string;
   };
@@ -90,6 +130,7 @@ export interface Content {
   };
   projects: Record<ProjectId, ProjectText>;
   diagram: DiagramText;
+  recoveryCases: RecoveryCasesText;
   stack: { label: string; items: string[] }[];
   education: {
     degree: string;

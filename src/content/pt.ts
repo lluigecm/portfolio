@@ -40,8 +40,11 @@ export const pt: Content = {
     title: "Desenvolvedor de Automação de Testes",
     intro:
       "Testes automatizados quebram quando a interface muda. Na X-Testing, automatizo testes e processos desde 2024. No TCC, pesquiso como esses testes podem se recuperar sozinhos.",
-    chartCaption: (total) =>
-      `${number.format(total)} contribuições no GitHub nos últimos 12 meses, somando a conta pessoal e a de trabalho.`,
+    chartCaption: ({ total, personal, work, workPrivate }) => {
+      // As privadas só aparecem se a conta de trabalho as mostra no perfil.
+      const hidden = workPrivate > 0 ? `, ${number.format(workPrivate)} delas em repositórios privados,` : "";
+      return `${number.format(total)} contribuições no GitHub nos últimos 12 meses: ${number.format(work)} na conta de trabalho${hidden} e ${number.format(personal)} na pessoal.`;
+    },
     chartMonth: (iso) => month.format(new Date(iso)),
   },
   experience: {
@@ -68,9 +71,9 @@ export const pt: Content = {
       title: "Auto-Healing em Testes de Interface Web",
       badge: "TCC, em andamento",
       description:
-        "Testes E2E quebram quando o DOM ou o CSS mudam e o seletor deixa de encontrar o elemento. Este protótipo procura o elemento por similaridade estrutural e atributos estáveis e calcula um score de confiança. Acima do limiar, troca o seletor e registra a troca para revisão. Abaixo, o teste falha como falharia sem o mecanismo.",
+        "Testes E2E quebram quando o DOM ou o CSS mudam e o seletor deixa de encontrar o elemento. Este protótipo procura o elemento por similaridade estrutural e atributos estáveis e calcula um score de confiança, ajustado pelo texto do elemento. Acima do limiar, troca o seletor e registra a troca para revisão. Abaixo, o teste falha como falharia sem o mecanismo.",
       mediaAlt:
-        "Diagrama da recuperação: quando o seletor não encontra o elemento, heurísticas de atributos estáveis e de similaridade estrutural calculam um score de confiança de 0 a 1. Se o score for maior ou igual ao limiar, o seletor é substituído; se não, o teste falha normalmente. Cada tentativa fica registrada em log.",
+        "Diagrama da recuperação: quando o seletor não encontra o elemento, heurísticas de atributos estáveis e de similaridade estrutural calculam um score de confiança de 0 a 1, ajustado pelo texto do elemento. Se o score for maior ou igual ao limiar, o seletor é substituído; se não, o teste falha normalmente. Cada tentativa fica registrada em log.",
     },
     mygather: {
       title: "MyGather",
@@ -84,13 +87,66 @@ export const pt: Content = {
   diagram: {
     selectorFails: ["O seletor não encontra", "o elemento"],
     heuristics: ["Heurísticas: atributos estáveis", "e similaridade estrutural"],
-    score: ["Score de confiança (0 a 1)"],
+    score: ["Score de confiança (0 a 1),", "ajustado pelo texto do elemento"],
     decision: ["Score ≥", "limiar?"],
     yes: "sim",
     no: "não",
     replaced: ["Seletor", "substituído"],
     fails: ["O teste falha", "normalmente"],
     note: ["Nota: cada tentativa fica", "registrada em log"],
+  },
+  recoveryCases: {
+    legend: "Casos reais do protótipo",
+    intro:
+      "Da rodada de 12/10/2026, na página de um livro do books.toscrape.com, o site usado nos experimentos. Escolha uma mudança para ver o caminho que o mecanismo seguiu.",
+    fields: {
+      selector: "Seletor do teste",
+      change: "Mudança na página",
+      candidate: "Candidato",
+      score: "Score",
+      outcome: "Resultado",
+    },
+    logLabel: "Trecho da linha de log desta tentativa",
+    logLink: "Ver a linha completa no repositório",
+    cases: {
+      "price-renamed": {
+        label: "Classe do preço renomeada",
+        summary:
+          "Uma refatoração de CSS renomeia a classe do preço, e o seletor deixa de encontrar o elemento. A estrutura aponta o mesmo parágrafo, na mesma posição, e o texto confere.",
+        change: [{ code: '<p class="price_color">' }, " vira ", { code: '<p class="m1-price_color" id="m1-M1-T8">' }],
+        candidate: ["o mesmo parágrafo, com o texto ", { code: "£45.17" }],
+        score: "1,00: estrutura idêntica e texto igual, acima do limiar provisório de 0,7",
+        outcome:
+          "Seletor substituído. Os testes passaram nas 96 execuções com essa mudança; sem o mecanismo, falharam todas.",
+      },
+      "price-removed": {
+        label: "Preço removido",
+        summary:
+          "Agora o preço some de verdade: é um defeito, e o teste precisa falhar. A disponibilidade ocupa a posição do preço, então a estrutura confere, mas o texto não, e o score cai pela metade.",
+        change: ["o parágrafo ", { code: '<p class="price_color">' }, " é removido"],
+        candidate: [
+          "o parágrafo seguinte, ",
+          { code: '<p class="instock availability">' },
+          ", com o texto ",
+          { code: "In stock (19 available)", lang: "en" },
+          " no lugar de ",
+          { code: "£45.17" },
+        ],
+        score: "0,50: estrutura idêntica (1,00), reduzida à metade porque o texto não confere; abaixo do limiar provisório de 0,7",
+        outcome:
+          "Seletor mantido. Os testes falharam nas 96 execuções, como deveriam: o mecanismo não escondeu o defeito.",
+      },
+      "rating-removed": {
+        label: "Estrelas removidas: falso positivo",
+        summary:
+          "A classificação por estrelas não tem texto: a nota fica só na classe. Sem o elemento, a estrutura aponta o vizinho, e não há texto para conferir. Foi o único falso positivo da rodada, e o repositório o registra como limitação do método.",
+        change: ["o parágrafo ", { code: '<p class="star-rating Two">' }, " é removido"],
+        candidate: ["o vizinho de cima, ", { code: '<p class="instock availability">' }, ": o elemento errado"],
+        score: "0,925: estrutura quase idêntica e nenhum texto para conferir, acima do limiar provisório de 0,7",
+        outcome:
+          "Seletor substituído pelo elemento errado nas 48 execuções. Os testes falharam mesmo assim, porque a nota lida virou 0, mas a troca é justamente o erro que o mecanismo deveria evitar.",
+      },
+    },
   },
   stack: [
     { label: "Linguagens", items: ["Python", "TypeScript", "C", "C++"] },

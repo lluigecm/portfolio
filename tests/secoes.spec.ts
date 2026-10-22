@@ -84,10 +84,15 @@ const TAB_SKIPS_LINKS_ON_SAFARI = "Tab do Safari não passa por links por padrã
 test("navegação completa por teclado, com foco sempre visível", async ({ page, browserName }) => {
   test.skip(browserName === "webkit", TAB_SKIPS_LINKS_ON_SAFARI);
   await page.goto("/");
-  const focusable = await page
+  const focusable = await page.evaluate(() => {
+    // Só o que está na tela: os casos do TCC escondem os links dos casos não escolhidos.
+    const shown = (el: Element) => el.getClientRects().length > 0;
     // Inclui a área rolável do gráfico, que recebe foco para rolar pelo teclado.
-    .locator('a[href], button, [tabindex="0"]')
-    .evaluateAll((elements) => elements.length);
+    const single = [...document.querySelectorAll('a[href], button, [tabindex="0"]')].filter(shown);
+    // Um grupo de opções (radio) é uma parada só do Tab; as setas trocam a opção.
+    const radios = [...document.querySelectorAll<HTMLInputElement>('input[type="radio"]')].filter(shown);
+    return single.length + new Set(radios.map((radio) => radio.name)).size;
+  });
 
   const visited = new Set<string>();
   for (let i = 0; i < focusable + 2; i++) {
@@ -96,8 +101,11 @@ test("navegação completa por teclado, com foco sempre visível", async ({ page
       const el = document.activeElement as HTMLElement;
       const style = getComputedStyle(el);
       const box = el.getBoundingClientRect();
+      const radioGroup = el instanceof HTMLInputElement && el.type === "radio" ? el.name : null;
       return {
-        id: `${el.tagName} ${el.getAttribute("href") ?? el.getAttribute("aria-label") ?? el.getAttribute("aria-labelledby")}`,
+        id: radioGroup
+          ? `INPUT radio ${radioGroup}`
+          : `${el.tagName} ${el.getAttribute("href") ?? el.getAttribute("aria-label") ?? el.getAttribute("aria-labelledby")}`,
         outline: `${style.outlineStyle} ${style.outlineWidth}`,
         visible: box.width > 0 && box.height > 0,
       };
@@ -179,7 +187,7 @@ test.describe("princípios de design (seção 5.1)", () => {
         ],
         // Numeração gerada por CSS: contadores ou texto como "01", "1.", "02 /".
         generatedNumbers: generated
-          .filter(({ style, text }) => /counter/.test(style.content) || /^s*d+s*[./)]?s*$/.test(text))
+          .filter(({ style, text }) => /counter/.test(style.content) || /^\s*\d+\s*[./)]?\s*$/.test(text))
           .map(({ el, pseudo }) => label(el, pseudo)),
       };
     });

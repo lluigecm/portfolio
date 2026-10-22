@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { content } from "../src/content";
-import { expectedTotal } from "./github-fixtures.mjs";
+import { expectedTotals } from "./github-fixtures.mjs";
 
 // Este site de teste (porta 3002) renova os dados do GitHub a cada 2 s, em vez
 // de 15 minutos, contra uma API falsa que o teste controla (tests/mock-github.mjs).
@@ -8,7 +8,7 @@ const API = "http://localhost:4011";
 const REVALIDATE_MS = 2000;
 const NEW_DATA_BONUS = 100;
 
-const caption = (total: number) => content.en.hero.chartCaption(total);
+const caption = (bonus = 0) => content.en.hero.chartCaption(expectedTotals(bonus));
 const shownCaption = (page: Page) =>
   page.getByTestId("contribution-chart").locator("figcaption").textContent();
 
@@ -27,7 +27,7 @@ test.afterAll(async ({ request }) => {
 test("se a renovação falhar, continuam valendo os últimos dados válidos", async ({ page }) => {
   await setApi(page, "dados");
   await page.goto("/");
-  expect(await shownCaption(page)).toBe(caption(expectedTotal()));
+  expect(await shownCaption(page)).toBe(caption());
 
   await setApi(page, "falha");
   const before = await graphqlRequests(page);
@@ -40,7 +40,7 @@ test("se a renovação falhar, continuam valendo os últimos dados válidos", as
 
   for (let visit = 0; visit < 3; visit++) {
     await page.reload();
-    expect(await shownCaption(page)).toBe(caption(expectedTotal()));
+    expect(await shownCaption(page)).toBe(caption());
   }
 });
 
@@ -57,5 +57,5 @@ test("quando a API volta, o gráfico se atualiza sozinho, sem novo build", async
       },
       { timeout: 20_000, intervals: [1000] },
     )
-    .toBe(caption(expectedTotal(NEW_DATA_BONUS)));
+    .toBe(caption(NEW_DATA_BONUS));
 });

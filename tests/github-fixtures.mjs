@@ -34,11 +34,17 @@ export function calendarDays(login, bonus = 0) {
   }));
 }
 
-/** Total somado das duas contas, como o site deve exibir. */
-export function expectedTotal(bonus = 0) {
-  return Object.values(USERS)
-    .flatMap((login) => calendarDays(login, login === USERS.personal ? bonus : 0))
-    .reduce((sum, day) => sum + day.contributionCount, 0);
+// Contribuições em repositórios privados que o token não enxerga. Só a conta de
+// trabalho tem; a pessoal recebe um valor de propósito, que o site deve ignorar.
+const RESTRICTED = { [USERS.personal]: 40, [USERS.work]: 250 };
+
+const sum = (days) => days.reduce((total, day) => total + day.contributionCount, 0);
+
+/** Totais que a legenda deve exibir; `bonus` vai para a conta pessoal (dados "novos"). */
+export function expectedTotals(bonus = 0) {
+  const personal = sum(calendarDays(USERS.personal, bonus));
+  const work = sum(calendarDays(USERS.work));
+  return { total: personal + work, personal, work, workPrivate: RESTRICTED[USERS.work] };
 }
 
 /** Resposta GraphQL no formato do GitHub, em semanas. */
@@ -46,5 +52,14 @@ export function calendarResponse(login, bonus = 0) {
   const days = calendarDays(login, bonus);
   const weeks = [];
   for (let i = 0; i < days.length; i += 7) weeks.push({ contributionDays: days.slice(i, i + 7) });
-  return { data: { user: { contributionsCollection: { contributionCalendar: { weeks } } } } };
+  return {
+    data: {
+      user: {
+        contributionsCollection: {
+          restrictedContributionsCount: RESTRICTED[login],
+          contributionCalendar: { weeks },
+        },
+      },
+    },
+  };
 }
