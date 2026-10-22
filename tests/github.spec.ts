@@ -1,19 +1,16 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
-import { projects } from "../src/content/projects";
 
 // O site de teste (porta 3000) é montado contra a API falsa de tests/mock-github.mjs.
 const EXPECTED = {
   pt: {
     autohealing: ["Atualizado em", "15 de set. de 2026"],
     mygather: ["Atualizado em", "1 de ago. de 2026"],
-    portfolio: ["Atualizado em", "1 de out. de 2026"],
   },
   en: {
     autohealing: ["Updated", "Sep 15, 2026"],
     mygather: ["Updated", "Aug 1, 2026"],
-    portfolio: ["Updated", "Oct 1, 2026"],
   },
 };
 
@@ -47,7 +44,7 @@ for (const [locale, browserLocale] of [
     test("os cards não exibem estrelas nem linguagens da API", async ({ page }) => {
       await page.goto("/");
       const cards = page.locator("[data-project]");
-      await expect(cards.locator('[data-testid="repo-stats"]')).toHaveCount(projects.length);
+      await expect(cards.locator('[data-testid="repo-stats"]')).toHaveCount(2);
       // Fora a mídia, que é conteúdo próprio: os casos do TCC citam a classificação
       // por estrelas do site testado e o limiar 0,7, e nada ali vem da API.
       const texts = await cards.evaluateAll((elements) =>

@@ -16,21 +16,12 @@ export interface DiagramMedia {
   kind: "diagram";
 }
 
-/** Trecho literal de um teste da suíte; tests/este-site.spec.ts confere com o arquivo. */
-export interface CodeMedia {
-  kind: "code";
-  file: string;
-  excerpt: string;
-}
-
 export interface Project {
   id: ProjectId;
   /** Repositório no formato dono/nome. */
   repo: string;
   tags: string[];
-  media: VideoMedia | DiagramMedia | CodeMedia;
-  /** Execuções do CI, quando o card fala da suíte de testes. */
-  ci?: string;
+  media: VideoMedia | DiagramMedia;
 }
 
 // Lista fixa (regra 12). Os textos de cada projeto ficam em pt.ts e en.ts.
@@ -54,21 +45,5 @@ export const projects: Project[] = [
       width: 882,
       height: 472,
     },
-  },
-  {
-    id: "portfolio",
-    repo: "lluigecm/portfolio",
-    tags: ["TypeScript", "Next.js", "Playwright", "axe-core", "GitHub Actions"],
-    media: {
-      kind: "code",
-      file: "tests/api-fora-do-ar.spec.ts",
-      excerpt: `test("com a API fora do ar e sem cache, o gráfico não aparece", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByTestId("contribution-chart")).toHaveCount(0);
-  await expect(page.locator("figcaption#contribution-caption")).toHaveCount(0);
-});`,
-    },
-    ci: "https://github.com/lluigecm/portfolio/actions/workflows/ci.yml",
   },
 ];

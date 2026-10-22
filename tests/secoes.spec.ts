@@ -67,10 +67,7 @@ for (const [locale, browserLocale] of [
         await expect(page).toHaveURL(new RegExp(`#${id}$`));
         await expect(page.getByRole("heading", { level: 2, name: text.ui.nav[id] })).toBeInViewport();
       }
-      await expect(page.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute(
-        "href",
-        profile.github,
-      );
+      await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", profile.github);
     });
 
     test("sem violações de acessibilidade", async ({ page }) => {
