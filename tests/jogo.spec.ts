@@ -75,11 +75,16 @@ test("as setas → e ← rolam a página como um controle", async ({ page }) => 
   await expect.poll(() => scrollY(page)).toBe(0);
 });
 
-test("o nome termina de se digitar com o cursor no fim", async ({ page }) => {
+test("o nome termina de entrar com o cursor no fim", async ({ page }) => {
   await page.goto("/");
   await waitForHydration(page);
+  // As letras caem e o cursor anda junto; a piscada do cursor não termina nunca.
+  const entering = () =>
+    page.locator(".hero h1").evaluate(
+      (h1) => h1.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity).length,
+    );
+  await expect.poll(entering).toBe(0);
   const typed = page.locator(".hero .typed");
-  await expect.poll(() => typed.evaluate((el) => el.getAnimations().length)).toBe(0);
   await expect(typed).toHaveText("LUIGE");
   const cursor = await page.locator(".hero .cursor").boundingBox();
   const name = await typed.boundingBox();

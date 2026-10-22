@@ -1,13 +1,14 @@
 "use client";
 
-import { Fragment, type KeyboardEvent, useRef, useState } from "react";
+import { type CSSProperties, Fragment, type KeyboardEvent, useRef, useState } from "react";
 import { inventory } from "@/content/game";
 import type { Content } from "@/types/content";
 
 /*
  * Inventário da stack: cada casa é um botão que equipa o item e mostra os
  * detalhes no quadro de baixo. As setas ← e → andam entre as casas (Home e End
- * vão às pontas). Sem JavaScript, o quadro mostra o primeiro item.
+ * vão às pontas). Sem JavaScript, o quadro mostra o primeiro item. Ao entrar na
+ * tela, as casas surgem uma a uma.
  */
 export function Inventory({ text }: { text: Content["stack"] }) {
   const [selected, setSelected] = useState(0);
@@ -38,9 +39,9 @@ export function Inventory({ text }: { text: Content["stack"] }) {
   return (
     <>
       <p className="inv-hint">{text.hint}</p>
-      <ul className="inv" onKeyDown={onKeyDown}>
+      <ul className="inv entra" onKeyDown={onKeyDown}>
         {inventory.map(({ id, lines, count, main }, i) => (
-          <li key={id}>
+          <li key={id} style={{ "--i": i } as CSSProperties}>
             <button
               ref={(el) => {
                 slots.current[i] = el;
@@ -65,7 +66,7 @@ export function Inventory({ text }: { text: Content["stack"] }) {
           </li>
         ))}
       </ul>
-      <div className="panel item-info" id="item-info" aria-live="polite" data-testid="item-info">
+      <div className="panel item-info entra" id="item-info" aria-live="polite" data-testid="item-info">
         <p className="item-label px">{text.selected}</p>
         <div className="item-head">
           <p className="item-name px">{item.lines.join(" ")}</p>

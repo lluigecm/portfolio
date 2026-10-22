@@ -33,6 +33,13 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <Stars />
       <Sky />
       <div className="crt" aria-hidden="true" />
+      {/* A TV ligando na abertura: só aparece com a classe "tv" no <html> (lib/intro.ts). */}
+      <div className="tv-liga" aria-hidden="true">
+        <i className="clarao" />
+        <i className="metade topo" />
+        <i className="metade base" />
+        <i className="linha" />
+      </div>
       <Hud locale={lang} />
       <main id="content">
         <Hero text={text.hero} />

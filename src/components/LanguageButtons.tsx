@@ -1,14 +1,17 @@
 "use client";
 
+import { skipNextIntro } from "@/lib/intro";
 import { HTML_LANG, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE, LOCALES } from "@/lib/locale";
 import type { Locale } from "@/types/content";
 
 /*
  * PT / EN na HUD. O idioma vive no cookie: o servidor entrega a página já no
- * idioma escolhido, e o recarregamento mantém a posição da rolagem.
+ * idioma escolhido, e o recarregamento mantém a posição da rolagem e chega
+ * pronto, sem a TV ligando de novo.
  */
 function switchTo(target: Locale) {
   document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE}; samesite=lax`;
+  skipNextIntro();
   window.location.reload();
 }
 

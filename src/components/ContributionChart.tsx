@@ -7,8 +7,8 @@ import type { ContributionDay, Contributions } from "@/types/github";
  * pixel art: uma coluna por semana, de domingo a sábado, quadrados retos na
  * escala de verdes do tema. Passar o mouse num dia faz o bot dizer quantas
  * contribuições teve. No celular, rola na horizontal dentro do próprio painel,
- * começando pelos meses mais recentes. As semanas entram uma a uma quando a
- * fase aparece na tela (globals.css). Medidas em unidades do viewBox.
+ * começando pelos meses mais recentes. As semanas entram uma a uma quando o
+ * gráfico aparece na tela (globals.css). Medidas em unidades do viewBox.
  */
 const CELL = 11;
 const GAP = 3;
@@ -34,7 +34,7 @@ export function ContributionChart({ contributions, text }: Props) {
   const caption = text.caption(contributions);
 
   return (
-    <figure className="panel chart" data-testid="contribution-chart">
+    <figure className="panel chart entra" data-testid="contribution-chart">
       <h3>{text.title}</h3>
       <div role="region" tabIndex={0} aria-labelledby="contribution-caption" className="chart-scroll">
         <svg
