@@ -20,7 +20,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
     <>
       <a
         href="#content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-10 focus:rounded-md focus:bg-superficie focus:px-4 focus:py-2"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-10 focus:rounded-md focus:bg-painel-2 focus:px-4 focus:py-2"
       >
         {text.ui.skipToContent}
       </a>

@@ -5,7 +5,7 @@ import { ChartRelief } from "./ChartRelief";
 
 /*
  * Gráfico de contribuições, a peça marcante do site (princípio 5.1.1): uma
- * coluna por semana, de domingo a sábado, na escala de âmbar da seção 5.2.
+ * coluna por semana, de domingo a sábado, na escala verde da seção 5.2.
  * No celular, rola na horizontal dentro do próprio espaço, começando pelos
  * meses mais recentes (flex-row-reverse inicia a rolagem pela direita).
  * Medidas em unidades do viewBox.
@@ -65,7 +65,7 @@ export function ContributionChart({ contributions, caption, month }: Props) {
           style={{ minWidth: width }}
           className="block h-auto w-full shrink-0"
         >
-          <g className="fill-lapis">
+          <g className="fill-secundario">
             {labels.map(({ week, date }) => (
               <text
                 key={date}
@@ -103,7 +103,7 @@ export function ContributionChart({ contributions, caption, month }: Props) {
         </svg>
         <ChartRelief svgId={SVG_ID} cell={CELL} step={STEP} />
       </div>
-      <figcaption id="contribution-caption" className="mt-3 text-sm text-lapis">
+      <figcaption id="contribution-caption" className="mt-3 text-sm text-secundario">
         {caption}
       </figcaption>
     </figure>

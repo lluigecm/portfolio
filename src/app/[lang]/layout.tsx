@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans, Press_Start_2P } from "next/font/google";
 import { notFound } from "next/navigation";
 import { content } from "@/content";
 import { HTML_LANG, isLocale, languageSwitchScript, LOCALES, OG_LOCALE } from "@/lib/locale";
@@ -16,6 +16,13 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-plex-mono",
+});
+
+// Títulos, HUD, placas e balão (seção 5.3). latin-ext cobre os acentos do português.
+const pressStart = Press_Start_2P({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  variable: "--font-press-start",
 });
 
 /*
@@ -64,13 +71,13 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     // O script do tema altera data-theme antes da hidratação; a diferença é esperada.
     <html
       lang={HTML_LANG[lang]}
-      className={`${plexSans.variable} ${plexMono.variable}`}
+      className={`${plexSans.variable} ${plexMono.variable} ${pressStart.variable}`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript + languageSwitchScript }} />
       </head>
-      <body className="bg-papel font-sans text-base text-grafite antialiased">
+      <body className="bg-painel font-sans text-base text-texto antialiased">
         {children}
       </body>
     </html>

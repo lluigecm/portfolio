@@ -92,11 +92,11 @@ export function ProjectVideo({ media, alt, credit, labels }: Props) {
         )}
         {alt}
       </video>
-      <figcaption className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-linha px-5 py-1 text-xs text-lapis md:px-6">
+      <figcaption className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-linha px-5 py-1 text-xs text-secundario md:px-6">
         <button
           type="button"
           onClick={toggle}
-          className="-ml-2 inline-flex items-center gap-2 rounded-md px-2 py-2 text-grafite"
+          className="-ml-2 inline-flex items-center gap-2 rounded-md px-2 py-2 text-texto"
         >
           <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3.5 fill-current">
             {playing ? <path d="M3 2h3.5v12H3zM9.5 2H13v12H9.5z" /> : <path d="M4 2l10 6-10 6z" />}

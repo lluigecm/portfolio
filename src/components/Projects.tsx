@@ -30,18 +30,18 @@ export async function Projects({ text, diagram, cases, ui }: Props) {
           <li
             key={project.id}
             data-project={project.id}
-            className="overflow-hidden rounded-md border border-linha bg-superficie"
+            className="overflow-hidden rounded-md border border-linha bg-painel-2"
           >
             <Media project={project} text={text[project.id]} diagram={diagram} cases={cases} ui={ui} />
             <div className="p-5 md:p-6">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              {badge && <p className="mt-1 text-sm text-ambar">{badge}</p>}
+              <h3 className="text-base">{title}</h3>
+              {badge && <p className="mt-1 text-sm text-destaque">{badge}</p>}
               <p className="mt-3">{description}</p>
-              <p className="mt-4 text-sm text-lapis">{project.tags.join(", ")}</p>
+              <p className="mt-4 text-sm text-secundario">{project.tags.join(", ")}</p>
               {stats[index] && <RepoFacts stats={stats[index]} labels={labels} />}
               <a
                 href={`https://github.com/${project.repo}`}
-                className="mt-4 inline-block text-sm underline decoration-linha underline-offset-4 hover:decoration-grafite"
+                className="mt-4 inline-block text-sm underline decoration-linha underline-offset-4 hover:decoration-texto"
               >
                 <code className="font-mono">{project.repo}</code>
               </a>
@@ -69,7 +69,7 @@ function Media({ project, text, diagram, cases, ui }: MediaProps) {
   }
   // "casos" liga o destaque do caminho no diagrama ao caso escolhido (globals.css).
   return (
-    <figure className="casos border-b border-linha bg-papel px-4 py-6 md:py-8">
+    <figure className="casos border-b border-linha bg-painel px-4 py-6 md:py-8">
       <RecoveryDiagram text={diagram} alt={text.mediaAlt} />
       <RecoveryCases text={cases} />
     </figure>
@@ -80,7 +80,7 @@ function Media({ project, text, diagram, cases, ui }: MediaProps) {
 function RepoFacts({ stats, labels }: { stats: RepoStats; labels: Content["ui"]["repo"] }) {
   return (
     <dl data-testid="repo-stats" className="mt-4 border-t border-linha pt-4 text-sm">
-      <dt className="text-lapis">{labels.updated}</dt>
+      <dt className="text-secundario">{labels.updated}</dt>
       <dd>{labels.date(stats.pushedAt)}</dd>
     </dl>
   );
