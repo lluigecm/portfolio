@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luige — Automação de testes & RPA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --sky:#0c1445; --sky2:#1d2b7a; --horizon:#4c3f91;
+  --hill:#1e6b4a; --hill2:#2e8f5e; --grass:#58c46a; --dirt:#6b3f2a; --dirt2:#4a2a1c;
+  --ink:#fff8e7; --muted:#b9c3ff; --panel:#121a52; --panel2:#0a0f33; --line:#3b4aa8;
+  --yellow:#ffd23f; --pink:#ff5d9e; --teal:#39d6c4; --red:#ff4d4d; --white:#fff;
+  --star:#fff;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --sky:#8fd3ff; --sky2:#d8f1ff; --horizon:#fff1c9;
+    --hill:#5fb86b; --hill2:#86d58f; --grass:#6fd66f; --dirt:#9a5e3c; --dirt2:#6d3f27;
+    --ink:#1a1a2e; --muted:#3a4a7a; --panel:#fffdf4; --panel2:#f0ecd6; --line:#1a1a2e;
+    --star:#ffffff00;
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --sky:#8fd3ff; --sky2:#d8f1ff; --horizon:#fff1c9;
+  --hill:#5fb86b; --hill2:#86d58f; --grass:#6fd66f; --dirt:#9a5e3c; --dirt2:#6d3f27;
+  --ink:#1a1a2e; --muted:#3a4a7a; --panel:#fffdf4; --panel2:#f0ecd6; --line:#1a1a2e;
+  --star:#ffffff00; color-scheme:light;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(72px + env(safe-area-inset-top,0px))}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;font-family:"VT323","Courier New",monospace;font-size:1.375rem;line-height:1.35;
+  color:var(--ink);background:linear-gradient(var(--sky),var(--sky2) 70%,var(--horizon));
+  background-attachment:fixed;overflow-x:hidden;image-rendering:pixelated;
+}
+h1,h2,h3,.px{font-family:"Press Start 2P","Courier New",monospace;line-height:1.5;letter-spacing:0}
+h2{font-size:clamp(.95rem,2.6vw,1.4rem);margin:0 0 1.2rem}
+h3{font-size:.8rem;margin:0 0 .6rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+img{max-width:100%}
+
+/* ---------- HUD ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--panel2)}
+.hud{
+  position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:30;
+  display:flex;gap:1rem;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem;background:var(--panel2);border-bottom:4px solid var(--line);
+  font-family:"Press Start 2P",monospace;font-size:.6rem;color:var(--ink);
+}
+.hud .score{color:var(--yellow)}
+.hud .lvl{color:var(--teal)}
+.hud .r{display:flex;gap:.6rem;align-items:center}
+.hud button{
+  font:inherit;font-size:.55rem;color:var(--ink);background:var(--panel);
+  border:3px solid var(--line);padding:.45rem .6rem;cursor:pointer;
+  box-shadow:3px 3px 0 var(--line);
+}
+.hud button[aria-pressed="true"]{background:var(--yellow);color:#1a1a2e;border-color:#1a1a2e;box-shadow:3px 3px 0 #1a1a2e}
+.hud button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+@media (max-width:640px){.hud .lvl{display:none}}
+
+/* ---------- Hero ---------- */
+.hero{
+  min-height:100svh;display:grid;place-items:center;text-align:center;
+  padding:6rem 1rem 11rem;position:relative;
+}
+.hero h1{
+  font-size:clamp(2.2rem,9vw,5.5rem);margin:0 0 1rem;color:var(--white);
+  text-shadow:4px 4px 0 var(--sky),8px 8px 0 var(--pink);
+}
+.hero h1 .cursor{display:inline-block;width:.6em;height:1em;background:var(--yellow);vertical-align:-.1em;animation:blink 1s steps(1) infinite}
+.hero .tag{font-size:clamp(1.3rem,3.2vw,1.9rem);max-width:34ch;margin:0 auto 2rem;color:var(--ink)}
+.hero .tag b{color:var(--yellow);font-weight:400}
+.start{
+  display:inline-block;font-family:"Press Start 2P",monospace;font-size:.85rem;color:#1a1a2e;
+  background:var(--yellow);padding:1rem 1.4rem;border:4px solid #1a1a2e;box-shadow:6px 6px 0 #1a1a2e;
+  text-decoration:none;animation:blink 1.2s steps(1) infinite;
+}
+.start:hover,.start:focus-visible{animation:none}
+.start:active{transform:translate(3px,3px);box-shadow:3px 3px 0 #1a1a2e}
+.hint{margin-top:1.2rem;font-size:1.05rem;color:var(--muted)}
+@keyframes blink{50%{opacity:.25}}
+
+/* stars */
+.stars{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.stars i{position:absolute;width:3px;height:3px;background:var(--star);animation:twinkle 3s steps(2) infinite}
+@keyframes twinkle{50%{opacity:.3}}
+
+/* ---------- Scene (fixed floor + walker) ---------- */
+.scene{position:fixed;left:0;right:0;bottom:0;height:150px;z-index:20;pointer-events:none;overflow:hidden}
+.hills{position:absolute;left:0;bottom:46px;width:300%;height:120px;display:flex}
+.hills svg{width:33.333%;height:100%;flex:none}
+.ground{
+  position:absolute;left:0;right:0;bottom:0;height:46px;
+  background:
+    linear-gradient(var(--grass) 0 10px,transparent 10px),
+    repeating-linear-gradient(90deg,var(--dirt) 0 12px,var(--dirt2) 12px 24px);
+  border-top:4px solid #1a1a2e;
+  background-position:0 0;
+  background-size:auto,48px 46px;
+}
+.ground::after{
+  content:"";position:absolute;left:0;right:0;top:10px;height:5px;
+  background:repeating-linear-gradient(90deg,#1a1a2e 0 6px,transparent 6px 24px);opacity:.5;
+}
+.walker{
+  position:absolute;left:clamp(16px,7vw,90px);bottom:46px;width:64px;height:64px;
+  transform-origin:50% 100%;
+}
+.walker .px{position:absolute;left:0;top:0;width:4px;height:4px;background:transparent;font:0/0 a}
+.walker.flip{transform:scaleX(-1)}
+.walker.idle{animation:bob 1.4s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.walker.flip.idle{animation:bobf 1.4s steps(2) infinite}
+@keyframes bobf{50%{transform:scaleX(-1) translateY(-3px)}}
+.bubble{
+  position:absolute;left:clamp(90px,14vw,170px);bottom:118px;
+  font-family:"Press Start 2P",monospace;font-size:.55rem;color:#1a1a2e;background:var(--white);
+  padding:.5rem .6rem;border:3px solid #1a1a2e;white-space:nowrap;opacity:0;transition:opacity .3s;
+}
+.bubble::after{content:"";position:absolute;left:-10px;bottom:6px;border:6px solid transparent;border-right-color:#1a1a2e}
+.bubble.show{opacity:1}
+@media (prefers-reduced-motion: reduce){.walker,.start,.cursor,.stars i{animation:none !important}}
+
+/* ---------- World map ---------- */
+.wrap{max-width:62rem;margin:0 auto;padding:0 1.2rem 11rem}
+.map{padding:3rem 0 2rem}
+.map ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.4rem .8rem;position:relative}
+.map li{text-align:center}
+.map a{
+  display:block;text-decoration:none;color:var(--ink);
+}
+.node{
+  width:72px;height:72px;margin:0 auto .6rem;display:grid;place-items:center;
+  font-family:"Press Start 2P",monospace;font-size:.65rem;color:#1a1a2e;
+  background:var(--teal);border:4px solid #1a1a2e;box-shadow:5px 5px 0 #1a1a2e;transition:transform .15s steps(2)
+}
+.map a:hover .node,.map a:focus-visible .node{transform:translateY(-6px)}
+.map li:last-child .node{background:var(--pink);color:#fff}
+.map .name{font-family:"Press Start 2P",monospace;font-size:.6rem;line-height:1.6}
+.map .meta{color:var(--muted);font-size:1.05rem}
+
+/* ---------- Levels ---------- */
+.level{padding:4rem 0 2rem;scroll-margin-top:80px}
+.sign{
+  display:inline-block;font-family:"Press Start 2P",monospace;font-size:.6rem;color:#1a1a2e;
+  background:var(--yellow);border:3px solid #1a1a2e;padding:.5rem .7rem;margin-bottom:1rem;
+  box-shadow:4px 4px 0 #1a1a2e;position:relative
+}
+.sign::after{content:"";position:absolute;left:12px;bottom:-14px;width:8px;height:14px;background:var(--dirt)}
+.panel{
+  background:var(--panel);border:4px solid var(--line);box-shadow:8px 8px 0 var(--line);
+  padding:1.6rem;position:relative
+}
+.panel p{margin:0 0 .9rem;max-width:62ch}
+.panel p:last-child{margin:0}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.stats{list-style:none;padding:0;margin:0;display:grid;gap:.5rem;min-width:200px}
+.stats li{display:flex;justify-content:space-between;gap:1rem;font-size:1.1rem;color:var(--muted)}
+.stats b{color:var(--yellow);font-weight:400}
+.bar{height:12px;background:var(--panel2);border:2px solid var(--line);position:relative;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--grass);width:0;transition:width 1.2s steps(10)}
+.bar.pink i{background:var(--pink)}
+@media (max-width:700px){.about{grid-template-columns:1fr}}
+
+/* experience: checkpoints */
+.track{position:relative;padding-left:2.4rem}
+.track::before{content:"";position:absolute;left:12px;top:8px;bottom:8px;width:6px;background:repeating-linear-gradient(var(--line) 0 10px,transparent 10px 18px)}
+.cp{position:relative;margin-bottom:1.6rem}
+.cp::before{content:"";position:absolute;left:-2.4rem;top:4px;width:22px;height:22px;background:var(--teal);border:4px solid #1a1a2e}
+.cp.now::before{background:var(--yellow);animation:blink 1.2s steps(1) infinite}
+.cp h3{color:var(--yellow)}
+.cp .when{color:var(--muted);font-size:1.05rem;margin-bottom:.4rem}
+.cp ul{margin:.4rem 0 0;padding-left:1.1rem}
+.cp li::marker{content:"▸ ";color:var(--teal)}
+
+/* projects: cartridges */
+.carts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.6rem}
+.cart{
+  background:var(--panel);border:4px solid var(--line);box-shadow:8px 8px 0 var(--line);
+  padding:0;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .15s steps(2)
+}
+.cart:hover,.cart:focus-visible{transform:translate(-3px,-3px)}
+.cart .label{
+  background:var(--sky);color:var(--white);padding:1.2rem;border-bottom:4px solid var(--line);
+  min-height:120px;display:grid;align-content:end;gap:.4rem;
+  background-image:repeating-linear-gradient(135deg,transparent 0 14px,rgba(255,255,255,.06) 14px 16px)
+}
+.cart:nth-child(2) .label{background-color:#5a2a6e}
+.cart .label h3{color:var(--yellow);margin:0}
+.cart .label small{font-family:"Press Start 2P",monospace;font-size:.5rem;color:var(--white);opacity:.8}
+.cart .body{padding:1.2rem}
+.cart .body p{margin:0 0 .8rem;color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:0;padding:0;list-style:none}
+.tags li{font-family:"Press Start 2P",monospace;font-size:.5rem;background:var(--panel2);border:2px solid var(--line);padding:.35rem .45rem}
+.cart .go{margin-top:auto;padding:0 1.2rem 1.2rem;font-family:"Press Start 2P",monospace;font-size:.55rem;color:var(--teal)}
+
+/* stack: inventory */
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.7rem}
+.slot{
+  aspect-ratio:1;background:var(--panel);border:4px solid var(--line);display:grid;place-items:center;
+  text-align:center;padding:.4rem;position:relative;box-shadow:inset 0 0 0 3px var(--panel2)
+}
+.slot b{font-family:"Press Start 2P",monospace;font-size:.5rem;font-weight:400;line-height:1.6}
+.slot small{position:absolute;right:6px;bottom:4px;font-size:1rem;color:var(--yellow)}
+.slot.main{border-color:var(--yellow)}
+
+/* education */
+.edu{display:grid;gap:1rem}
+.edu .panel{padding:1.2rem 1.6rem}
+.edu h3{color:var(--teal)}
+.edu .when{color:var(--muted);font-size:1.05rem}
+
+/* contact */
+.boss{text-align:center;padding:3rem 1.2rem 2rem}
+.boss h2{color:var(--pink)}
+.boss p{max-width:44ch;margin:0 auto 1.6rem}
+.btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  font-family:"Press Start 2P",monospace;font-size:.65rem;color:#1a1a2e;background:var(--teal);
+  padding:.9rem 1.1rem;border:4px solid #1a1a2e;box-shadow:5px 5px 0 #1a1a2e;text-decoration:none
+}
+.btn.alt{background:var(--yellow)}
+.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 #1a1a2e}
+.foot{text-align:center;color:var(--muted);font-size:1.05rem;padding:2rem 0 0}
+.foot .px{font-size:.5rem;display:block;margin-top:.6rem;color:var(--ink)}
+
+/* scanlines */
+.crt{position:fixed;inset:0;z-index:35;pointer-events:none;background:repeating-linear-gradient(transparent 0 3px,rgba(0,0,0,.08) 3px 4px);mix-blend-mode:multiply;opacity:.6}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .crt{opacity:.25}}
+</style>
+</head>
+<body>
+
+<div class="stars" aria-hidden="true" id="stars"></div>
+<div class="crt" aria-hidden="true"></div>
+
+<header class="hud">
+  <span class="px">LUIGE</span>
+  <span class="lvl" data-pt="LVL: TRAINEE @ X-TESTING" data-en="LVL: TRAINEE @ X-TESTING">LVL: TRAINEE @ X-TESTING</span>
+  <span class="score"><span data-pt="BUGS CAÇADOS" data-en="BUGS CAUGHT">BUGS CAÇADOS</span> <span id="score">0000</span></span>
+  <div class="r" role="group" aria-label="Idioma / Language">
+    <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <h1 id="title" aria-label="Luige"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></h1>
+      <p class="tag"
+         data-pt="Automação de testes e RPA. Eu caço <b>bugs</b> antes que eles cheguem ao jogador final — quer dizer, ao usuário."
+         data-en="Test automation and RPA. I hunt <b>bugs</b> before they reach the final player — I mean, the user.">
+        Automação de testes e RPA. Eu caço <b>bugs</b> antes que eles cheguem ao jogador final — quer dizer, ao usuário.
+      </p>
+      <a class="start px" href="#mapa" data-pt="▶ PRESS START" data-en="▶ PRESS START">▶ PRESS START</a>
+      <p class="hint" data-pt="Role a página pra fazer o bot andar. Cada seção é uma fase." data-en="Scroll to make the bot walk. Each section is a level.">Role a página pra fazer o bot andar. Cada seção é uma fase.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+
+    <section class="map" id="mapa" aria-labelledby="map-h">
+      <h2 id="map-h" data-pt="Seleção de fase" data-en="Level select">Seleção de fase</h2>
+      <ol>
+        <li><a href="#sobre"><div class="node">1-1</div><div class="name" data-pt="Sobre" data-en="About">Sobre</div><div class="meta" data-pt="quem é o jogador" data-en="who's playing">quem é o jogador</div></a></li>
+        <li><a href="#exp"><div class="node">1-2</div><div class="name" data-pt="Experiência" data-en="Experience">Experiência</div><div class="meta">X-Testing</div></a></li>
+        <li><a href="#proj"><div class="node">1-3</div><div class="name" data-pt="Projetos" data-en="Projects">Projetos</div><div class="meta" data-pt="2 cartuchos" data-en="2 cartridges">2 cartuchos</div></a></li>
+        <li><a href="#stack"><div class="node">1-4</div><div class="name">Stack</div><div class="meta" data-pt="inventário" data-en="inventory">inventário</div></a></li>
+        <li><a href="#edu"><div class="node">1-5</div><div class="name" data-pt="Formação" data-en="Education">Formação</div><div class="meta">UESC</div></a></li>
+        <li><a href="#contato"><div class="node">BOSS</div><div class="name" data-pt="Contato" data-en="Contact">Contato</div><div class="meta" data-pt="fase final" data-en="final stage">fase final</div></a></li>
+      </ol>
+    </section>
+
+    <section class="level" id="sobre" aria-labelledby="sobre-h">
+      <div class="sign">WORLD 1-1</div>
+      <h2 id="sobre-h" data-pt="Sobre" data-en="About">Sobre</h2>
+      <div class="panel about">
+        <div>
+          <p data-pt="Sou Lucas Luige, mas todo mundo me chama de Luige. Estudo Ciência da Computação na UESC e trabalho com automação: testes E2E com Playwright e TypeScript, RPA com Python e Robot Framework."
+             data-en="I'm Lucas Luige — everyone just calls me Luige. I study Computer Science at UESC and work with automation: E2E testing with Playwright and TypeScript, RPA with Python and Robot Framework.">
+            Sou Lucas Luige, mas todo mundo me chama de Luige. Estudo Ciência da Computação na UESC e trabalho com automação: testes E2E com Playwright e TypeScript, RPA com Python e Robot Framework.</p>
+          <p data-pt="Meu TCC é sobre testes que se consertam sozinhos quando a interface muda. Gosto de software que aguenta pancada."
+             data-en="My thesis is about tests that fix themselves when the UI changes. I like software that can take a hit.">
+            Meu TCC é sobre testes que se consertam sozinhos quando a interface muda. Gosto de software que aguenta pancada.</p>
+        </div>
+        <ul class="stats" aria-label="Status">
+          <li><span>HP</span><b data-pt="Bahia, BR" data-en="Bahia, BR">Bahia, BR</b></li>
+          <li><span data-pt="Automação" data-en="Automation">Automação</span><b>92</b></li>
+          <li><div class="bar"><i data-w="92%"></i></div></li>
+          <li><span>Playwright</span><b>88</b></li>
+          <li><div class="bar"><i data-w="88%"></i></div></li>
+          <li><span>RPA</span><b>85</b></li>
+          <li><div class="bar pink"><i data-w="85%"></i></div></li>
+          <li><span>Café</span><b>MAX</b></li>
+          <li><div class="bar pink"><i data-w="100%"></i></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="level" id="exp" aria-labelledby="exp-h">
+      <div class="sign">WORLD 1-2</div>
+      <h2 id="exp-h" data-pt="Experiência" data-en="Experience">Experiência</h2>
+      <div class="panel">
+        <div class="track">
+          <div class="cp now">
+            <h3>Trainee · X-Testing</h3>
+            <div class="when" data-pt="abr 2026 — hoje · checkpoint atual" data-en="Apr 2026 — now · current checkpoint">abr 2026 — hoje · checkpoint atual</div>
+            <ul>
+              <li data-pt="Conduzo projetos de automação de ponta a ponta, do planejamento ao relatório." data-en="Run automation projects end to end, from planning to reporting.">Conduzo projetos de automação de ponta a ponta, do planejamento ao relatório.</li>
+              <li data-pt="Suítes E2E em Playwright/TypeScript com arquitetura Page Object Model." data-en="E2E suites in Playwright/TypeScript with Page Object Model architecture.">Suítes E2E em Playwright/TypeScript com arquitetura Page Object Model.</li>
+              <li data-pt="Robôs RPA em Python e Robot Framework pra processos repetitivos." data-en="RPA bots in Python and Robot Framework for repetitive processes.">Robôs RPA em Python e Robot Framework pra processos repetitivos.</li>
+            </ul>
+          </div>
+          <div class="cp">
+            <h3 data-pt="Estagiário de automação de testes · X-Testing" data-en="Test automation intern · X-Testing">Estagiário de automação de testes · X-Testing</h3>
+            <div class="when" data-pt="jul 2024 — mar 2026" data-en="Jul 2024 — Mar 2026">jul 2024 — mar 2026</div>
+            <ul>
+              <li data-pt="Primeiro contato com automação profissional: Playwright, Robot Framework e pipelines de teste." data-en="First professional automation work: Playwright, Robot Framework and test pipelines.">Primeiro contato com automação profissional: Playwright, Robot Framework e pipelines de teste.</li>
+              <li data-pt="Evoluí de tarefas pontuais até assumir projetos inteiros." data-en="Grew from small tasks to owning whole projects.">Evoluí de tarefas pontuais até assumir projetos inteiros.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="level" id="proj" aria-labelledby="proj-h">
+      <div class="sign">WORLD 1-3</div>
+      <h2 id="proj-h" data-pt="Projetos" data-en="Projects">Projetos</h2>
+      <div class="carts">
+        <a class="cart" href="https://github.com/lluigecm/autohealing-e2e-tests" target="_blank" rel="noopener">
+          <div class="label"><small>CARTRIDGE 01 · TCC</small><h3>Autohealing E2E Tests</h3></div>
+          <div class="body">
+            <p data-pt="Mecanismo de self-healing para testes de interface web: quando um seletor quebra, o teste encontra o elemento de novo em vez de falhar."
+               data-en="Self-healing mechanism for web UI tests: when a selector breaks, the test relocates the element instead of failing.">
+              Mecanismo de self-healing para testes de interface web: quando um seletor quebra, o teste encontra o elemento de novo em vez de falhar.</p>
+            <ul class="tags"><li>Playwright</li><li>TypeScript</li><li>Self-healing</li><li>E2E</li></ul>
+          </div>
+          <div class="go" data-pt="▶ Ver no GitHub" data-en="▶ View on GitHub">▶ Ver no GitHub</div>
+        </a>
+        <a class="cart" href="https://github.com/lluigecm/MyGather" target="_blank" rel="noopener">
+          <div class="label"><small>CARTRIDGE 02</small><h3>MyGather</h3></div>
+          <div class="body">
+            <p data-pt="Escritório virtual 2D feito do zero: você anda com o personagem e o áudio e vídeo ligam por proximidade, como numa sala de verdade."
+               data-en="2D virtual office built from scratch: walk your character around and audio/video turn on by proximity, like a real room.">
+              Escritório virtual 2D feito do zero: você anda com o personagem e o áudio e vídeo ligam por proximidade, como numa sala de verdade.</p>
+            <ul class="tags"><li>WebRTC</li><li>Realtime</li><li>Canvas</li><li>Node</li></ul>
+          </div>
+          <div class="go" data-pt="▶ Ver no GitHub" data-en="▶ View on GitHub">▶ Ver no GitHub</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="level" id="stack" aria-labelledby="stack-h">
+      <div class="sign">WORLD 1-4</div>
+      <h2 id="stack-h" data-pt="Inventário" data-en="Inventory">Inventário</h2>
+      <div class="inv" role="list">
+        <div class="slot main" role="listitem"><b>Playwright</b><small>×99</small></div>
+        <div class="slot main" role="listitem"><b>TypeScript</b><small>×99</small></div>
+        <div class="slot main" role="listitem"><b>Python</b><small>×99</small></div>
+        <div class="slot main" role="listitem"><b>Robot<br>Framework</b><small>×88</small></div>
+        <div class="slot" role="listitem"><b>Java</b><small>×60</small></div>
+        <div class="slot" role="listitem"><b>C / C++</b><small>×55</small></div>
+        <div class="slot" role="listitem"><b>Next.js</b><small>×50</small></div>
+        <div class="slot" role="listitem"><b>MPI<br>OpenMP</b><small>×45</small></div>
+        <div class="slot" role="listitem"><b>Git</b><small>×80</small></div>
+        <div class="slot" role="listitem"><b>CI/CD</b><small>×60</small></div>
+      </div>
+    </section>
+
+    <section class="level" id="edu" aria-labelledby="edu-h">
+      <div class="sign">WORLD 1-5</div>
+      <h2 id="edu-h" data-pt="Formação" data-en="Education">Formação</h2>
+      <div class="edu">
+        <div class="panel">
+          <h3 data-pt="Bacharelado em Ciência da Computação" data-en="B.Sc. in Computer Science">Bacharelado em Ciência da Computação</h3>
+          <div class="when" data-pt="UESC — Universidade Estadual de Santa Cruz · conclusão prevista: fim de 2026" data-en="UESC — Universidade Estadual de Santa Cruz · expected graduation: end of 2026">UESC — Universidade Estadual de Santa Cruz · conclusão prevista: fim de 2026</div>
+          <p style="margin-top:.6rem" data-pt="Ênfase em computação paralela (MPI/OpenMP) e engenharia de software. TCC em self-healing de testes automatizados." data-en="Focus on parallel computing (MPI/OpenMP) and software engineering. Thesis on self-healing automated tests.">Ênfase em computação paralela (MPI/OpenMP) e engenharia de software. TCC em self-healing de testes automatizados.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="level boss" id="contato" aria-labelledby="ct-h">
+      <div class="sign" style="background:var(--pink);color:#fff">BOSS STAGE</div>
+      <h2 id="ct-h" data-pt="CONTINUE? ▶ SIM" data-en="CONTINUE? ▶ YES">CONTINUE? ▶ SIM</h2>
+      <p data-pt="Sem currículo em PDF, sem formulário. Se quiser conversar sobre automação, testes ou um projeto, é por aqui." data-en="No PDF resume, no form. If you want to talk automation, testing or a project, this is the door.">Sem currículo em PDF, sem formulário. Se quiser conversar sobre automação, testes ou um projeto, é por aqui.</p>
+      <div class="btns">
+        <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn alt" href="mailto:contato@lluigecm.dev">E-mail</a>
+      </div>
+      <div class="foot">
+        <span data-pt="Feito em Next.js · dados do GitHub ao vivo" data-en="Built with Next.js · live GitHub data">Feito em Next.js · dados do GitHub ao vivo</span>
+        <span class="px">lluigecm.dev © 2026</span>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="scene" aria-hidden="true">
+  <div class="hills" id="hills"></div>
+  <div class="ground" id="ground"></div>
+  <div class="walker idle" id="walker"><span class="px" id="sprite"></span></div>
+  <div class="bubble" id="bubble"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- stars ---- */
+  var stars = document.getElementById("stars"), sf = document.createDocumentFragment();
+  for (var i=0;i<70;i++){ var s=document.createElement("i");
+    s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*70+"%";
+    s.style.animationDelay=(Math.random()*3)+"s"; sf.appendChild(s); }
+  stars.appendChild(sf);
+
+  /* ---- hills (stepped pixel silhouettes) ---- */
+  function hillSVG(){
+    return '<svg viewBox="0 0 600 120" preserveAspectRatio="none" shape-rendering="crispEdges">'+
+    '<path fill="var(--hill)" d="M0 120V70h20V50h20V36h20V26h20V18h20V26h20V36h20V50h20V70h20V90h20V120Z"/>'+
+    '<path fill="var(--hill2)" d="M200 120V80h30V60h30V46h30V40h30V46h30V60h30V80h30V120Z"/>'+
+    '<path fill="var(--hill)" d="M430 120V74h20V54h20V40h20V32h20V40h20V54h20V74h20V120Z"/>'+
+    '<rect fill="var(--hill)" x="0" y="100" width="600" height="20"/></svg>';
+  }
+  document.getElementById("hills").innerHTML = hillSVG()+hillSVG()+hillSVG();
+
+  /* ---- original pixel bot (two walk frames) ---- */
+  var P = {k:"#1a1a2e", t:"var(--teal)", y:"var(--yellow)", w:"#ffffff", p:"var(--pink)"};
+  var frameA = [
+    ".......kk.......",
+    ".......ky.......",
+    "......kkkk......",
+    "....kkttttkk....",
+    "...kttttttttk...",
+    "...ktwwkkwwtk...",
+    "...ktwkkkkwtk...",
+    "...kttttttttk...",
+    "...ktkpkkpktk...",
+    "....kkttttkk....",
+    "..kkkttttttkkk..",
+    ".kt.kttttttk.tk.",
+    ".kk.kttttttk.kk.",
+    "....kttttttk....",
+    "....kkk..kkk....",
+    "....kkk..kkk...."
+  ];
+  var frameB = frameA.slice(0,13).concat([
+    "....kttttttk....",
+    "...kkk....kkk...",
+    "..kkk......kkk.."
+  ]);
+  function shadow(f){
+    var out=[];
+    for (var r=0;r<f.length;r++) for (var c=0;c<f[r].length;c++){
+      var ch=f[r][c]; if(ch===".") continue;
+      out.push((c*4)+"px "+(r*4)+"px 0 "+P[ch]);
+    }
+    return out.join(",");
+  }
+  var shA=shadow(frameA), shB=shadow(frameB);
+  var sprite=document.getElementById("sprite"); sprite.style.boxShadow=shA;
+
+  /* ---- scroll-driven walking, parallax, score ---- */
+  var walker=document.getElementById("walker"), hills=document.getElementById("hills"),
+      ground=document.getElementById("ground"), score=document.getElementById("score"),
+      bubble=document.getElementById("bubble");
+  var lastY=window.scrollY, idleTimer=null, frame=0, acc=0, maxBugs=0;
+
+  function onScroll(){
+    var y=window.scrollY, dy=y-lastY; lastY=y;
+    if (!reduce){
+      hills.style.transform="translateX("+(-(y*0.25)%(hills.offsetWidth/3))+"px)";
+      ground.style.backgroundPosition="0 0,"+(-(y*0.6))+"px 0";
+      walker.classList.toggle("flip", dy<0);
+      walker.classList.remove("idle");
+      acc+=Math.abs(dy);
+      if (acc>28){ acc=0; frame^=1; sprite.style.boxShadow=frame?shB:shA; }
+      clearTimeout(idleTimer);
+      idleTimer=setTimeout(function(){ walker.classList.add("idle"); sprite.style.boxShadow=shA; },160);
+    }
+    var bugs=Math.min(9999, Math.floor(y/9));
+    if (bugs>maxBugs){ maxBugs=bugs; score.textContent=("0000"+bugs).slice(-4); }
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+
+  /* ---- speech bubble per level ---- */
+  var lines = {
+    pt:{sobre:"É ESSE AQUI, O LUIGE.", exp:"CHECKPOINT ATUAL: TRAINEE.", proj:"DOIS CARTUCHOS NO GITHUB.", stack:"INVENTÁRIO CHEIO.", edu:"FALTA POUCO PRO DIPLOMA.", contato:"VAI LÁ, MANDA UM OI."},
+    en:{sobre:"THAT'S HIM. LUIGE.", exp:"CURRENT CHECKPOINT: TRAINEE.", proj:"TWO CARTRIDGES ON GITHUB.", stack:"INVENTORY IS FULL.", edu:"ALMOST GRADUATED.", contato:"GO ON, SAY HI."}
+  };
+  var lang="pt", current=null, bubbleTimer=null;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      current=e.target.id;
+      if(lines[lang][current]){
+        bubble.textContent=lines[lang][current]; bubble.classList.add("show");
+        clearTimeout(bubbleTimer); bubbleTimer=setTimeout(function(){bubble.classList.remove("show");},2600);
+      }
+      e.target.querySelectorAll(".bar i").forEach(function(b){ b.style.width=b.getAttribute("data-w"); });
+    });
+  },{threshold:.35});
+  document.querySelectorAll(".level").forEach(function(s){io.observe(s);});
+
+  /* ---- typewriter title ---- */
+  var typed=document.getElementById("typed"), name="LUIGE", n=0;
+  if (reduce){ typed.textContent=name; }
+  else (function tick(){ typed.textContent=name.slice(0,++n); if(n<name.length) setTimeout(tick,180); })();
+
+  /* ---- language toggle ---- */
+  function setLang(l){
+    lang=l; document.documentElement.lang = l==="pt"?"pt-BR":"en";
+    document.querySelectorAll("[data-pt]").forEach(function(el){
+      var v=el.getAttribute("data-"+l); if(v==null) return;
+      if (/<b>/.test(v)) el.innerHTML=v; else el.textContent=v;
+    });
+    document.querySelectorAll(".hud [data-lang]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-lang")===l)); });
+    document.title = l==="pt" ? "Luige — Automação de testes & RPA" : "Luige — Test automation & RPA";
+  }
+  document.querySelectorAll(".hud [data-lang]").forEach(function(b){ b.addEventListener("click",function(){ setLang(b.getAttribute("data-lang")); }); });
+  if (!/^pt/i.test(navigator.language||"")) setLang("en");
+
+  /* keyboard: arrows nudge the page like a controller */
+  window.addEventListener("keydown",function(e){
+    if(e.key==="ArrowRight") window.scrollBy({top:120,behavior:"smooth"});
+    if(e.key==="ArrowLeft") window.scrollBy({top:-120,behavior:"smooth"});
+  });
+})();
+</script>
+</body>
+</html>

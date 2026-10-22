@@ -2,7 +2,7 @@ import "server-only";
 import { Octokit } from "@octokit/rest";
 import { cacheLife } from "next/cache";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
-import type { ContributionDay, Contributions, RepoStats } from "@/types/github";
+import type { ContributionDay, Contributions } from "@/types/github";
 
 /*
  * Toda chamada ao GitHub fica aqui (regras 1 a 4). Roda só no servidor; o
@@ -23,9 +23,9 @@ function client() {
 }
 
 /*
- * Regra 14, igual para cards e gráfico:
+ * Regra 14:
  * - No build, uma falha devolve null: o build passa e o componente fica sem os
- *   dados (cards só com textos, gráfico oculto).
+ *   dados (gráfico oculto).
  * - Numa renovação em produção, a falha é lançada. A renovação inteira falha e
  *   o Next continua servindo a última página gerada com sucesso, ou seja, os
  *   últimos dados válidos. Na visita seguinte, tenta de novo.
@@ -37,20 +37,6 @@ function onFailure(what: string, error: unknown): null {
     return null;
   }
   throw new Error(message, { cause: error });
-}
-
-/** Data do último push de um repositório ("dono/nome"). */
-export async function getRepoStats(repo: string): Promise<RepoStats | null> {
-  "use cache";
-  cacheLife("github");
-
-  const [owner, name] = repo.split("/");
-  try {
-    const { data: info } = await client().rest.repos.get({ owner, repo: name });
-    return { pushedAt: info.pushed_at ?? info.updated_at };
-  } catch (error) {
-    return onFailure(repo, error);
-  }
 }
 
 const CALENDAR_QUERY = `

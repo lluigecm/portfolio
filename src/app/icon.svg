@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Provisório até a etapa 14.5 (cabeça do bot): "L" de Luige e uma célula em amarelo-destaque. -->
+  <!-- "L" de Luige e uma célula amarela. -->
   <rect width="32" height="32" rx="7" fill="#1a1a2e"/>
   <path d="M10 8.5V22.5H21" fill="none" stroke="#fffdf4" stroke-width="3.4" stroke-linecap="square"/>
   <rect x="17.5" y="8.5" width="5" height="5" rx="1" fill="#ffd23f"/>

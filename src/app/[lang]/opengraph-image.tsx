@@ -7,22 +7,19 @@ import { palette } from "@/lib/palette";
 import type { Locale } from "@/types/content";
 
 /*
- * Imagem de prévia (Open Graph e Twitter Card, seção 6.7): nome e título no
- * visual provisório até a etapa 14.5, uma por idioma. Gerada no build, sem buscar nada na rede:
- * a IBM Plex vem do pacote @fontsource (o gerador não lê WOFF2).
+ * Imagem de prévia (Open Graph e Twitter Card), uma por idioma: a tela de
+ * título do site. Gerada no build, sem buscar nada na rede: a Press Start 2P
+ * vem do pacote @fontsource (o gerador não lê WOFF2).
  */
 const size = { width: 1200, height: 630 };
-const colors = palette.light;
 
-// Lidas uma vez, no carregamento do módulo (com Cache Components, ler arquivo
-// dentro da função conta como acesso não cacheado). Caminhos literais, para o
-// rastreamento de arquivos do Next levar as fontes junto para o servidor.
-const [regular, semibold] = await Promise.all([
-  readFile(join(process.cwd(), "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff")),
-  readFile(join(process.cwd(), "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff")),
-]);
+// Lida uma vez, no carregamento do módulo. Caminho literal, para o rastreamento
+// de arquivos do Next levar a fonte junto para o servidor.
+const pressStart = await readFile(
+  join(process.cwd(), "node_modules/@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff"),
+);
 
-const alt = (locale: Locale) => `${content[locale].hero.name}, ${content[locale].hero.title}`;
+const alt = (locale: Locale) => content[locale].meta.title;
 
 export function generateImageMetadata({ params }: { params: { lang: string } }) {
   const locale = isLocale(params.lang) ? params.lang : "en";
@@ -31,7 +28,7 @@ export function generateImageMetadata({ params }: { params: { lang: string } }) 
 
 export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const { hero } = content[isLocale(lang) ? lang : "en"];
+  const { hero, hud } = content[isLocale(lang) ? lang : "en"];
   return new ImageResponse(
     (
       <div
@@ -40,30 +37,43 @@ export default async function Image({ params }: { params: Promise<{ lang: string
           height: "100%",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
-          padding: "0 96px",
-          background: colors.painel,
-          fontFamily: "IBM Plex Sans",
+          background: `linear-gradient(${palette.sky}, ${palette.sky2} 70%, ${palette.horizon})`,
+          fontFamily: "Press Start 2P",
         }}
       >
-        <div style={{ fontSize: 144, fontWeight: 600, color: colors.texto, letterSpacing: -3 }}>
-          {hero.name}
+        <div
+          style={{
+            fontSize: 150,
+            color: "#fff",
+            textShadow: `8px 8px 0 ${palette.sky}, 16px 16px 0 ${palette.pink}`,
+          }}
+        >
+          {hero.name.toUpperCase()}
         </div>
-        <div style={{ marginTop: 8, fontSize: 52, color: colors.secundario }}>{hero.title}</div>
-        {/* A escala do gráfico de contribuições, a peça marcante do site. */}
-        <div style={{ display: "flex", gap: 10, marginTop: 72 }}>
-          {colors.grafico.map((color) => (
-            <div key={color} style={{ width: 36, height: 36, borderRadius: 6, background: color }} />
-          ))}
+        <div style={{ marginTop: 48, fontSize: 28, color: palette.teal }}>{hud.lvl}</div>
+        <div
+          style={{
+            marginTop: 56,
+            display: "flex",
+            alignItems: "center",
+            padding: "24px 32px",
+            fontSize: 28,
+            color: "#1a1a2e",
+            background: palette.yellow,
+            border: "6px solid #1a1a2e",
+            boxShadow: "10px 10px 0 #1a1a2e",
+          }}
+        >
+          {/* O ▶ não existe na Press Start 2P: vai desenhado, em pixels. */}
+          <svg width="28" height="28" viewBox="0 0 7 7" style={{ marginRight: 24 }}>
+            <path d="M0 0h2v1h2v1h2v1h1v1H6v1H4v1H2v1H0Z" fill="#1a1a2e" />
+          </svg>
+          {hero.start.replace("▶", "").trim()}
         </div>
       </div>
     ),
-    {
-      ...size,
-      fonts: [
-        { name: "IBM Plex Sans", data: regular, weight: 400, style: "normal" },
-        { name: "IBM Plex Sans", data: semibold, weight: 600, style: "normal" },
-      ],
-    },
+    { ...size, fonts: [{ name: "Press Start 2P", data: pressStart, weight: 400, style: "normal" }] },
   );
 }

@@ -10,18 +10,6 @@ export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 /** Valor do atributo lang do <html> para cada idioma. */
 export const HTML_LANG: Record<Locale, string> = { pt: "pt-BR", en: "en" };
 
-/*
- * Na troca de idioma, o gráfico chega pronto, sem repetir o preenchimento
- * (seção 5.5, efeito 1): o botão deixa esta marca (com o horário) antes de
- * navegar, e o script abaixo, no <head> da página nova, a consome antes de
- * qualquer estilo ser calculado. A marca só vale por alguns segundos, para uma
- * troca interrompida não afetar a visita seguinte.
- */
-export const LANGUAGE_SWITCH_KEY = "troca-de-idioma";
-const LANGUAGE_SWITCH_MAX_AGE_MS = 10_000;
-
-export const languageSwitchScript = `try{var s=sessionStorage.getItem("${LANGUAGE_SWITCH_KEY}");if(s){sessionStorage.removeItem("${LANGUAGE_SWITCH_KEY}");if(Date.now()-Number(s)<${LANGUAGE_SWITCH_MAX_AGE_MS})document.documentElement.classList.add("grafico-pronto")}}catch(e){}`;
-
 /** Idioma no formato do Open Graph (og:locale). */
 export const OG_LOCALE: Record<Locale, string> = { pt: "pt_BR", en: "en_US" };
 

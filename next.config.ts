@@ -10,21 +10,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   cacheLife: {
-    // Dados do GitHub (cards e gráfico): renovação a cada 15 minutos (regra 3) e
-    // expiração longa, para os últimos dados válidos continuarem no ar mesmo
-    // com a API fora por dias (regra 14). Os testes encurtam a renovação.
+    // Dados do GitHub (gráfico): renovação a cada 15 minutos e expiração longa,
+    // para os últimos dados válidos continuarem no ar mesmo com a API fora por
+    // dias. Os testes encurtam a renovação.
     github: {
       stale: 60 * 5,
       revalidate: Number(process.env.GITHUB_REVALIDATE_SECONDS) || 60 * 15,
       expire: 60 * 60 * 24 * 365,
-    },
-  },
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
     },
   },
 };

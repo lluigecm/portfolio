@@ -1,9 +1,9 @@
 # Portfólio
 
-Site pessoal de Luige: página única, bilíngue (PT/EN), com dados do GitHub.
+Site pessoal de Luige: página única, bilíngue (PT/EN), no visual de jogo de plataforma retrô.
 
-- Especificação: [PROJETO.md](PROJETO.md)
-- Plano de implementação: [PLANO.md](PLANO.md)
+- Modelo do site: [docs/modelo.html](docs/modelo.html) (vale sobre a especificação anterior)
+- Especificação anterior: [PROJETO.md](PROJETO.md) · plano: [PLANO.md](PLANO.md)
 
 ## Desenvolvimento
 
@@ -12,4 +12,4 @@ npm install
 npm run dev
 ```
 
-Variáveis de ambiente em `.env.local` (fora do Git): `GITHUB_TOKEN`, `GITHUB_PERSONAL_USER`, `GITHUB_WORK_USER`.
+Testes E2E (contra o build de produção): `npm run test:e2e`.

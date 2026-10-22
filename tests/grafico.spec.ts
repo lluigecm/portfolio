@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { content } from "../src/content";
 import { calendarDays, expectedTotals, USERS } from "./github-fixtures.mjs";
-import { checkA11y } from "./a11y";
+import { checkA11y, waitForHydration } from "./apoio";
 
 // O site de teste (porta 3000) usa a API falsa: os totais esperados vêm dos mesmos dados.
 const TOTALS = expectedTotals();
@@ -17,7 +17,7 @@ for (const [locale, browserLocale] of [
   ["pt", "pt-BR"],
   ["en", "en-US"],
 ] as const) {
-  const caption = content[locale].hero.chartCaption(TOTALS);
+  const caption = content[locale].chart.caption(TOTALS);
   const format = new Intl.NumberFormat(browserLocale).format;
 
   test.describe(`gráfico em ${locale.toUpperCase()}`, () => {
@@ -35,7 +35,7 @@ for (const [locale, browserLocale] of [
     });
 
     test("sem contribuições privadas, a legenda não fala delas", async () => {
-      const without = content[locale].hero.chartCaption({ ...TOTALS, workPrivate: 0 });
+      const without = content[locale].chart.caption({ ...TOTALS, workPrivate: 0 });
       expect(without).not.toContain(format(TOTALS.workPrivate));
       expect(without).not.toMatch(/privad|private/i);
       expect(without).toContain(format(TOTALS.work));
@@ -66,12 +66,12 @@ test("o total da legenda bate com a soma exibida no gráfico", async ({ page }) 
   expect(counts).toEqual(expected);
 });
 
-test("usa a escala de âmbar: nível 0 só para dias sem contribuição", async ({ page }) => {
+test("escala de verdes: nível 0 só para dias sem contribuição", async ({ page }) => {
   await page.goto("/");
   const levels = await cells(page).evaluateAll((rects) =>
     rects.map((rect) => ({
       count: Number(rect.getAttribute("data-count")),
-      level: Number(rect.getAttribute("class")!.match(/fill-grafico-(\d)/)![1]),
+      level: Number(rect.getAttribute("class")!.match(/^n(\d)$/)![1]),
     })),
   );
   for (const { count, level } of levels) {
@@ -86,10 +86,30 @@ test("no desktop, o gráfico ocupa a largura toda sem rolar", async ({ page }) =
   const region = chart(page).getByRole("region");
   const sizes = await region.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
   expect(sizes.scroll).toBeLessThanOrEqual(sizes.client);
-  const main = await page.locator("main").boundingBox();
-  const box = await region.boundingBox();
-  // Largura total da coluna de conteúdo (main menos o recuo lateral de 24 px de cada lado).
-  expect(Math.round(box!.width)).toBe(Math.round(main!.width - 48));
+  // Largura toda do painel do gráfico (a área de conteúdo, sem bordas e recuos).
+  const widths = await region.evaluate((el) => {
+    const panel = el.closest(".panel")!;
+    const style = getComputedStyle(panel);
+    const content = panel.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    return { region: el.getBoundingClientRect().width, content };
+  });
+  expect(Math.abs(widths.region - widths.content)).toBeLessThan(1);
+});
+
+test.describe("bot", () => {
+  test.use({ locale: "en-US" });
+
+  test("passar o mouse num dia faz o bot dizer quantas contribuições teve", async ({ page, isMobile }) => {
+  test.skip(isMobile, "sem mouse no celular");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/");
+  await waitForHydration(page);
+  await chart(page).scrollIntoViewIfNeeded();
+  const day = DAYS[DAYS.length - 10];
+  const total = day.contributionCount + calendarDays(USERS.work)[DAYS.length - 10].contributionCount;
+  await cells(page).and(page.locator(`[data-date="${day.date}"]`)).hover();
+  await expect(page.getByTestId("bubble")).toHaveText(content.en.chart.day(day.date, total));
+  });
 });
 
 test.describe("no celular", () => {
@@ -126,8 +146,7 @@ test.describe("no celular", () => {
   });
 });
 
-// Ajuste pós-etapa 9: rótulos de mês legíveis (mínimo de 12 px, como no
-// diagrama do TCC), inteiros dentro do gráfico e sem se sobrepor.
+// Rótulos de mês legíveis (mínimo de 12 px), inteiros dentro do gráfico e sem se sobrepor.
 for (const viewport of [
   { width: 360, height: 780 },
   { width: 1280, height: 900 },

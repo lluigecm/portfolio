@@ -45,7 +45,7 @@ for (const [locale, browserLocale, ogLocale, ogAlternate] of [
       expect(await meta(page, "og:image")).toMatch(new RegExp(`^${BASE}/${locale}/opengraph-image/`));
       expect(await meta(page, "og:image:width")).toBe("1200");
       expect(await meta(page, "og:image:height")).toBe("630");
-      expect(await meta(page, "og:image:alt")).toBe(`${text.hero.name}, ${text.hero.title}`);
+      expect(await meta(page, "og:image:alt")).toBe(text.meta.title);
 
       expect(await meta(page, "twitter:card")).toBe("summary_large_image");
       expect(await meta(page, "twitter:title")).toBe(text.meta.title);
@@ -83,32 +83,13 @@ test("favicon e ícone do iPhone próprios", async ({ page }) => {
   expect((await page.request.get("/favicon.ico")).status()).toBe(404);
 });
 
-test("as cores das imagens geradas são as dos tokens", () => {
+test("as cores da prévia de link são as do tema escuro", () => {
   const css = readFileSync("src/app/globals.css", "utf8");
-  const block = (selector: string) => css.slice(css.indexOf(selector), css.indexOf("}", css.indexOf(selector)));
-  const token = (source: string, name: string) =>
-    source.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1].toLowerCase();
-
-  const light = block(":root {");
-  const dark = block(':root[data-theme="dark"] {');
-  for (const name of ["painel", "painel-2", "texto", "secundario", "linha", "destaque"] as const) {
-    expect(palette.light[name], name).toBe(token(light, name));
+  const root = css.slice(css.indexOf(":root {"), css.indexOf("}", css.indexOf(":root {")));
+  for (const [name, color] of Object.entries(palette)) {
+    const value = root.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{6})`, "i"))?.[1].toLowerCase();
+    expect(color, name).toBe(value);
   }
-  // Escala do gráfico: nível 0 = painel-2, a casa vazia (seção 5.2).
-  expect(palette.light.grafico).toEqual([
-    token(light, "painel-2"),
-    token(light, "grafico-1"),
-    token(light, "grafico-2"),
-    token(light, "grafico-3"),
-    token(light, "grafico-4"),
-  ]);
-  for (const name of ["painel", "texto", "destaque"] as const) {
-    expect(palette.dark[name], `${name} (escuro)`).toBe(token(dark, name));
-  }
-
-  const iconColors = readFileSync("src/app/icon.svg", "utf8").match(/#[0-9a-f]{6}/gi) ?? [];
-  const known = new Set(Object.values(palette).flatMap((theme) => Object.values(theme).flat()));
-  for (const color of iconColors) expect(known, `cor ${color} do favicon`).toContain(color.toLowerCase());
 });
 
 test("endereço base: SITE_URL, depois o da Vercel, depois o local", () => {

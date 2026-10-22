@@ -1,20 +1,22 @@
 import { profile } from "@/content/profile";
 import type { Content } from "@/types/content";
 
-const button = "inline-flex items-center rounded-md border border-linha px-4 py-2 hover:border-texto";
-
+/* Fase final: os dois caminhos de contato e o rodapé. */
 export function Contact({ text }: { text: Content["contact"] }) {
   return (
     <>
       <p>{text.text}</p>
-      <div className="mt-6 flex flex-wrap gap-3">
-        {/* Regra 21: o e-mail só aparece como link mailto:. */}
-        <a href={`mailto:${profile.email}`} className={button}>
-          {text.email}
+      <div className="btns">
+        <a className="btn" href={profile.linkedin} target="_blank" rel="noopener" data-fala={text.linkedinFala}>
+          LinkedIn
         </a>
-        <a href={profile.linkedin} className={button}>
-          {text.linkedin}
+        <a className="btn alt" href={`mailto:${profile.email}`} data-fala={text.emailFala}>
+          E-mail
         </a>
+      </div>
+      <div className="foot">
+        <span>{text.foot}</span>
+        <span className="px">lluigecm.dev © 2026</span>
       </div>
     </>
   );

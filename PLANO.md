@@ -3,6 +3,8 @@
 > Baseado na especificação aprovada em `PROJETO.md` (09/10/2026).
 > Status: **aprovado em 09/10/2026; etapa 14 (redesign) acrescentada em 22/10/2026** · execução no chat de desenvolvimento (claude.ai)
 
+> **22/10/2026 — o modelo `docs/modelo.html` substitui esta especificação.** Por decisão do Luige, o site passa a ser exatamente esse modelo (visual, textos, seções e interações), e as regras e decisões anteriores deste arquivo e do `PROJETO.md` deixam de valer onde conflitarem com ele. Diferenças em relação ao modelo: os links de contato são os reais (`src/content/profile.ts`), o idioma continua no cookie com a página entregue pelo servidor, e as fontes vêm do próprio site (não do Google Fonts). Acréscimos pedidos pelo Luige no mesmo dia: textos sem travessão, botão "PRESS TO START" com animação ao passar o mouse, dica "Role a página pra fazer o bot avançar.", moitas desenhadas e balançando, Lua à noite, modo dia com Sol (botão na HUD), nuvens, inventário interativo e cards que reagem ao mouse (o bot comenta cada um). Depois: morros do fundo redondos, gráfico de contribuições do GitHub de volta (na fase "Sobre", no visual do jogo) e as barras de status, que no modelo nunca enchiam, corrigidas.
+
 ## Como usar este plano
 
 - Cada etapa é pequena, entrega algo verificável e termina com os critérios de aceite cumpridos.
@@ -30,8 +32,8 @@
 | 11 | Auditoria e polimento | 8, 9, 10 | ✅ Concluída em 10/10/2026 |
 | 12 | Publicação | 11 | ⏸ Em parte: falta o domínio |
 | 13 | Movimento (fora do plano original; seção 5.5) | 11 | ✅ Concluída em 10/10/2026 |
-| 14.1 | Redesign: tokens e fontes | 13 | 🔍 Em revisão (PR) |
-| 14.2 | Redesign: componentes de apresentação por seção | 14.1 |  |
+| 14.1 | Redesign: tokens e fontes | 13 | ✅ Concluída em 22/10/2026 |
+| 14.2 | Redesign: componentes de apresentação por seção | 14.1 | 🔍 Em revisão (PR) |
 | 14.3 | Redesign: cena com o bot | 14.2 |  |
 | 14.4 | Redesign: gráfico reestilizado | 14.1 |  |
 | 14.5 | Redesign: imagem de prévia e favicon | 14.1 |  |
@@ -310,15 +312,15 @@
 - Sombras duras só em painéis, placas, botões e cartuchos; nenhum `text-shadow`; sem hover que mova elementos.
 
 **Critérios de aceite**
-- [ ] Os textos da seção 6 continuam intactos, e os títulos das seções (h2) são os nomes da seção 6.
-- [ ] As placas são invisíveis ao leitor de tela e trazem o texto do idioma da página.
-- [ ] Teste de design: caixa alta e numeração só na placa, na HUD e no balão; mono só em código; sem pontos médios.
-- [ ] Teste de sombras: desfoque e espalhamento zero, cor igual ao token linha, só nos elementos permitidos; nenhum `text-shadow`.
-- [ ] O contador da HUD mostra o mesmo total da legenda e some com a API fora do ar e sem cache.
-- [ ] Cada link da HUD leva à seção com o título visível abaixo da HUD.
-- [ ] Navegação completa por teclado, com foco visível nas cores de foco do tema.
-- [ ] Sem violações do axe nos dois temas e nos dois idiomas.
-- [ ] A 360 px: sem rolagem horizontal, HUD em no máximo duas linhas, idioma e tema visíveis.
+- [x] Os textos da seção 6 continuam intactos, e os títulos das seções (h2) são os nomes da seção 6.
+- [x] As placas são invisíveis ao leitor de tela e trazem o texto do idioma da página.
+- [x] Teste de design: caixa alta e numeração só na placa, na HUD e no balão; mono só em código; sem pontos médios.
+- [x] Teste de sombras: desfoque e espalhamento zero, cor igual ao token linha, só nos elementos permitidos; nenhum `text-shadow`.
+- [x] O contador da HUD mostra o mesmo total da legenda e some com a API fora do ar e sem cache.
+- [x] Cada link da HUD leva à seção com o título visível abaixo da HUD.
+- [x] Navegação completa por teclado, com foco visível nas cores de foco do tema.
+- [x] Sem violações do axe nos dois temas e nos dois idiomas.
+- [x] A 360 px: sem rolagem horizontal, HUD em no máximo duas linhas, idioma e tema visíveis.
 
 ### 14.3 — Cena com o bot
 

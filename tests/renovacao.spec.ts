@@ -8,7 +8,7 @@ const API = "http://localhost:4011";
 const REVALIDATE_MS = 2000;
 const NEW_DATA_BONUS = 100;
 
-const caption = (bonus = 0) => content.en.hero.chartCaption(expectedTotals(bonus));
+const caption = (bonus = 0) => content.en.chart.caption(expectedTotals(bonus));
 const shownCaption = (page: Page) =>
   page.getByTestId("contribution-chart").locator("figcaption").textContent();
 

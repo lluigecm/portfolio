@@ -1,30 +1,22 @@
 import type { Content } from "@/types/content";
 
-/*
- * Linha do tempo vertical: a única sequência real da página (princípio 5.1.2).
- * O ponto na cor de destaque marca o cargo atual; o texto do período diz o mesmo.
- */
+/* Trilha de checkpoints: o atual pisca em amarelo. */
 export function Experience({ text }: { text: Content["experience"] }) {
   return (
-    <>
-      <h3 className="text-base">{text.company}</h3>
-      <p className="mt-1 text-secundario">{text.companyDescription}</p>
-
-      <ol className="mt-8 border-l border-linha">
-        {text.roles.map((role, index) => (
-          <li key={role.title} className="relative pb-8 pl-6 last:pb-0">
-            <span
-              aria-hidden="true"
-              className={`absolute top-2.5 -left-[5px] size-[9px] rounded-full border ${
-                index === 0 ? "border-destaque bg-destaque" : "border-secundario bg-painel"
-              }`}
-            />
-            <h4 className="font-semibold">{role.title}</h4>
-            <p className="text-sm text-secundario">{role.period}</p>
-            <p className="mt-2">{role.description}</p>
-          </li>
+    <div className="panel">
+      <div className="track">
+        {text.roles.map((role) => (
+          <div key={role.title} className={role.now ? "cp now" : "cp"} data-fala={role.fala}>
+            <h3>{role.title}</h3>
+            <div className="when">{role.when}</div>
+            <ul>
+              {role.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ol>
-    </>
+      </div>
+    </div>
   );
 }

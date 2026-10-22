@@ -1,21 +1,16 @@
 /*
- * Cores para imagens geradas no build (prévia de link e ícones), que não
- * enxergam as variáveis CSS. Os valores repetem os tokens de globals.css;
- * tests/seo.spec.ts confere que continuam iguais.
+ * Cores do tema escuro do modelo, para imagens geradas no build (prévia de
+ * link e ícone do iPhone), que não enxergam as variáveis CSS. Os valores
+ * repetem os de globals.css; tests/seo.spec.ts confere que continuam iguais.
  */
 export const palette = {
-  light: {
-    painel: "#fffdf4",
-    "painel-2": "#f0ecd6",
-    texto: "#1a1a2e",
-    secundario: "#3a4a7a",
-    linha: "#1a1a2e",
-    destaque: "#9c1c5c",
-    grafico: ["#f0ecd6", "#4a944a", "#3a7f3c", "#2a6230", "#1b4422"],
-  },
-  dark: {
-    painel: "#121a52",
-    texto: "#fff8e7",
-    destaque: "#ffd23f",
-  },
+  sky: "#0c1445",
+  sky2: "#1d2b7a",
+  horizon: "#4c3f91",
+  ink: "#fff8e7",
+  muted: "#b9c3ff",
+  panel2: "#0a0f33",
+  yellow: "#ffd23f",
+  pink: "#ff5d9e",
+  teal: "#39d6c4",
 } as const;

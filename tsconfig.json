@@ -40,7 +40,9 @@
     ".next-api-fora/types/**/*.ts",
     ".next-api-fora/dev/types/**/*.ts",
     ".next-renovacao/types/**/*.ts",
-    ".next-renovacao/dev/types/**/*.ts"
+    ".next-renovacao/dev/types/**/*.ts",
+    ".next-shot/types/**/*.ts",
+    ".next-shot/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

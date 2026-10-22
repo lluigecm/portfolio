@@ -1,23 +1,24 @@
-import { getContributions } from "@/lib/github";
 import type { Content } from "@/types/content";
-import { ContributionChart } from "./ContributionChart";
 
-export async function Hero({ text }: { text: Content["hero"] }) {
-  // Regra 14: sem dados válidos, o gráfico não aparece e o resto segue normal.
-  const contributions = await getContributions();
-
+/* Tela de título: o nome se digita sozinho (globals.css) e PRESS TO START leva ao mapa. */
+export function Hero({ text }: { text: Content["hero"] }) {
   return (
-    <div className="py-16 md:py-24">
-      <h1 className="text-3xl">{text.name}</h1>
-      <p className="mt-2 text-xl text-secundario">{text.title}</p>
-      <p className="mt-8 max-w-texto">{text.intro}</p>
-      {contributions && (
-        <ContributionChart
-          contributions={contributions}
-          caption={text.chartCaption(contributions)}
-          month={text.chartMonth}
-        />
-      )}
-    </div>
+    <section className="hero">
+      <div>
+        <h1 aria-label={text.name}>
+          <span className="typed">{text.name.toUpperCase()}</span>
+          <span className="cursor" aria-hidden="true" />
+        </h1>
+        <p className="tag">
+          {text.tag.before}
+          <b>{text.tag.bold}</b>
+          {text.tag.after}
+        </p>
+        <a className="start px" href="#mapa" data-fala={text.startFala}>
+          <span className="arrow">▶</span> {text.start}
+        </a>
+        <p className="hint">{text.hint}</p>
+      </div>
+    </section>
   );
 }

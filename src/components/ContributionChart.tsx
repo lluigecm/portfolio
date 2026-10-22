@@ -1,85 +1,64 @@
 import type { CSSProperties } from "react";
 import type { Content } from "@/types/content";
 import type { ContributionDay, Contributions } from "@/types/github";
-import { ChartRelief } from "./ChartRelief";
 
 /*
- * Gráfico de contribuições, a peça marcante do site (princípio 5.1.1): uma
- * coluna por semana, de domingo a sábado, na escala verde da seção 5.2.
- * No celular, rola na horizontal dentro do próprio espaço, começando pelos
- * meses mais recentes (flex-row-reverse inicia a rolagem pela direita).
- * Medidas em unidades do viewBox.
- *
- * Movimento (seção 5.5): as semanas se preenchem uma vez ao carregar (efeito 1,
- * CSS em globals.css) e, com mouse, as células sobem perto do cursor (efeito 2,
- * ChartRelief).
+ * Gráfico de contribuições do GitHub (contas pessoal e de trabalho somadas), em
+ * pixel art: uma coluna por semana, de domingo a sábado, quadrados retos na
+ * escala de verdes do tema. Passar o mouse num dia faz o bot dizer quantas
+ * contribuições teve. No celular, rola na horizontal dentro do próprio painel,
+ * começando pelos meses mais recentes. As semanas entram uma a uma quando a
+ * fase aparece na tela (globals.css). Medidas em unidades do viewBox.
  */
 const CELL = 11;
 const GAP = 3;
 const STEP = CELL + GAP;
 const MONTH_ROW = 20;
-// No celular o SVG fica no tamanho natural (1 unidade = 1 px): 12 px é o piso
-// de legibilidade, o mesmo do diagrama do TCC.
-const FONT = 12;
+const FONT = 16;
 // Rótulos nas últimas semanas são alinhados pela direita, para não sair do gráfico.
 const RIGHT_ALIGNED_WEEKS = 2;
 // Rótulos de mês a menos de 3 semanas um do outro se sobreporiam.
 const MIN_WEEKS_BETWEEN_MONTHS = 3;
-const SVG_ID = "contribution-svg";
-
-const LEVEL_CLASS = [
-  "fill-grafico-0",
-  "fill-grafico-1",
-  "fill-grafico-2",
-  "fill-grafico-3",
-  "fill-grafico-4",
-];
 
 interface Props {
   contributions: Contributions;
-  caption: string;
-  month: Content["hero"]["chartMonth"];
+  text: Content["chart"];
 }
 
-export function ContributionChart({ contributions, caption, month }: Props) {
+export function ContributionChart({ contributions, text }: Props) {
   const weeks = toWeeks(contributions.days);
   const level = levelScale(contributions.days);
   const labels = monthLabels(weeks);
   const width = weeks.length * STEP - GAP;
   const height = MONTH_ROW + 7 * STEP - GAP;
+  const caption = text.caption(contributions);
 
   return (
-    <figure className="mt-12" data-testid="contribution-chart">
-      <div
-        role="region"
-        tabIndex={0}
-        aria-labelledby="contribution-caption"
-        className="flex flex-row-reverse overflow-x-auto"
-      >
+    <figure className="panel chart" data-testid="contribution-chart">
+      <h3>{text.title}</h3>
+      <div role="region" tabIndex={0} aria-labelledby="contribution-caption" className="chart-scroll">
         <svg
-          id={SVG_ID}
           aria-hidden="true"
           viewBox={`0 0 ${width} ${height}`}
           fontSize={FONT}
+          shapeRendering="crispEdges"
           // Nunca menor que o tamanho natural: no celular, rola em vez de encolher.
           style={{ minWidth: width }}
-          className="block h-auto w-full shrink-0"
         >
-          <g className="fill-secundario">
+          <g className="chart-months">
             {labels.map(({ week, date }) => (
               <text
                 key={date}
                 x={week >= weeks.length - RIGHT_ALIGNED_WEEKS ? width : week * STEP}
-                y={FONT}
+                y={FONT - 2}
                 textAnchor={week >= weeks.length - RIGHT_ALIGNED_WEEKS ? "end" : "start"}
               >
-                {month(date)}
+                {text.month(date)}
               </text>
             ))}
           </g>
           {weeks.map((week, w) => (
-            // Uma semana por grupo: o preenchimento (efeito 1) segue a ordem das semanas.
-            <g key={w} className="grafico-semana" style={{ "--semana": w } as CSSProperties}>
+            <g key={w} className="semana" style={{ "--semana": w } as CSSProperties}>
               {week.map((day, d) => {
                 if (!day) return null;
                 const dayLevel = level(day.count);
@@ -90,22 +69,19 @@ export function ContributionChart({ contributions, caption, month }: Props) {
                     y={MONTH_ROW + d * STEP}
                     width={CELL}
                     height={CELL}
-                    rx={2}
                     data-date={day.date}
                     data-count={day.count}
                     data-level={dayLevel}
-                    className={LEVEL_CLASS[dayLevel]}
+                    data-fala={text.day(day.date, day.count)}
+                    className={`n${dayLevel}`}
                   />
                 );
               })}
             </g>
           ))}
         </svg>
-        <ChartRelief svgId={SVG_ID} cell={CELL} step={STEP} />
       </div>
-      <figcaption id="contribution-caption" className="mt-3 text-sm text-secundario">
-        {caption}
-      </figcaption>
+      <figcaption id="contribution-caption">{caption}</figcaption>
     </figure>
   );
 }
