@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { LevelId } from "@/types/content";
+import { BushStrip } from "./Bushes";
 
 /* Bot de 16 × 16 pixels (4 px cada), desenhado com box-shadow em dois quadros de passo. */
 const COLORS: Record<string, string> = {
@@ -57,14 +58,21 @@ function Hills() {
   );
 }
 
+/** Faixas de moitas lado a lado: cobrem telas de até 3000 px mesmo deslocadas. */
+const BUSH_STRIPS = 6;
+const BUSH_STRIP_WIDTH = 600;
+
 /*
  * Chão fixo no rodapé da tela. Rolar a página faz o bot andar (dois quadros,
- * virando para trás quando a rolagem sobe), os morros e o chão correrem, e cada
- * fase que entra na tela ganha uma fala do bot e enche as suas barras de status.
- * As setas ← e → rolam a página como um controle.
+ * virando para trás quando a rolagem sobe), os morros e as moitas correrem em
+ * velocidades diferentes, e cada fase que entra na tela ganha uma fala do bot e
+ * enche as suas barras de status. Passar o mouse (ou o foco) num card com
+ * data-fala também faz o bot falar, e clicar nele faz ele pular. As setas ← e →
+ * rolam a página como um controle.
  */
 export function Scene({ lines }: { lines: Record<LevelId, string> }) {
   const hillsRef = useRef<HTMLDivElement>(null);
+  const bushesRef = useRef<HTMLDivElement>(null);
   const groundRef = useRef<HTMLDivElement>(null);
   const walkerRef = useRef<HTMLDivElement>(null);
   const spriteRef = useRef<HTMLSpanElement>(null);
@@ -72,6 +80,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
 
   useEffect(() => {
     const hills = hillsRef.current!;
+    const bushes = bushesRef.current!;
     const ground = groundRef.current!;
     const walker = walkerRef.current!;
     const sprite = spriteRef.current!;
@@ -89,6 +98,7 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       lastY = y;
       if (reduce) return;
       hills.style.transform = `translateX(${-((y * 0.25) % (hills.offsetWidth / 3))}px)`;
+      bushes.style.transform = `translateX(${-((y * 0.45) % BUSH_STRIP_WIDTH)}px)`;
       ground.style.backgroundPosition = `0 0,${-(y * 0.6)}px 0`;
       walker.classList.toggle("flip", dy < 0);
       walker.classList.remove("idle");
@@ -106,17 +116,19 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
     }
 
     let bubbleTimer: ReturnType<typeof setTimeout> | undefined;
+    function say(line: string) {
+      bubble.textContent = line;
+      bubble.classList.add("show");
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 2600);
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           const line = lines[entry.target.id as LevelId];
-          if (line) {
-            bubble.textContent = line;
-            bubble.classList.add("show");
-            clearTimeout(bubbleTimer);
-            bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 2600);
-          }
+          if (line) say(line);
           entry.target.querySelectorAll<HTMLElement>(".bar i").forEach((bar) => {
             bar.style.width = bar.dataset.w ?? "";
           });
@@ -126,19 +138,44 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
     );
     document.querySelectorAll(".level").forEach((level) => observer.observe(level));
 
+    // Uma fala por card: só fala de novo depois de sair dele.
+    let speaker: Element | null = null;
+    function onPoint(event: Event) {
+      const card = (event.target as Element).closest?.("[data-fala]") ?? null;
+      if (card === speaker) return;
+      speaker = card;
+      if (card) say(card.getAttribute("data-fala")!);
+    }
+
+    let jumpTimer: ReturnType<typeof setTimeout> | undefined;
+    function onJump() {
+      if (reduce || sprite.classList.contains("jump")) return;
+      sprite.classList.add("jump");
+      jumpTimer = setTimeout(() => sprite.classList.remove("jump"), 600);
+    }
+
     function onKey(event: KeyboardEvent) {
+      // O inventário usa as setas para trocar de item.
+      if (event.defaultPrevented) return;
       if (event.key === "ArrowRight") window.scrollBy({ top: 120, behavior: "smooth" });
       if (event.key === "ArrowLeft") window.scrollBy({ top: -120, behavior: "smooth" });
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("keydown", onKey);
+    document.addEventListener("mouseover", onPoint);
+    document.addEventListener("focusin", onPoint);
+    walker.addEventListener("click", onJump);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKey);
+      document.removeEventListener("mouseover", onPoint);
+      document.removeEventListener("focusin", onPoint);
+      walker.removeEventListener("click", onJump);
       observer.disconnect();
       clearTimeout(idleTimer);
       clearTimeout(bubbleTimer);
+      clearTimeout(jumpTimer);
     };
   }, [lines]);
 
@@ -148,6 +185,11 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
         <Hills />
         <Hills />
         <Hills />
+      </div>
+      <div className="bushes" ref={bushesRef}>
+        {Array.from({ length: BUSH_STRIPS }, (_, i) => (
+          <BushStrip key={i} />
+        ))}
       </div>
       <div className="ground" ref={groundRef} />
       <div className="walker idle" ref={walkerRef} data-testid="walker">

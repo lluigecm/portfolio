@@ -5,6 +5,24 @@ export type LevelId = "sobre" | "exp" | "proj" | "stack" | "edu" | "contato";
 
 export type ProjectId = "autohealing" | "mygather";
 
+export type ItemId =
+  | "playwright"
+  | "typescript"
+  | "python"
+  | "robot"
+  | "java"
+  | "c"
+  | "next"
+  | "mpi"
+  | "git"
+  | "cicd";
+
+/** Texto de um item do inventário. */
+export interface ItemText {
+  category: string;
+  description: string;
+}
+
 export interface MapNode {
   name: string;
   meta: string;
@@ -16,6 +34,8 @@ export interface Role {
   bullets: string[];
   /** Checkpoint atual: marcador amarelo piscando. */
   now?: boolean;
+  /** Fala do bot ao passar o mouse no checkpoint. */
+  fala: string;
 }
 
 /** Todos os textos do site num idioma. PT e EN têm a mesma forma. */
@@ -27,6 +47,8 @@ export interface Content {
   ui: {
     /** Link que pula a HUD e vai direto ao conteúdo (teclado). */
     skipToContent: string;
+    /** Botão de dia e noite: rótulo antes de saber o tema e para cada destino. */
+    theme: { toggle: string; toDay: string; toNight: string };
   };
   hud: {
     lvl: string;
@@ -37,6 +59,8 @@ export interface Content {
     /** Frase de abertura; `bold` aparece em amarelo. */
     tag: { before: string; bold: string; after: string };
     start: string;
+    /** Fala do bot ao passar o mouse no botão de começar. */
+    startFala: string;
     hint: string;
   };
   map: {
@@ -49,6 +73,8 @@ export interface Content {
     hp: string;
     automation: string;
     coffee: string;
+    /** Fala do bot ao passar o mouse nas barras de status. */
+    statsFala: string;
   };
   experience: {
     title: string;
@@ -57,21 +83,31 @@ export interface Content {
   projects: {
     title: string;
     descriptions: Record<ProjectId, string>;
+    /** Fala do bot ao passar o mouse em cada cartucho. */
+    falas: Record<ProjectId, string>;
     go: string;
   };
   stack: {
     title: string;
+    /** Instrução acima do inventário. */
+    hint: string;
+    /** Rótulo do quadro com o item escolhido. */
+    selected: string;
+    items: Record<ItemId, ItemText>;
   };
   education: {
     title: string;
     degree: string;
     when: string;
     description: string;
+    fala: string;
   };
   contact: {
     title: string;
     text: string;
     foot: string;
+    linkedinFala: string;
+    emailFala: string;
   };
   /** Fala do bot ao chegar em cada fase. */
   bubble: Record<LevelId, string>;

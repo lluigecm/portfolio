@@ -7,10 +7,10 @@ export function Contact({ text }: { text: Content["contact"] }) {
     <>
       <p>{text.text}</p>
       <div className="btns">
-        <a className="btn" href={profile.linkedin} target="_blank" rel="noopener">
+        <a className="btn" href={profile.linkedin} target="_blank" rel="noopener" data-fala={text.linkedinFala}>
           LinkedIn
         </a>
-        <a className="btn alt" href={`mailto:${profile.email}`}>
+        <a className="btn alt" href={`mailto:${profile.email}`} data-fala={text.emailFala}>
           E-mail
         </a>
       </div>

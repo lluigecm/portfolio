@@ -1,4 +1,4 @@
-import type { ProjectId } from "@/types/content";
+import type { ItemId, ProjectId } from "@/types/content";
 
 /*
  * Dados do modelo que não mudam com o idioma: cartuchos, inventário e status.
@@ -22,17 +22,17 @@ export const cartridges: { id: ProjectId; label: string; title: string; href: st
 ];
 
 /** Casas do inventário; `lines` quebra o nome em linhas, `main` tem borda amarela. */
-export const inventory: { lines: string[]; count: number; main?: boolean }[] = [
-  { lines: ["Playwright"], count: 99, main: true },
-  { lines: ["TypeScript"], count: 99, main: true },
-  { lines: ["Python"], count: 99, main: true },
-  { lines: ["Robot", "Framework"], count: 88, main: true },
-  { lines: ["Java"], count: 60 },
-  { lines: ["C / C++"], count: 55 },
-  { lines: ["Next.js"], count: 50 },
-  { lines: ["MPI", "OpenMP"], count: 45 },
-  { lines: ["Git"], count: 80 },
-  { lines: ["CI/CD"], count: 60 },
+export const inventory: { id: ItemId; lines: string[]; count: number; main?: boolean }[] = [
+  { id: "playwright", lines: ["Playwright"], count: 99, main: true },
+  { id: "typescript", lines: ["TypeScript"], count: 99, main: true },
+  { id: "python", lines: ["Python"], count: 99, main: true },
+  { id: "robot", lines: ["Robot", "Framework"], count: 88, main: true },
+  { id: "java", lines: ["Java"], count: 60 },
+  { id: "c", lines: ["C / C++"], count: 55 },
+  { id: "next", lines: ["Next.js"], count: 50 },
+  { id: "mpi", lines: ["MPI", "OpenMP"], count: 45 },
+  { id: "git", lines: ["Git"], count: 80 },
+  { id: "cicd", lines: ["CI/CD"], count: 60 },
 ];
 
 /** Barras de status da fase "Sobre", de 0 a 100. */

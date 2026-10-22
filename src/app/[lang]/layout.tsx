@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { content } from "@/content";
 import { HTML_LANG, isLocale, LOCALES, OG_LOCALE } from "@/lib/locale";
 import { siteUrl } from "@/lib/site";
+import { themeScript } from "@/lib/theme";
 import "../globals.css";
 
 // Fontes do modelo: Press Start 2P nos títulos e na HUD, VT323 no corpo.
@@ -67,7 +68,11 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   if (!isLocale(lang)) notFound();
 
   return (
-    <html lang={HTML_LANG[lang]} className={`${pressStart.variable} ${vt323.variable}`}>
+    // O script do tema altera data-theme antes da hidratação; a diferença é esperada.
+    <html lang={HTML_LANG[lang]} className={`${pressStart.variable} ${vt323.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

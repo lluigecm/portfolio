@@ -6,7 +6,7 @@ export function Experience({ text }: { text: Content["experience"] }) {
     <div className="panel">
       <div className="track">
         {text.roles.map((role) => (
-          <div key={role.title} className={role.now ? "cp now" : "cp"}>
+          <div key={role.title} className={role.now ? "cp now" : "cp"} data-fala={role.fala}>
             <h3>{role.title}</h3>
             <div className="when">{role.when}</div>
             <ul>

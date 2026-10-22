@@ -2,18 +2,25 @@ import { content } from "@/content";
 import type { Locale } from "@/types/content";
 import { LanguageButtons } from "./LanguageButtons";
 import { Score } from "./Score";
+import { ThemeButton } from "./ThemeButton";
 
-/* HUD fixa no topo: nome, nível, placar de bugs e troca de idioma. */
+/* HUD fixa no topo: nome, nível, placar de bugs, idioma e dia ou noite. */
 export function Hud({ locale }: { locale: Locale }) {
-  const text = content[locale].hud;
+  const { hud: text, ui } = content[locale];
+  // Em telas estreitas fica só a primeira palavra: "BUGS 0042".
+  const [first, ...rest] = text.score.split(" ");
   return (
     <header className="hud">
       <span className="px">LUIGE</span>
       <span className="lvl">{text.lvl}</span>
       <span className="score">
-        {text.score} <Score />
+        {first}
+        <span className="score-rest"> {rest.join(" ")}</span> <Score />
       </span>
-      <LanguageButtons current={locale} />
+      <div className="r">
+        <LanguageButtons current={locale} />
+        <ThemeButton labels={ui.theme} />
+      </div>
     </header>
   );
 }

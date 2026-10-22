@@ -17,7 +17,7 @@ export function LevelMap({ text }: { text: Content["map"] }) {
       <ol>
         {NODES.map(([id, node]) => (
           <li key={id}>
-            <a href={`#${id}`}>
+            <a href={`#${id}`} data-fala={`${node} · ${text.nodes[id].name.toUpperCase()}`}>
               <div className="node">{node}</div>
               <div className="name">{text.nodes[id].name}</div>
               <div className="meta">{text.nodes[id].meta}</div>

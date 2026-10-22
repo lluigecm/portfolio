@@ -1,6 +1,6 @@
 import type { Content } from "@/types/content";
 
-/* Tela de título: o nome se digita sozinho (globals.css) e PRESS START leva ao mapa. */
+/* Tela de título: o nome se digita sozinho (globals.css) e PRESS TO START leva ao mapa. */
 export function Hero({ text }: { text: Content["hero"] }) {
   return (
     <section className="hero">
@@ -14,8 +14,8 @@ export function Hero({ text }: { text: Content["hero"] }) {
           <b>{text.tag.bold}</b>
           {text.tag.after}
         </p>
-        <a className="start px" href="#mapa">
-          {text.start}
+        <a className="start px" href="#mapa" data-fala={text.startFala}>
+          <span className="arrow">▶</span> {text.start}
         </a>
         <p className="hint">{text.hint}</p>
       </div>

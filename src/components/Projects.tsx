@@ -6,7 +6,14 @@ export function Projects({ text }: { text: Content["projects"] }) {
   return (
     <div className="carts">
       {cartridges.map((cart) => (
-        <a key={cart.id} className="cart" href={cart.href} target="_blank" rel="noopener">
+        <a
+          key={cart.id}
+          className="cart"
+          href={cart.href}
+          target="_blank"
+          rel="noopener"
+          data-fala={text.falas[cart.id]}
+        >
           <div className="label">
             <small>{cart.label}</small>
             <h3>{cart.title}</h3>

@@ -17,7 +17,7 @@ export function About({ text }: { text: Content["about"] }) {
           <p key={paragraph}>{paragraph}</p>
         ))}
       </div>
-      <ul className="stats" aria-label="Status">
+      <ul className="stats" aria-label="Status" data-fala={text.statsFala}>
         <li>
           <span>HP</span>
           <b>{text.hp}</b>

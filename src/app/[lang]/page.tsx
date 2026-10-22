@@ -10,6 +10,7 @@ import { Level } from "@/components/Level";
 import { LevelMap } from "@/components/LevelMap";
 import { Projects } from "@/components/Projects";
 import { Scene } from "@/components/Scene";
+import { Sky } from "@/components/Sky";
 import { Stars } from "@/components/Stars";
 import { getContent } from "@/content";
 import { isLocale } from "@/lib/locale";
@@ -26,6 +27,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         {text.ui.skipToContent}
       </a>
       <Stars />
+      <Sky />
       <div className="crt" aria-hidden="true" />
       <Hud locale={lang} />
       <main id="content">
@@ -42,7 +44,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             <Projects text={text.projects} />
           </Level>
           <Level id="stack" sign="WORLD 1-4" title={text.stack.title}>
-            <Inventory />
+            <Inventory text={text.stack} />
           </Level>
           <Level id="edu" sign="WORLD 1-5" title={text.education.title}>
             <Education text={text.education} />

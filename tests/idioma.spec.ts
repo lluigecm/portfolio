@@ -12,8 +12,8 @@ test.describe("navegador em português", () => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.getByText(HINT.pt)).toBeVisible();
-    await expect(page.getByRole("button", { name: "PT" })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("button", { name: "EN" })).toHaveAttribute("aria-pressed", "false");
+    await expect(page.getByRole("button", { name: "PT", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "EN", exact: true })).toHaveAttribute("aria-pressed", "false");
   });
 });
 
@@ -24,7 +24,7 @@ test.describe("navegador em alemão", () => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(page.getByText(HINT.en)).toBeVisible();
-    await expect(page.getByRole("button", { name: "EN" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByRole("button", { name: "EN", exact: true })).toHaveAttribute("aria-pressed", "true");
   });
 });
 
@@ -36,7 +36,7 @@ test.describe("troca manual", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await waitForHydration(page);
 
-    await page.getByRole("button", { name: "PT" }).click();
+    await page.getByRole("button", { name: "PT", exact: true }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.getByText(HINT.pt)).toBeVisible();
     await expect(page).toHaveTitle(content.pt.meta.title);
@@ -47,7 +47,7 @@ test.describe("troca manual", () => {
     await waitForHydration(page);
 
     // E volta para o inglês, mesmo com o navegador em inglês, pelo teclado.
-    await page.getByRole("button", { name: "EN" }).focus();
+    await page.getByRole("button", { name: "EN", exact: true }).focus();
     await page.keyboard.press("Enter");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await page.reload();
@@ -61,7 +61,7 @@ test.describe("troca manual", () => {
     const before = await page.evaluate(() => window.scrollY);
     expect(before).toBeGreaterThan(0);
 
-    await page.getByRole("button", { name: "PT" }).click();
+    await page.getByRole("button", { name: "PT", exact: true }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before / 2);
   });

@@ -11,7 +11,8 @@ test("a página inicial carrega", async ({ page }) => {
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName("Luige");
   await expect(page.locator(".hero h1")).toContainText("LUIGE");
-  await expect(page.getByRole("link", { name: "▶ PRESS START" })).toHaveAttribute("href", "#mapa");
+  await expect(page.getByRole("link", { name: "▶ PRESS TO START" })).toHaveAttribute("href", "#mapa");
+  await expect(page.getByText(text.hero.hint)).toBeVisible();
 });
 
 test("as fases aparecem na ordem do mapa, cada uma com a sua placa", async ({ page }) => {
@@ -65,11 +66,20 @@ test("cartuchos, inventário e contato apontam para os endereços reais", async 
   );
   await expect(page.locator(".cart").nth(1)).toHaveAttribute("href", "https://github.com/lluigecm/MyGather");
 
-  await expect(page.locator(".inv [role=listitem]")).toHaveCount(10);
+  await expect(page.locator(".inv .slot")).toHaveCount(10);
   await expect(page.locator(".slot.main")).toHaveCount(4);
 
   await expect(page.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", profile.linkedin);
   await expect(page.getByRole("link", { name: "E-mail" })).toHaveAttribute("href", `mailto:${profile.email}`);
+});
+
+test("o texto do site não usa travessão", async ({ page }) => {
+  for (const locale of ["pt", "en"]) {
+    await page.context().addCookies([{ name: "lang", value: locale, url: "http://localhost:3000" }]);
+    await page.goto("/");
+    expect(await page.locator("body").innerText()).not.toContain("—");
+    expect(await page.title()).not.toContain("—");
+  }
 });
 
 for (const colorScheme of ["light", "dark"] as const) {
