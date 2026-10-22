@@ -27,3 +27,17 @@ export async function checkA11y(page: Page) {
 export async function waitForHydration(page: Page) {
   await page.waitForFunction(() => document.documentElement.classList.contains("jogo"));
 }
+
+/**
+ * Espera as entradas das fases terminarem (Scene, globals.css): um cartucho que
+ * ainda cai ou uma casa do inventário que ainda cresce muda de lugar debaixo do
+ * mouse e do foco.
+ */
+export async function waitForEntrances(page: Page) {
+  await page.waitForFunction(() =>
+    document.getAnimations().every((a) => {
+      const target = (a.effect as KeyframeEffect | null)?.target;
+      return a.playState !== "running" || a.effect?.getTiming().iterations === Infinity || !target?.closest(".entra");
+    }),
+  );
+}
