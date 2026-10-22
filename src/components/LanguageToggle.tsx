@@ -38,7 +38,7 @@ export function LanguageToggle({ target, label }: Props) {
       lang={HTML_LANG[target]}
       // O nome acessível contém o texto visível (WCAG 2.5.3).
       aria-label={`${label} (${code})`}
-      className="inline-flex h-10 min-w-10 items-center justify-center rounded-md px-2 text-sm font-semibold text-texto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foco"
+      className="inline-flex h-10 min-w-10 items-center justify-center border-2 border-linha bg-painel px-2 text-texto active:translate-x-px active:translate-y-px"
     >
       {code}
     </button>

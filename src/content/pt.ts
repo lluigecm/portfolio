@@ -23,6 +23,11 @@ export const pt: Content = {
     },
     skipToContent: "Pular para o conteúdo",
     navLabel: "Seções",
+    world: "MUNDO",
+    hud: {
+      contributions: (total) => `CONTRIBUIÇÕES ${number.format(total)}`,
+      menu: "Abrir seções",
+    },
     repo: {
       updated: "Atualizado em",
       date: (iso) => date.format(new Date(iso)),

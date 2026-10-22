@@ -41,6 +41,14 @@ for (const [locale, browserLocale] of [
       expect(without).toContain(format(TOTALS.work));
     });
 
+    test("o contador da HUD mostra o mesmo total da legenda", async ({ page }) => {
+      await page.goto("/");
+      await expect(page.getByTestId("hud-contador")).toHaveText(
+        content[locale].ui.hud.contributions(TOTAL),
+      );
+      expect(content[locale].ui.hud.contributions(TOTAL)).toContain(format(TOTAL));
+    });
+
     test("leitores de tela recebem a alternativa textual", async ({ page }) => {
       await page.goto("/");
       await expect(page.getByRole("figure", { name: caption })).toBeVisible();
@@ -86,10 +94,14 @@ test("no desktop, o gráfico ocupa a largura toda sem rolar", async ({ page }) =
   const region = chart(page).getByRole("region");
   const sizes = await region.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
   expect(sizes.scroll).toBeLessThanOrEqual(sizes.client);
-  const main = await page.locator("main").boundingBox();
-  const box = await region.boundingBox();
-  // Largura total da coluna de conteúdo (main menos o recuo lateral de 24 px de cada lado).
-  expect(Math.round(box!.width)).toBe(Math.round(main!.width - 48));
+  // Largura toda do painel do gráfico (a área de conteúdo, sem bordas e recuos).
+  const widths = await region.evaluate((el) => {
+    const panel = el.closest('[data-ui="painel"]')!;
+    const style = getComputedStyle(panel);
+    const content = panel.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    return { region: Math.round(el.getBoundingClientRect().width), content: Math.round(content) };
+  });
+  expect(widths.region).toBe(widths.content);
 });
 
 test.describe("no celular", () => {

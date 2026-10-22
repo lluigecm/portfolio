@@ -15,6 +15,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!isLocale(lang)) notFound();
 
   const text = getContent(lang);
+  // Placas MUNDO 1-1 a 1-5, na ordem das seções (seção 5.4).
+  const sign = (index: number) => `${text.ui.world} 1-${index + 1}`;
 
   return (
     <>
@@ -25,12 +27,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         {text.ui.skipToContent}
       </a>
       <Header locale={lang} />
-      <main id="content" className="mx-auto max-w-5xl px-6">
+      <main id="content" className="mx-auto max-w-5xl px-4 md:px-6">
         <Hero text={text.hero} />
-        <Section id="experience" title={text.ui.nav.experience}>
+        <Section id="experience" title={text.ui.nav.experience} sign={sign(0)}>
           <Experience text={text.experience} />
         </Section>
-        <Section id="projects" title={text.ui.nav.projects}>
+        <Section id="projects" title={text.ui.nav.projects} sign={sign(1)}>
           <Projects
             text={text.projects}
             diagram={text.diagram}
@@ -38,13 +40,13 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             ui={text.ui}
           />
         </Section>
-        <Section id="stack" title={text.ui.nav.stack}>
+        <Section id="stack" title={text.ui.nav.stack} sign={sign(2)}>
           <Stack text={text.stack} />
         </Section>
-        <Section id="education" title={text.ui.nav.education}>
+        <Section id="education" title={text.ui.nav.education} sign={sign(3)}>
           <Education text={text.education} />
         </Section>
-        <Section id="contact" title={text.ui.nav.contact}>
+        <Section id="contact" title={text.ui.nav.contact} sign={sign(4)}>
           <Contact text={text.contact} />
         </Section>
       </main>

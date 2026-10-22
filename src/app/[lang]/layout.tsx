@@ -19,10 +19,15 @@ const plexMono = IBM_Plex_Mono({
 });
 
 // Títulos, HUD, placas e balão (seção 5.3). latin-ext cobre os acentos do português.
+// A reserva calculada pelo next/font sai bem mais estreita que esta fonte pixelada,
+// e a troca deslocava o layout; a reserva calibrada fica em globals.css. O nome
+// não pode ter palavra começando com dígito ("2P"): o next/font o escreve sem aspas.
 const pressStart = Press_Start_2P({
   subsets: ["latin", "latin-ext"],
   weight: "400",
   variable: "--font-press-start",
+  adjustFontFallback: false,
+  fallback: ["Reserva Press Start", "monospace"],
 });
 
 /*
@@ -77,7 +82,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript + languageSwitchScript }} />
       </head>
-      <body className="bg-painel font-sans text-base text-texto antialiased">
+      <body className="bg-painel-2 font-sans text-base text-texto antialiased">
         {children}
       </body>
     </html>

@@ -109,6 +109,22 @@
 }
 
 /*
+ * Reserva calibrada para a Press Start 2P, que é monoespaçada: cada caractere
+ * avança 1 em, com ascendente 1 em e descendente 0 (medidos no navegador). A
+ * Courier New e a Liberation Mono avançam 0,6 em; ampliadas em 166,64%, ficam
+ * com a mesma largura, e as métricas forçadas dão a mesma altura de linha.
+ */
+@font-face {
+  font-family: "Reserva Press Start";
+  src: local("Courier New"), local("CourierNewPSMT"), local("Liberation Mono"), local("LiberationMono"),
+    local("Cousine");
+  size-adjust: 166.64%;
+  ascent-override: 100%;
+  descent-override: 0%;
+  line-gap-override: 0%;
+}
+
+/*
  * Só os tokens existem como cores no Tailwind: a paleta padrão é desligada,
  * então classes como bg-zinc-50 não compilam.
  */
@@ -218,6 +234,14 @@
 .casos:has([data-caminho="fails"]:checked) text[data-path~="fails"] {
   fill: var(--destaque);
   font-weight: 600;
+}
+
+/*
+ * A HUD é fixa no topo (seção 5.4): as âncoras das seções param abaixo dela.
+ * A folga cobre as duas linhas da HUD com sobra.
+ */
+html {
+  scroll-padding-top: 7.5rem;
 }
 
 /* Foco sempre visível, na cor de foco do tema (seção 5.2). */

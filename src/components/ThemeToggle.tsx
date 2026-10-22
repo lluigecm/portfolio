@@ -20,7 +20,7 @@ export function ThemeToggle({ labels }: Props) {
       type="button"
       onClick={() => setTheme(getTheme() === "dark" ? "light" : "dark")}
       aria-label={label}
-      className="inline-flex size-10 items-center justify-center rounded-md text-texto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foco"
+      className="inline-flex size-10 items-center justify-center border-2 border-linha bg-painel text-texto active:translate-x-px active:translate-y-px"
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5">
         <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />

@@ -49,7 +49,7 @@ export function ContributionChart({ contributions, caption, month }: Props) {
   const height = MONTH_ROW + 7 * STEP - GAP;
 
   return (
-    <figure className="mt-12" data-testid="contribution-chart">
+    <figure data-testid="contribution-chart">
       <div
         role="region"
         tabIndex={0}

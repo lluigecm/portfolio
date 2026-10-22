@@ -313,7 +313,7 @@ test.describe("com prefers-reduced-motion", () => {
   });
 });
 
-test("nenhuma sombra e nenhuma curva elástica ou linear", async ({ page, isMobile }) => {
+test("só sombras duras, e nenhuma curva elástica ou linear", async ({ page, isMobile }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
@@ -331,10 +331,32 @@ test("nenhuma sombra e nenhuma curva elástica ou linear", async ({ page, isMobi
       .filter(([, y1, , y2]) => y1 < 0 || y1 > 1 || y2 < 0 || y2 > 1)
       .map((values) => values.join(","));
     const linear = [...css.matchAll(/(?:transition|animation)[a-z-]*:[^;}]*\blinear\b/g)].map((m) => m[0]);
+    // Princípio 5.1.7: sombra só em painéis, placas, botões e cartuchos (data-ui),
+    // sem desfoque nem espalhamento e sempre na cor da linha; nenhum text-shadow.
+    const probe = document.createElement("div");
+    probe.style.color = "var(--linha)";
+    document.body.append(probe);
+    const linha = getComputedStyle(probe).color;
+    probe.remove();
     const shadows = [...document.querySelectorAll("*")]
       .map((el) => ({ el, style: getComputedStyle(el) }))
-      .filter(({ style }) => style.boxShadow !== "none" || style.textShadow !== "none" || /drop-shadow/.test(style.filter))
-      .map(({ el }) => el.outerHTML.slice(0, 60));
+      .flatMap(({ el, style }) => {
+        const label = el.outerHTML.slice(0, 60);
+        const problems: string[] = [];
+        if (style.textShadow !== "none") problems.push(`text-shadow em ${label}`);
+        if (/drop-shadow/.test(style.filter)) problems.push(`drop-shadow em ${label}`);
+        if (style.boxShadow === "none") return problems;
+        if (!el.matches("[data-ui]")) problems.push(`sombra fora de painel, placa, botão ou cartucho: ${label}`);
+        for (const shadow of style.boxShadow.split(/,(?![^(]*\))/)) {
+          const color = shadow.match(/rgba?\([^)]*\)/)?.[0];
+          const [x, y, blur, spread] = (shadow.replace(/rgba?\([^)]*\)/, "").match(/-?[\d.]+px/g) ?? []).map(parseFloat);
+          // O Tailwind compõe a sombra com camadas vazias (transparentes e de tamanho zero).
+          if (/rgba\(0, 0, 0, 0\)/.test(color ?? "") && !x && !y && !blur && !spread) continue;
+          if (blur || spread) problems.push(`desfoque ou espalhamento em ${label}: ${shadow.trim()}`);
+          if (color !== linha) problems.push(`sombra fora da cor da linha em ${label}: ${color}`);
+        }
+        return problems;
+      });
     return { elastic, linear, shadows };
   });
   expect(report).toEqual({ elastic: [], linear: [], shadows: [] });

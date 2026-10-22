@@ -69,7 +69,7 @@ export function ProjectVideo({ media, alt, credit, labels }: Props) {
   }
 
   return (
-    <figure ref={figureRef} className="border-b border-linha">
+    <figure ref={figureRef} className="border-b-4 border-linha">
       <video
         ref={videoRef}
         muted

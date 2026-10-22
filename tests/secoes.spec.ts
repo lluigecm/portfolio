@@ -1,7 +1,29 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { content } from "../src/content";
 import { profile } from "../src/content/profile";
 import { checkA11y } from "./a11y";
+
+/*
+ * Abaixo de 1024 px os links das seções ficam recolhidos num <details> na HUD
+ * (seção 5.4). Abre a lista quando o botão dela está na tela.
+ */
+async function openSections(page: Page) {
+  const summary = page.locator("header summary");
+  if ((await summary.isVisible()) && !(await page.locator("header details").getAttribute("open"))) {
+    await summary.click();
+  }
+}
+
+// O título da seção fica inteiro abaixo da HUD fixa depois de seguir o link.
+async function headingBelowHud(page: Page, name: string) {
+  const heading = page.getByRole("heading", { level: 2, name });
+  await expect(heading).toBeInViewport();
+  const [hud, box] = await Promise.all([
+    page.locator("header").boundingBox(),
+    heading.boundingBox(),
+  ]);
+  expect(box!.y, `${name} abaixo da HUD`).toBeGreaterThanOrEqual(hud!.y + hud!.height);
+}
 
 const SECTIONS = ["experience", "projects", "stack", "education", "contact"] as const;
 
@@ -63,11 +85,15 @@ for (const [locale, browserLocale] of [
       await page.goto("/");
       const nav = page.getByRole("navigation", { name: text.ui.navLabel });
       for (const id of SECTIONS) {
+        await openSections(page);
         await nav.getByRole("link", { name: text.ui.nav[id], exact: true }).click();
         await expect(page).toHaveURL(new RegExp(`#${id}$`));
-        await expect(page.getByRole("heading", { level: 2, name: text.ui.nav[id] })).toBeInViewport();
+        await headingBelowHud(page, text.ui.nav[id]);
       }
-      await expect(page.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", profile.github);
+      await expect(page.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute(
+        "href",
+        profile.github,
+      );
     });
 
     test("sem violações de acessibilidade", async ({ page }) => {
@@ -195,6 +221,49 @@ test.describe("princípios de design (seção 5.1)", () => {
   });
 });
 
+// Exceção do princípio 5.1.2: uma placa por seção, decorativa, no idioma da página.
+for (const [locale, browserLocale] of [
+  ["pt", "pt-BR"],
+  ["en", "en-US"],
+] as const) {
+  test.describe(`placas em ${locale.toUpperCase()}`, () => {
+    test.use({ locale: browserLocale });
+
+    test("uma por seção, na ordem, invisível ao leitor de tela", async ({ page }) => {
+      await page.goto("/");
+      for (const [i, id] of SECTIONS.entries()) {
+        const signs = page.locator(`section#${id} [data-ui="placa"]`);
+        await expect(signs).toHaveCount(1);
+        await expect(signs).toHaveText(`${content[locale].ui.world} 1-${i + 1}`);
+        await expect(signs).toHaveAttribute("aria-hidden", "true");
+      }
+      // O topo não tem placa.
+      await expect(page.locator('[data-ui="placa"]')).toHaveCount(SECTIONS.length);
+    });
+  });
+}
+
+test("caixa alta e numeração de fase só na placa, na HUD e no balão", async ({ page }) => {
+  await page.goto("/");
+  const found = await page.evaluate(() => {
+    // Siglas que existem no conteúdo da seção 6.
+    const ACRONYMS = new Set(["UESC"]);
+    const allowed = 'header, [data-ui="placa"], [data-ui="balao"], code, pre';
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const offenders: string[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement!;
+      if (parent.closest(allowed) || !parent.checkVisibility()) continue;
+      const text = node.textContent ?? "";
+      const caps = (text.match(/\b[A-ZÀ-Ý]{4,}\b/g) ?? []).filter((word) => !ACRONYMS.has(word));
+      const stage = text.match(/\b\d+-\d+\b/g) ?? [];
+      if (caps.length || stage.length) offenders.push(`${parent.tagName}: ${[...caps, ...stage].join(" ")}`);
+    }
+    return offenders;
+  });
+  expect(found).toEqual([]);
+});
+
 test.describe("celular", () => {
   test.use({ viewport: { width: 375, height: 812 } });
 
@@ -206,6 +275,7 @@ test.describe("celular", () => {
     expect(overflow).toBe(0);
     await expect(page.getByRole("button", { name: /Ver em português/ })).toBeInViewport();
     await expect(page.getByRole("button", { name: /theme/ })).toBeInViewport();
+    await openSections(page);
     for (const id of SECTIONS) {
       await expect(page.getByRole("link", { name: content.en.ui.nav[id], exact: true })).toBeVisible();
     }
@@ -225,8 +295,10 @@ for (const [locale, browserLocale] of [
       await page.goto("/");
       await page.evaluate(() => document.fonts.ready);
 
-      const rows = await page.locator("header a, header button").evaluateAll((elements) => {
+      // Todas as linhas da HUD: links e botões na tela, o botão das seções e o contador.
+      const rows = await page.locator("header a, header button, header summary, header p").evaluateAll((elements) => {
         const centers = elements
+          .filter((el) => el.checkVisibility())
           .map((el) => el.getBoundingClientRect())
           .map((box) => box.top + box.height / 2)
           .sort((a, b) => a - b);
@@ -240,12 +312,13 @@ for (const [locale, browserLocale] of [
       );
       expect(overflow).toBe(0);
 
+      await expect(page.getByText(content[locale].hero.intro)).toBeInViewport();
+      await openSections(page);
       for (const id of SECTIONS) {
         await expect(
           page.getByRole("link", { name: content[locale].ui.nav[id], exact: true }),
         ).toBeInViewport();
       }
-      await expect(page.getByText(content[locale].hero.intro)).toBeInViewport();
     });
   });
 }
@@ -269,7 +342,11 @@ for (const [locale, browserLocale] of [
       await page.goto("/");
       const stack = page.locator("#stack");
       await expect(stack.locator("dt")).toHaveText(STACK[locale]);
-      await expect(stack.locator("dd")).toHaveText(STACK.items);
+      // Cada item numa casa do inventário, na ordem da 6.4.
+      const items = await stack
+        .locator("dd")
+        .evaluateAll((groups) => groups.map((dd) => [...dd.querySelectorAll("li")].map((li) => li.textContent).join(", ")));
+      expect(items).toEqual(STACK.items);
     });
   });
 }

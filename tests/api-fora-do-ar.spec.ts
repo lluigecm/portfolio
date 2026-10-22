@@ -32,4 +32,6 @@ test("com a API fora do ar e sem cache, o gráfico não aparece", async ({ page 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.getByTestId("contribution-chart")).toHaveCount(0);
   await expect(page.locator("figcaption#contribution-caption")).toHaveCount(0);
+  // O contador da HUD some junto com o gráfico, sem mostrar zero.
+  await expect(page.getByTestId("hud-contador")).toHaveCount(0);
 });

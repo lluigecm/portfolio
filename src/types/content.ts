@@ -100,6 +100,15 @@ export interface Content {
     skipToContent: string;
     /** Nome da navegação entre seções, para leitores de tela. */
     navLabel: string;
+    /** Placa de cada seção (princípio 5.1.2): "MUNDO" vira "MUNDO 1-1", "MUNDO 1-2"... */
+    world: string;
+    /** HUD (seção 5.4). */
+    hud: {
+      /** Contador com o total de contribuições, já formatado no idioma. */
+      contributions: (total: number) => string;
+      /** Botão que abre a navegação recolhida, no celular. */
+      menu: string;
+    };
     /** Rótulos dos dados que a API do GitHub acrescenta aos cards. */
     repo: {
       updated: string;

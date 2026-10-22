@@ -20,14 +20,14 @@ export function RecoveryCases({ text }: { text: RecoveryCasesText }) {
           {recoveryCases.map(({ id, path }) => (
             <label
               key={id}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-linha bg-painel-2 px-3 py-2 text-sm has-checked:border-destaque"
+              className="inline-flex cursor-pointer items-center gap-2 border-2 border-linha bg-painel-2 px-3 py-2 text-sm has-checked:bg-amarelo has-checked:text-tinta"
             >
               <input
                 type="radio"
                 name="recovery-case"
                 value={id}
                 data-caminho={path}
-                className="accent-destaque"
+                className="accent-tinta"
               />
               {text.cases[id].label}
             </label>
@@ -55,7 +55,7 @@ export function RecoveryCases({ text }: { text: RecoveryCasesText }) {
             </dl>
             <p className="mt-3 text-secundario">{text.logLabel}</p>
             {/* O pre fica na fonte do corpo: a mono é só do código (seção 5.3). */}
-            <pre className="mt-1 rounded-md border border-linha bg-painel-2 p-3 font-sans text-xs whitespace-pre-wrap [overflow-wrap:anywhere]">
+            <pre className="mt-1 border-2 border-linha bg-painel-2 p-3 font-sans text-xs whitespace-pre-wrap [overflow-wrap:anywhere]">
               <code className="font-mono">{logExcerpt(log)}</code>
             </pre>
             <a

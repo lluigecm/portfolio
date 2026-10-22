@@ -14,8 +14,8 @@ interface Props {
 }
 
 /*
- * Fichas dos projetos: mídia grande no topo, borda fina, sem sombra
- * (princípio 5.1.4). Textos próprios sempre; os dados do GitHub entram
+ * Projetos como cartuchos (princípio 5.1.4): a mídia grande no topo é o
+ * rótulo; borda grossa, cantos retos e sombra dura (5.1.7). Textos próprios sempre; os dados do GitHub entram
  * quando a API responde.
  */
 export async function Projects({ text, diagram, cases, ui }: Props) {
@@ -30,7 +30,8 @@ export async function Projects({ text, diagram, cases, ui }: Props) {
           <li
             key={project.id}
             data-project={project.id}
-            className="overflow-hidden rounded-md border border-linha bg-painel-2"
+            data-ui="cartucho"
+            className="min-w-0 overflow-hidden border-4 border-linha bg-painel-2 shadow-dura"
           >
             <Media project={project} text={text[project.id]} diagram={diagram} cases={cases} ui={ui} />
             <div className="p-5 md:p-6">
@@ -69,7 +70,7 @@ function Media({ project, text, diagram, cases, ui }: MediaProps) {
   }
   // "casos" liga o destaque do caminho no diagrama ao caso escolhido (globals.css).
   return (
-    <figure className="casos border-b border-linha bg-painel px-4 py-6 md:py-8">
+    <figure className="casos border-b-4 border-linha bg-painel px-2 py-6 md:px-4 md:py-8">
       <RecoveryDiagram text={diagram} alt={text.mediaAlt} />
       <RecoveryCases text={cases} />
     </figure>

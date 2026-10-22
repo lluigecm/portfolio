@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { checkA11y } from "./a11y";
 
-// Painel (fundo da página) de cada tema, como o navegador o resolve (seção 5.2).
-const PAINEL = { light: "rgb(255, 253, 244)", dark: "rgb(18, 26, 82)" };
+// Fundo da página (painel 2) de cada tema, como o navegador o resolve (seção 5.2).
+const PAINEL = { light: "rgb(240, 236, 214)", dark: "rgb(10, 15, 51)" };
 
 const background = (page: Page) =>
   page.evaluate(() => getComputedStyle(document.body).backgroundColor);

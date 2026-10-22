@@ -46,6 +46,22 @@ test("a Press Start 2P carrega e nunca fica abaixo de 14 px", async ({ page }) =
   }
 });
 
+test("a reserva da Press Start 2P é a calibrada, com a mesma largura", async ({ page }) => {
+  // Uma pilha de fontes inválida (ex.: nome sem aspas começando com dígito) faz o
+  // navegador descartar a declaração e os títulos caírem na Plex sem aviso.
+  await page.goto("/");
+  const stack = await page.evaluate(() => getComputedStyle(document.querySelector("h1")!).fontFamily);
+  expect(stack).toMatch(/^"?Press Start 2P"?, "?Reserva Press Start"?/);
+
+  // Monoespaçada como a original: cada caractere avança 1 em (16 px a 16 px).
+  const advance = await page.evaluate(() => {
+    const ctx = document.createElement("canvas").getContext("2d")!;
+    ctx.font = '16px "Reserva Press Start"';
+    return ctx.measureText("MMMMMMMMMM").width / 10;
+  });
+  expect(advance).toBeCloseTo(16, 0);
+});
+
 test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {
   // O next/font gera uma fonte de reserva com as métricas da Plex
   // (size-adjust e afins); é ela que evita o salto quando a Plex chega.
