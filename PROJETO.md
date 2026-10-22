@@ -364,3 +364,9 @@ Cada caso mostra seletor, mudança na página, candidato, score, resultado, um t
 | 22/10/2026 | Experiência continua com o texto atual: por motivos contratuais, nada além do que já está descrito sobre o trabalho na X-Testing |
 | 22/10/2026 | Demonstração interativa "quebre a interface" no card do TCC adiada |
 | 22/10/2026 | A suíte de testes deste site é de autoria do Luige |
+| 22/10/2026 | Card "Este site" (parte 5) descartado antes de chegar à main |
+| 22/10/2026 | Aberta a revisão de design: o visual Grafite (seção 5) dá lugar à direção "retrô platformer" (pixel art 8-bit). A seção 6 continua valendo integralmente; o preview em HTML é só referência de aparência e comportamento |
+| 22/10/2026 | Redesign, bloco A (1/4): o gráfico de contribuições continua a peça principal, no topo, reestilizado em pixel art; o bot anda num chão fixo e separado, no rodapé da tela |
+| 22/10/2026 | Redesign, bloco A (2/4): a HUD fixa vira o cabeçalho e mantém a navegação entre seções (recolhível no celular), idioma, tema e GitHub; sem o "mapa de fases" do preview |
+| 22/10/2026 | Redesign, bloco A (3/4): contador da HUD com rótulo verdadeiro ("CONTRIBUIÇÕES" / "CONTRIBUTIONS") e o mesmo total da legenda; some junto com o gráfico quando ele é ocultado (regra 14) |
+| 22/10/2026 | Redesign, bloco A (4/4): exceção à 5.1.2 para uma placa por seção ("MUNDO 1-1" / "WORLD 1-1"), decorativa e invisível ao leitor de tela; o título da seção continua o da seção 6; caixa alta e numeração só na placa e na HUD |
