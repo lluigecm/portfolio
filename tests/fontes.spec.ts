@@ -46,20 +46,25 @@ test("a Press Start 2P carrega e nunca fica abaixo de 14 px", async ({ page }) =
   }
 });
 
-test("a reserva da Press Start 2P é a calibrada, com a mesma largura", async ({ page }) => {
+test("a reserva da Press Start 2P é a calibrada, com as mesmas medidas", async ({ page }) => {
   // Uma pilha de fontes inválida (ex.: nome sem aspas começando com dígito) faz o
   // navegador descartar a declaração e os títulos caírem na Plex sem aviso.
   await page.goto("/");
   const stack = await page.evaluate(() => getComputedStyle(document.querySelector("h1")!).fontFamily);
   expect(stack).toMatch(/^"?Press Start 2P"?, "?Reserva Press Start"?/);
 
-  // Monoespaçada como a original: cada caractere avança 1 em (16 px a 16 px).
-  const advance = await page.evaluate(() => {
+  // Como a original: cada caractere avança 1 em e o texto ocupa 1 em acima da
+  // linha de base e nada abaixo dela (a 16 px: 16, 16 e 0). Se a altura não
+  // bater, o texto desce quando a fonte chega, mesmo com a largura certa.
+  const metrics = await page.evaluate(() => {
     const ctx = document.createElement("canvas").getContext("2d")!;
     ctx.font = '16px "Reserva Press Start"';
-    return ctx.measureText("MMMMMMMMMM").width / 10;
+    const text = ctx.measureText("MMMMMMMMMM");
+    return { advance: text.width / 10, ascent: text.fontBoundingBoxAscent, descent: text.fontBoundingBoxDescent };
   });
-  expect(advance).toBeCloseTo(16, 0);
+  expect(metrics.advance).toBeCloseTo(16, 0);
+  expect(metrics.ascent).toBeCloseTo(16, 0);
+  expect(metrics.descent).toBeCloseTo(0, 0);
 });
 
 test("a fonte de reserva é calibrada para a Plex", async ({ page }) => {

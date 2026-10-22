@@ -112,14 +112,16 @@
  * Reserva calibrada para a Press Start 2P, que é monoespaçada: cada caractere
  * avança 1 em, com ascendente 1 em e descendente 0 (medidos no navegador). A
  * Courier New e a Liberation Mono avançam 0,6 em; ampliadas em 166,64%, ficam
- * com a mesma largura, e as métricas forçadas dão a mesma altura de linha.
+ * com a mesma largura. O navegador aplica o size-adjust também ao ascendente
+ * forçado: 60,01% × 1,6664 = 1 em, o mesmo da Press Start, e o texto não
+ * desce quando a fonte chega.
  */
 @font-face {
   font-family: "Reserva Press Start";
   src: local("Courier New"), local("CourierNewPSMT"), local("Liberation Mono"), local("LiberationMono"),
     local("Cousine");
   size-adjust: 166.64%;
-  ascent-override: 100%;
+  ascent-override: 60.01%;
   descent-override: 0%;
   line-gap-override: 0%;
 }
