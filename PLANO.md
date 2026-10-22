@@ -41,7 +41,7 @@
 | 15.1 | Motion no site: abertura com a TV e entradas das fases | motion/ | ✅ Concluída em 22/10/2026 |
 | 15.2 | Motion no site: nascer e pôr do sol no botão de tema | 15.1 | ✅ Concluída em 22/10/2026 |
 | 15.3 | Motion no site: bugs no chão, pisão e placar | 15.1 | ✅ Concluída em 22/10/2026 |
-| 15.4 | Motion no site: efeitos sonoros e música | 15.1 | 🔍 Em revisão (PR) |
+| 15.4 | Motion no site: efeitos sonoros e música | 15.1 | ✅ Concluída em 22/10/2026 |
 
 ---
 
@@ -443,7 +443,7 @@
 - A 360 px, a HUD com os cinco botões cabe sem cortar.
 
 **Critérios de aceite**
-- [ ] Efeitos e música começam ligados, cada um com o seu botão, e a escolha fica salva.
-- [ ] A música começa no primeiro gesto e para no botão.
-- [ ] A HUD cabe a 360 px.
+- [x] Efeitos e música começam ligados, cada um com o seu botão, e a escolha fica salva.
+- [x] A música começa no primeiro gesto e para no botão.
+- [x] A HUD cabe a 360 px.
 
