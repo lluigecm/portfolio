@@ -121,7 +121,9 @@ test("o inventário equipa o item escolhido e mostra os detalhes", async ({ page
   await expect(info).toContainText("Robot Framework");
   await expect(info).toContainText(text.stack.items.robot.description);
 
-  // As setas trocam de item sem rolar a página.
+  // As setas trocam de item sem rolar a página. Inventário no meio da tela: na
+  // borda, o foco puxaria uns pixels para mostrar a casa vizinha (a do mouse sobe 4 px).
+  await page.locator(".inv").evaluate((inv) => inv.scrollIntoView({ block: "center", behavior: "instant" }));
   const y = await scrollY(page);
   await page.keyboard.press("ArrowRight");
   await expect(slots.nth(4)).toHaveAttribute("aria-pressed", "true");
@@ -132,6 +134,32 @@ test("o inventário equipa o item escolhido e mostra os detalhes", async ({ page
   await expect(slots.nth(2)).toHaveAttribute("aria-pressed", "true");
   await page.waitForTimeout(300);
   expect(await scrollY(page)).toBe(y);
+});
+
+test("no desktop, cinco casas por linha e o item equipado ao lado; no celular, embaixo", async ({ page, isMobile }) => {
+  await page.goto("/");
+  await waitForHydration(page);
+  // Casas paradas: a entrada (scale) mudaria as medidas.
+  await page.locator("#stack").evaluate((stack) => stack.scrollIntoView({ behavior: "instant" }));
+  await waitForEntrances(page);
+  const box = (locator: ReturnType<Page["locator"]>) => locator.boundingBox().then((b) => b!);
+  const slots = page.locator(".slot");
+  const info = await box(page.getByTestId("item-info"));
+  // A barra do item equipado (Playwright ×99) continua cheia depois que a fase aparece.
+  const fill = await page.locator("#item-info .bar").evaluate((bar) =>
+    Math.round((bar.querySelector("i")!.getBoundingClientRect().width / bar.clientWidth) * 100),
+  );
+  expect(fill).toBe(99);
+  if (isMobile) {
+    const last = await box(slots.last());
+    expect(info.y).toBeGreaterThan(last.y + last.height);
+    return;
+  }
+  const [first, fifth, sixth] = await Promise.all([box(slots.nth(0)), box(slots.nth(4)), box(slots.nth(5))]);
+  expect(Math.abs(fifth.y - first.y)).toBeLessThan(2);
+  expect(sixth.y).toBeGreaterThan(first.y + first.height - 1);
+  expect(info.x).toBeGreaterThan(fifth.x + fifth.width);
+  expect(Math.abs(info.y - first.y)).toBeLessThan(2);
 });
 
 test("passar o mouse num card faz o bot comentar", async ({ page, isMobile }) => {

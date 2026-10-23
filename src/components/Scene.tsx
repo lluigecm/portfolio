@@ -225,8 +225,9 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
             confettiTimer = setTimeout(() => confetti?.remove(), 3500);
           }
           entry.target.classList.add("visto");
-          entry.target.querySelectorAll<HTMLElement>(".bar i").forEach((bar) => {
-            bar.style.width = bar.dataset.w ?? "";
+          // Só as barras de status (data-w); a do item equipado é do React e não pode ser apagada.
+          entry.target.querySelectorAll<HTMLElement>(".bar i[data-w]").forEach((bar) => {
+            bar.style.width = bar.dataset.w!;
           });
         }
       },
