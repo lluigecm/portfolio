@@ -329,6 +329,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .inv { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: .7rem; list-style: none; margin: 0; padding: 0 }
 .inv li { display: grid }
 @media (max-width: 480px) { .inv { grid-template-columns: repeat(3, 1fr) } }
+/* Casas e item equipado: lado a lado em tela larga, como no vídeo (cinco casas por linha, de ~105 px ou mais); embaixo no resto. */
+.inv-area { display: grid; gap: 1.4rem; align-items: start }
+@media (min-width: 940px) {
+  .inv-area { grid-template-columns: minmax(0, 1.9fr) minmax(14rem, 1fr) }
+  .inv-area .inv { grid-template-columns: repeat(5, 1fr) }
+}
 .slot {
   aspect-ratio: 1; background: var(--panel); border: 4px solid var(--line); display: grid; place-items: center;
   text-align: center; padding: .4rem; position: relative; box-shadow: inset 0 0 0 3px var(--panel2);
@@ -347,7 +353,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 @keyframes equipped { 50% { box-shadow: inset 0 0 0 3px var(--panel), 0 0 0 3px transparent } }
 @keyframes hop { 50% { transform: translateY(-3px) } }
-.item-info { margin-top: 1.4rem; display: grid; gap: .5rem }
+.item-info { display: grid; gap: .5rem }
 .item-info p { margin: 0 }
 .item-info .item-label { font-size: .5rem; color: var(--muted) }
 .item-head { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem .9rem }

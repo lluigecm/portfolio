@@ -8,7 +8,8 @@ import type { Content } from "@/types/content";
  * Inventário da stack: cada casa é um botão que equipa o item e mostra os
  * detalhes no quadro de baixo. As setas ← e → andam entre as casas (Home e End
  * vão às pontas). Sem JavaScript, o quadro mostra o primeiro item. Ao entrar na
- * tela, as casas surgem uma a uma.
+ * tela, as casas surgem uma a uma. Em tela larga, o quadro fica ao lado das
+ * casas, como no vídeo (motion/); no celular, embaixo.
  */
 export function Inventory({ text }: { text: Content["stack"] }) {
   const [selected, setSelected] = useState(0);
@@ -39,43 +40,45 @@ export function Inventory({ text }: { text: Content["stack"] }) {
   return (
     <>
       <p className="inv-hint">{text.hint}</p>
-      <ul className="inv entra" onKeyDown={onKeyDown}>
-        {inventory.map(({ id, lines, count, main }, i) => (
-          <li key={id} style={{ "--i": i } as CSSProperties}>
-            <button
-              ref={(el) => {
-                slots.current[i] = el;
-              }}
-              type="button"
-              className={main ? "slot main" : "slot"}
-              aria-pressed={i === selected}
-              aria-controls="item-info"
-              data-fala={`ITEM: ${lines.join(" ").toUpperCase()} ×${count}`}
-              onClick={() => choose(i)}
-            >
-              <b>
-                {lines.map((line, j) => (
-                  <Fragment key={line}>
-                    {j > 0 && <br />}
-                    {line}
-                  </Fragment>
-                ))}
-              </b>
-              <small>×{count}</small>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div className="panel item-info entra" id="item-info" aria-live="polite" data-testid="item-info">
-        <p className="item-label px">{text.selected}</p>
-        <div className="item-head">
-          <p className="item-name px">{item.lines.join(" ")}</p>
-          <span className="item-cat px">{details.category}</span>
-          <b className="item-count">×{item.count}</b>
-        </div>
-        <p>{details.description}</p>
-        <div className="bar">
-          <i style={{ width: `${item.count}%` }} />
+      <div className="inv-area">
+        <ul className="inv entra" onKeyDown={onKeyDown}>
+          {inventory.map(({ id, lines, count, main }, i) => (
+            <li key={id} style={{ "--i": i } as CSSProperties}>
+              <button
+                ref={(el) => {
+                  slots.current[i] = el;
+                }}
+                type="button"
+                className={main ? "slot main" : "slot"}
+                aria-pressed={i === selected}
+                aria-controls="item-info"
+                data-fala={`ITEM: ${lines.join(" ").toUpperCase()} ×${count}`}
+                onClick={() => choose(i)}
+              >
+                <b>
+                  {lines.map((line, j) => (
+                    <Fragment key={line}>
+                      {j > 0 && <br />}
+                      {line}
+                    </Fragment>
+                  ))}
+                </b>
+                <small>×{count}</small>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="panel item-info entra" id="item-info" aria-live="polite" data-testid="item-info">
+          <p className="item-label px">{text.selected}</p>
+          <div className="item-head">
+            <p className="item-name px">{item.lines.join(" ")}</p>
+            <span className="item-cat px">{details.category}</span>
+            <b className="item-count">×{item.count}</b>
+          </div>
+          <p>{details.description}</p>
+          <div className="bar">
+            <i style={{ width: `${item.count}%` }} />
+          </div>
         </div>
       </div>
     </>

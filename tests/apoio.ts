@@ -34,10 +34,18 @@ export async function waitForHydration(page: Page) {
  * mouse e do foco.
  */
 export async function waitForEntrances(page: Page) {
-  await page.waitForFunction(() =>
-    document.getAnimations().every((a) => {
+  await page.waitForFunction(() => {
+    // Logo depois de rolar, a cena ainda não marcou os blocos novos: antes de
+    // esperar as animações, todo bloco já na tela (acima da linha de entrada,
+    // a 92% da altura) tem de ter entrado.
+    const pending = [...document.querySelectorAll(".entra:not(.entrou)")].some((block) => {
+      const { top, bottom } = block.getBoundingClientRect();
+      return top < window.innerHeight * 0.9 && bottom > 0;
+    });
+    const moving = document.getAnimations().some((a) => {
       const target = (a.effect as KeyframeEffect | null)?.target;
-      return a.playState !== "running" || a.effect?.getTiming().iterations === Infinity || !target?.closest(".entra");
-    }),
-  );
+      return a.playState === "running" && a.effect?.getTiming().iterations !== Infinity && target?.closest(".entra");
+    });
+    return !pending && !moving;
+  });
 }
