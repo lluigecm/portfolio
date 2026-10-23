@@ -48,7 +48,6 @@ export type Effect =
   | "pulo"
   | "pisao"
   | "moeda"
-  | "fala"
   | "entra"
   | "confete"
   | "dia"
@@ -58,9 +57,9 @@ export type Effect =
 
 const EFFECT_EVENT = "som-efeito";
 
-/** Pede um efeito; o motor (SoundButtons) toca se os efeitos estiverem ligados. `size` é o tamanho da fala. */
-export function playEffect(name: Effect, size = 0) {
-  window.dispatchEvent(new CustomEvent(EFFECT_EVENT, { detail: { name, size } }));
+/** Pede um efeito; o motor (SoundButtons) toca se os efeitos estiverem ligados. */
+export function playEffect(name: Effect) {
+  window.dispatchEvent(new CustomEvent(EFFECT_EVENT, { detail: name }));
 }
 
 /* ---------- síntese ---------- */
@@ -298,7 +297,7 @@ export async function renderSong(sampleRate: number): Promise<AudioBuffer> {
 
 /* ---------- efeitos ---------- */
 
-function effect(ctx: AudioContext, out: AudioNode, name: Effect, size: number) {
+function effect(ctx: AudioContext, out: AudioNode, name: Effect) {
   const t = ctx.currentTime + 0.01;
   const blip = (at: number, freq: number, volume = 0.08, duration = 0.04, wave = 0.5) =>
     tone(ctx, out, at, duration, freq, { wave, volume, attack: 0.002, sustain: 0.6, release: 0.02 });
@@ -320,9 +319,6 @@ function effect(ctx: AudioContext, out: AudioNode, name: Effect, size: number) {
       break;
     case "moeda":
       coin(t);
-      break;
-    case "fala":
-      for (let i = 0; i < Math.min(6, Math.ceil(size / 4)); i++) blip(t + i * 0.07, 1100 + ((i * 3) % 5) * 50, 0.03, 0.02, 0.25);
       break;
     case "entra":
       tone(ctx, out, t, 0.06, 520, { wave: 0.25, volume: 0.05, sustain: 0.7, slideTo: 830 });
@@ -431,14 +427,14 @@ export function createSoundEngine(initial: { effects: boolean; music: boolean })
   }
 
   function onEffect(event: Event) {
-    const { name, size } = (event as CustomEvent<{ name: Effect; size: number }>).detail;
+    const name = (event as CustomEvent<Effect>).detail;
     if (!ctx || !fx || !effectsOn) return;
     // Várias entradas juntas soam como uma só.
     if (name === "entra") {
       if (ctx.currentTime - lastEntrance < 0.15) return;
       lastEntrance = ctx.currentTime;
     }
-    effect(ctx, fx, name, size);
+    effect(ctx, fx, name);
   }
 
   function onVisibility() {
