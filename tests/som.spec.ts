@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { content } from "../src/content";
-import { waitForHydration } from "./apoio";
+import { waitForEntrances, waitForHydration } from "./apoio";
 
 test.use({ locale: "pt-BR" });
 const labels = content.pt.ui.sound;
@@ -32,6 +32,23 @@ test("a música começa no primeiro toque na página e para no botão", async ({
   await expect(html).toHaveAttribute("data-musica", "ligada");
   await page.getByRole("button", { name: labels.music }).click();
   await expect(html).toHaveAttribute("data-musica", "desligada");
+});
+
+test("a fala do bot não toca som", async ({ page, isMobile }) => {
+  test.skip(isMobile, "sem mouse no celular");
+  await page.goto("/");
+  await waitForHydration(page);
+  await page.locator(".cart").first().evaluate((cart) => cart.scrollIntoView({ behavior: "instant", block: "center" }));
+  await waitForEntrances(page);
+  // Registra todo efeito pedido ao motor (lib/som.ts) a partir daqui.
+  await page.evaluate(() => {
+    const heard: string[] = [];
+    Object.assign(window, { heard });
+    window.addEventListener("som-efeito", (event) => heard.push((event as CustomEvent<string>).detail));
+  });
+  await page.locator(".cart").nth(1).hover();
+  await expect(page.getByTestId("bubble")).toHaveText(content.pt.projects.falas.mygather);
+  expect(await page.evaluate(() => (window as unknown as { heard: string[] }).heard)).toEqual([]);
 });
 
 test("a HUD com os botões de som cabe a 360 px", async ({ page }) => {

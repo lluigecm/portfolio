@@ -202,7 +202,6 @@ export function Scene({ lines }: { lines: Record<LevelId, string> }) {
       fala.style.setProperty("--n", String(line.length));
       fala.textContent = line;
       bubble.replaceChildren(fala);
-      playEffect("fala", line.length);
       bubble.classList.add("show");
       clearTimeout(bubbleTimer);
       bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 2600);

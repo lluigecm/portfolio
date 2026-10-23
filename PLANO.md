@@ -438,7 +438,7 @@
 ### 15.4 — Efeitos sonoros e música
 
 **Entregas**
-- `src/lib/som.ts`: motor em Web Audio. A trilha é o tema principal do vídeo (16 compassos, 150 BPM) em loop sem emenda, renderizada uma vez num `OfflineAudioContext` (vozes monofônicas com as notas como automação, para custar pouco). Os efeitos são sintetizados na hora: pulo, pisão, moeda, fala do bot, entradas, confete, dia e noite, seleção e equipar.
+- `src/lib/som.ts`: motor em Web Audio. A trilha é o tema principal do vídeo (16 compassos, 150 BPM) em loop sem emenda, renderizada uma vez num `OfflineAudioContext` (vozes monofônicas com as notas como automação, para custar pouco). Os efeitos são sintetizados na hora: pulo, pisão, moeda, entradas, confete, dia e noite, seleção e equipar. A fala do bot é muda (decisão de 23/10/2026).
 - Dois botões na HUD (`SoundButtons`), efeitos sonoros e música, **ligados por padrão** e salvos no navegador. Como os navegadores só liberam áudio depois de um gesto, o som começa no primeiro clique, toque ou tecla na página (`data-musica` no `<html>` depois disso). Aba escondida pausa o som.
 - A 360 px, a HUD com os cinco botões cabe sem cortar.
 
@@ -446,4 +446,5 @@
 - [x] Efeitos e música começam ligados, cada um com o seu botão, e a escolha fica salva.
 - [x] A música começa no primeiro gesto e para no botão.
 - [x] A HUD cabe a 360 px.
+- [x] O balão de fala do bot não toca som.
 
